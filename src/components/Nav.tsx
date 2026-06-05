@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { ApplyButton } from "./ApplyButton";
+import { useState } from 'react';
+import { ApplyButton } from './ApplyButton';
 
 const LINKS = [
-  { href: "#como-funciona", label: "Cómo funciona" },
-  { href: "#simula", label: "Simula tu crédito" },
-  { href: "#requisitos", label: "Requisitos" },
-  { href: "#seguridad", label: "Seguridad" },
-  { href: "#preguntas", label: "Preguntas" },
+  { href: '#como-funciona', label: 'Cómo funciona' },
+  { href: '#simula', label: 'Simula tu crédito' },
+  { href: '#requisitos-band', label: 'Requisitos' },
+  { href: '#seguridad', label: 'Seguridad' },
+  { href: '#preguntas', label: 'Preguntas' },
 ];
 
 export function Nav() {
@@ -17,11 +17,26 @@ export function Nav() {
   return (
     <header className="nav" id="top">
       <div className="wrap nav-inner">
-        <a className="brand" href="#top" aria-label="Credalia — inicio">
+        <a
+          className="brand"
+          href="#top"
+          aria-label="Credalia — inicio"
+        >
           <span className="logo" aria-hidden="true">
-            <svg width="42" height="30" viewBox="0 0 42 30" fill="none">
-              <path d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z" fill="#1e9e55" />
-              <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#0d2a5e" />
+            <svg
+              width="42"
+              height="30"
+              viewBox="0 0 42 30"
+              fill="none"
+            >
+              <path
+                d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z"
+                fill="#1e9e55"
+              />
+              <path
+                d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z"
+                fill="#0d2a5e"
+              />
             </svg>
           </span>
           <span className="brand-name">CREDALIA</span>
@@ -34,7 +49,9 @@ export function Nav() {
           ))}
         </nav>
         <div className="nav-cta">
-          <ApplyButton className="btn btn-outline">Solicitar crédito</ApplyButton>
+          <ApplyButton className="btn btn-outline">
+            Solicitar crédito
+          </ApplyButton>
           <button
             className="nav-toggle"
             id="navToggle"
@@ -59,11 +76,12 @@ export function Nav() {
         </div>
       </div>
       <div
-        className={`nav-mobile${open ? " open" : ""}`}
+        className={`nav-mobile${open ? ' open' : ''}`}
         id="navMobile"
         onClick={(e) => {
           // close after picking a link/button (matches prototype)
-          if ((e.target as HTMLElement).closest("a, .btn")) setOpen(false);
+          if ((e.target as HTMLElement).closest('a, .btn'))
+            setOpen(false);
         }}
       >
         {LINKS.map((l) => (
