@@ -1,10 +1,8 @@
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ===== design tokens (ShadCN semantic vars → brand colors) ===== */
+/* ===== design tokens (ShadCN semantic vars mapped to brand colors) ===== */
 @layer base {
   :root {
     /* Brand palette */
@@ -25,7 +23,7 @@
     --hint-ink: #9a4a16;
     --hint-bg: #fff4ed;
 
-    /* ShadCN semantic tokens → Credalia brand */
+    /* ShadCN semantic tokens */
     --background: #ffffff;
     --foreground: #14213d;
     --card: #ffffff;
@@ -50,17 +48,64 @@
 
   * {
     box-sizing: border-box;
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
   }
 
   html {
     scroll-behavior: smooth;
-    @apply font-sans;
+    font-family: var(--font-jakarta), 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
     margin: 0;
+  }
+}
+
+/* ===== accordion animations (Tailwind v3 compatible) ===== */
+@layer utilities {
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height, auto); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height, auto); }
+    to { height: 0; }
+  }
+  .animate-accordion-down {
+    animation: accordion-down 0.2s ease-out;
+  }
+  .animate-accordion-up {
+    animation: accordion-up 0.2s ease-out;
+  }
+  @keyframes dialog-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes dialog-out {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+  }
+  @keyframes overlay-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes overlay-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+  .animate-dialog-in {
+    animation: dialog-in 0.15s ease-out;
+  }
+  .animate-dialog-out {
+    animation: dialog-out 0.15s ease-in;
+  }
+  .animate-overlay-in {
+    animation: overlay-in 0.15s ease-out;
+  }
+  .animate-overlay-out {
+    animation: overlay-out 0.15s ease-in;
   }
 }
 
@@ -95,9 +140,7 @@
   text-align: center;
   padding: 14px 20px;
 }
-.noscript-banner strong {
-  font-weight: 800;
-}
+.noscript-banner strong { font-weight: 800; }
 .noscript-banner a {
   color: var(--green-ink);
   font-weight: 700;
@@ -122,9 +165,7 @@
 .reveal.d3 { transition-delay: 0.18s; }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
-    scroll-behavior: auto !important;
-  }
+  * { scroll-behavior: auto !important; }
   .js .reveal {
     opacity: 1 !important;
     transform: none !important;
@@ -132,7 +173,7 @@
   }
 }
 
-/* ===== phone mockup (decorative, decorative) ===== */
+/* ===== phone mockup (decorative) ===== */
 .phone {
   width: 280px;
   flex-shrink: 0;
@@ -161,11 +202,7 @@
   font-weight: 600;
   color: #0b0d12;
 }
-.status-icons {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
+.status-icons { display: flex; align-items: center; gap: 4px; }
 .chat-header {
   display: flex;
   align-items: center;
@@ -215,15 +252,8 @@
   align-self: flex-end;
   border-bottom-right-radius: 4px;
 }
-.bubble .sim-title {
-  font-weight: 800;
-  font-size: 13px;
-  margin-bottom: 4px;
-}
-.bubble .sim-row {
-  font-size: 12.5px;
-  line-height: 1.5;
-}
+.bubble .sim-title { font-weight: 800; font-size: 13px; margin-bottom: 4px; }
+.bubble .sim-row { font-size: 12.5px; line-height: 1.5; }
 .bubble.note {
   background: #fff8e6;
   border: 1px solid #f6e2a6;
@@ -269,10 +299,6 @@
 @keyframes popIn {
   from { transform: scale(0.4); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
-}
-@keyframes stepIn {
-  from { opacity: 0; transform: translateX(10px); }
-  to { opacity: 1; transform: none; }
 }
 @keyframes btnspin {
   to { transform: rotate(360deg); }
