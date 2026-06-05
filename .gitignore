@@ -28,6 +28,10 @@ pnpm-debug.log*
 
 # testing / coverage
 /coverage
+/test-results
+/playwright-report
+/.lighthouseci
+/playwright/.cache
 
 # typescript
 *.tsbuildinfo
