@@ -1,9 +1,5 @@
-import { calculatePayment } from "@/lib/credit";
 import { config } from "@/lib/config";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
-
-// Footer/contact/pqrs messages ignore the sim; pass the default snapshot.
-const defaultSim = calculatePayment(500000, 12, "monthly");
+import { WhatsAppLink } from "./WhatsAppLink";
 
 export function Footer() {
   return (
@@ -23,15 +19,9 @@ export function Footer() {
             Plataforma de crédito digital simple, ágil y 100% en línea. Crédito
             claro, tasa simple, segura y en línea.
           </p>
-          <a
-            className="footer-wa js-wa"
-            href={buildWhatsAppUrl("footer", defaultSim)}
-            target="_blank"
-            rel="noopener"
-            data-wa-ctx="footer"
-          >
+          <WhatsAppLink ctx="footer" className="footer-wa js-wa">
             <span className="wa-ico" aria-hidden="true" /> Escríbenos por WhatsApp
-          </a>
+          </WhatsAppLink>
           <p className="footer-reg">
             {config.regulatorVerified
               ? "Vigilado por la Superintendencia Financiera de Colombia. Tratamos tus datos conforme a la Ley 1581 de 2012 (Habeas Data)."
@@ -54,24 +44,12 @@ export function Footer() {
         <div className="footer-col">
           <h5>Ayuda</h5>
           <a href="#preguntas">Centro de ayuda</a>
-          <a
-            className="js-wa"
-            href={buildWhatsAppUrl("contact", defaultSim)}
-            target="_blank"
-            rel="noopener"
-            data-wa-ctx="contact"
-          >
+          <WhatsAppLink ctx="contact" className="js-wa">
             Contacto
-          </a>
-          <a
-            className="js-wa"
-            href={buildWhatsAppUrl("pqrs", defaultSim)}
-            target="_blank"
-            rel="noopener"
-            data-wa-ctx="pqrs"
-          >
+          </WhatsAppLink>
+          <WhatsAppLink ctx="pqrs" className="js-wa">
             PQRS
-          </a>
+          </WhatsAppLink>
         </div>
         <div className="footer-col">
           <h5>Síguenos</h5>

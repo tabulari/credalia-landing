@@ -1,12 +1,8 @@
-import { calculatePayment } from "@/lib/credit";
 import { config } from "@/lib/config";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { ApplyButton } from "./ApplyButton";
 import { ScrollButton } from "./ScrollButton";
 import { PhoneChat } from "./PhoneChat";
-
-// Default snapshot for the hero WhatsApp link; goes live (store-driven) in Slice 5.
-const defaultSim = calculatePayment(500000, 12, "monthly");
+import { WhatsAppLink } from "./WhatsAppLink";
 
 export function Hero() {
   return (
@@ -32,18 +28,12 @@ export function Hero() {
               Solicitar crédito <span className="btn-arrow">→</span>
             </ApplyButton>
           </div>
-          <a
-            className="whatsapp-line js-wa"
-            href={buildWhatsAppUrl("hero", defaultSim)}
-            target="_blank"
-            rel="noopener"
-            data-wa-ctx="hero"
-          >
+          <WhatsAppLink ctx="hero" className="whatsapp-line js-wa">
             <span className="wa-ico" aria-hidden="true" />
             <span>
               ¿Dudas? Escríbenos por <b>WhatsApp</b>
             </span>
-          </a>
+          </WhatsAppLink>
           {/* ⚠️ COMPLIANCE: the Superfinanciera seal renders only when the
               regulator status is verified (NEXT_PUBLIC_REGULATOR_VERIFIED). */}
           <div className="hero-seals">
