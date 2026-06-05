@@ -69,8 +69,12 @@ export function StickyPaymentBar() {
     return () => document.body.classList.remove("has-payment-bar");
   }, [show]);
 
+  // When hidden (slid off-screen) the bar must leave the tab order and the a11y
+  // tree; `inert` does both, avoiding aria-hidden-with-focusable-children.
+  const hiddenProps = show ? {} : ({ inert: "" } as Record<string, string>);
+
   return (
-    <div className={`payment-bar${show ? " show" : ""}`} aria-hidden={!show}>
+    <div className={`payment-bar${show ? " show" : ""}`} {...hiddenProps}>
       <div className="payment-bar-inner">
         <div className="payment-bar-info">
           <span className="pb-label">Tu cuota estimada</span>

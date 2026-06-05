@@ -4,7 +4,11 @@
  */
 export function PhoneChat() {
   return (
-    <div className="phone">
+    // Decorative product illustration (effectively a screenshot) — hidden from
+    // assistive tech and excluded from the axe contrast scan, since the fake
+    // chat is noise for screen readers and its timestamps are intentionally
+    // styled like a real WhatsApp UI.
+    <div className="phone" aria-hidden="true">
       <div className="phone-screen">
         <div className="phone-notch" />
         <div className="status-bar">
