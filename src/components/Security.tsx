@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { config } from "@/lib/config";
 
 /**
@@ -66,7 +67,7 @@ export function Security() {
         </div>
         <p className="sec-foot reveal">
           ¿Quieres saber más sobre cómo cuidamos tus datos? Lee nuestra{" "}
-          <a href="/legal/privacidad">Política de Privacidad</a>.
+          <Link href="/legal/privacidad">Política de Privacidad</Link>.
         </p>
       </div>
     </section>

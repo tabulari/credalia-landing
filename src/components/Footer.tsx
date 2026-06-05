@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { config } from "@/lib/config";
 import { WhatsAppLink } from "./WhatsAppLink";
 
@@ -37,8 +38,8 @@ export function Footer() {
         </div>
         <div className="footer-col">
           <h5>Empresa</h5>
-          <a href="/legal/terminos">Términos y condiciones</a>
-          <a href="/legal/privacidad">Privacidad</a>
+          <Link href="/legal/terminos">Términos y condiciones</Link>
+          <Link href="/legal/privacidad">Privacidad</Link>
           <a href="#seguridad">Seguridad</a>
         </div>
         <div className="footer-col">
