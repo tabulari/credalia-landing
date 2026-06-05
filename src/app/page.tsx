@@ -8,6 +8,9 @@ import { Faq } from "@/components/Faq";
 import { Security } from "@/components/Security";
 import { CtaBanner } from "@/components/CtaBanner";
 import { Footer } from "@/components/Footer";
+import { StickyPaymentBar } from "@/components/StickyPaymentBar";
+import { ApplyModal } from "@/components/ApplyModal";
+import { ResumeNudge } from "@/components/ResumeNudge";
 
 export default function Home() {
   return (
@@ -23,6 +26,11 @@ export default function Home() {
       <Security />
       <CtaBanner />
       <Footer />
+
+      {/* landing-only overlays */}
+      <StickyPaymentBar />
+      <ApplyModal />
+      <ResumeNudge />
     </>
   );
 }

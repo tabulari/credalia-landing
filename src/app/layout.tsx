@@ -4,9 +4,6 @@ import { config } from "@/lib/config";
 import { StructuredData } from "@/components/StructuredData";
 import { SiteUiProvider } from "@/components/site-ui";
 import { SimulatorProvider } from "@/components/simulator-store";
-import { ApplyModal } from "@/components/ApplyModal";
-import { StickyPaymentBar } from "@/components/StickyPaymentBar";
-import { ResumeNudge } from "@/components/ResumeNudge";
 import { RevealController } from "@/components/RevealController";
 import "./globals.css";
 
@@ -100,12 +97,10 @@ export default function RootLayout({
         </noscript>
 
         <SiteUiProvider>
-          <SimulatorProvider>
-            {children}
-            <StickyPaymentBar />
-            <ApplyModal />
-            <ResumeNudge />
-          </SimulatorProvider>
+          {/* Landing-only overlays (sticky bar, apply modal, resume nudge) are
+              rendered by the landing page itself, not here, so other routes
+              (e.g. /legal) don't mount them. */}
+          <SimulatorProvider>{children}</SimulatorProvider>
         </SiteUiProvider>
 
         <RevealController />
