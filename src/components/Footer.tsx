@@ -1,107 +1,113 @@
-import Link from "next/link";
-import { config } from "@/lib/config";
-import { WhatsAppLink } from "./WhatsAppLink";
+import Link from 'next/link';
+import { config } from '@/lib/config';
+import { WhatsAppLink } from './WhatsAppLink';
 
 export function Footer() {
   return (
-    <footer className="footer">
-      <div className="wrap footer-grid">
-        <div>
-          <a className="brand" href="#top">
-            <span className="logo" aria-hidden="true">
+    <footer data-slot="footer" className="bg-navy-deep text-white">
+      <div className="mx-auto max-w-container px-6 py-14 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+        <div className="col-span-2 lg:col-span-1">
+          <a href="#top" className="flex items-center gap-2 mb-3">
+            <span aria-hidden="true">
               <svg width="38" height="27" viewBox="0 0 42 30">
                 <path d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z" fill="#1e9e55" />
                 <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#f2691c" />
               </svg>
             </span>
-            <span className="brand-name">CREDALIA</span>
+            <span className="text-lg font-extrabold tracking-wider">CREDALIA</span>
           </a>
-          <p className="footer-about">
+          <p className="text-sm text-white/60 mb-4">
             Plataforma de crédito digital simple, ágil y 100% en línea. Crédito
             claro, tasa simple, segura y en línea.
           </p>
-          <WhatsAppLink ctx="footer" className="footer-wa js-wa">
+          <WhatsAppLink
+            ctx="footer"
+            className="inline-flex items-center gap-2 text-sm text-green hover:text-green/80 transition-colors"
+          >
             <span className="wa-ico" aria-hidden="true" /> Escríbenos por WhatsApp
           </WhatsAppLink>
-          <p className="footer-reg">
+          <p className="text-xs text-white/50 mt-4">
             {config.regulatorVerified
-              ? "Vigilado por la Superintendencia Financiera de Colombia. Tratamos tus datos conforme a la Ley 1581 de 2012 (Habeas Data)."
-              : "Tratamos tus datos conforme a la Ley 1581 de 2012 (Habeas Data)."}
+              ? 'Vigilado por la Superintendencia Financiera de Colombia. Tratamos tus datos conforme a la Ley 1581 de 2012 (Habeas Data).'
+              : 'Tratamos tus datos conforme a la Ley 1581 de 2012 (Habeas Data).'}
           </p>
         </div>
-        <div className="footer-col">
-          <h5>Producto</h5>
-          <a href="#simula">Simula tu crédito</a>
-          <a href="#requisitos-band">Requisitos</a>
-          <a href="#seguridad">Seguridad</a>
-          <a href="#preguntas">Preguntas</a>
+
+        <div className="flex flex-col gap-2">
+          <h5 className="text-sm font-bold mb-1">Producto</h5>
+          <a href="#simula" className="text-sm text-white/70 hover:text-white transition-colors">Simula tu crédito</a>
+          <a href="#requisitos-band" className="text-sm text-white/70 hover:text-white transition-colors">Requisitos</a>
+          <a href="#seguridad" className="text-sm text-white/70 hover:text-white transition-colors">Seguridad</a>
+          <a href="#preguntas" className="text-sm text-white/70 hover:text-white transition-colors">Preguntas</a>
         </div>
-        <div className="footer-col">
-          <h5>Empresa</h5>
-          <Link href="/legal/terminos">Términos y condiciones</Link>
-          <Link href="/legal/privacidad">Privacidad</Link>
-          <a href="#seguridad">Seguridad</a>
+        <div className="flex flex-col gap-2">
+          <h5 className="text-sm font-bold mb-1">Empresa</h5>
+          <Link href="/legal/terminos" className="text-sm text-white/70 hover:text-white transition-colors">Términos y condiciones</Link>
+          <Link href="/legal/privacidad" className="text-sm text-white/70 hover:text-white transition-colors">Privacidad</Link>
+          <a href="#seguridad" className="text-sm text-white/70 hover:text-white transition-colors">Seguridad</a>
         </div>
-        <div className="footer-col">
-          <h5>Ayuda</h5>
-          <a href="#preguntas">Centro de ayuda</a>
-          <WhatsAppLink ctx="contact" className="js-wa">
-            Contacto
-          </WhatsAppLink>
-          <WhatsAppLink ctx="pqrs" className="js-wa">
-            PQRS
-          </WhatsAppLink>
+        <div className="flex flex-col gap-2">
+          <h5 className="text-sm font-bold mb-1">Ayuda</h5>
+          <a href="#preguntas" className="text-sm text-white/70 hover:text-white transition-colors">Centro de ayuda</a>
+          <WhatsAppLink ctx="contact" className="text-sm text-white/70 hover:text-white transition-colors">Contacto</WhatsAppLink>
+          <WhatsAppLink ctx="pqrs" className="text-sm text-white/70 hover:text-white transition-colors">PQRS</WhatsAppLink>
         </div>
-        <div className="footer-col">
-          <h5>Síguenos</h5>
-          <div className="socials">
-            <a href={config.social.facebook} target="_blank" rel="noopener" aria-label="Facebook">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff">
+        <div className="flex flex-col gap-2">
+          <h5 className="text-sm font-bold mb-1">Síguenos</h5>
+          <div className="flex gap-3">
+            <a href={config.social.facebook} target="_blank" rel="noopener" aria-label="Facebook" className="text-white/70 hover:text-white transition-colors">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M14 8 h2.5 V5 H14 c-2 0-3.3 1.3-3.3 3.4 V10 H8 v3 h2.7 v8 h3.3 v-8 H16 l.5-3 h-2.8 V8.8 C13.7 8.2 14 8 14 8Z" />
               </svg>
             </a>
-            <a href={config.social.instagram} target="_blank" rel="noopener" aria-label="Instagram">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8">
+            <a href={config.social.instagram} target="_blank" rel="noopener" aria-label="Instagram" className="text-white/70 hover:text-white transition-colors">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <rect x="3" y="3" width="18" height="18" rx="5" />
                 <circle cx="12" cy="12" r="4" />
-                <circle cx="17" cy="7" r="1.2" fill="#fff" stroke="none" />
+                <circle cx="17" cy="7" r="1.2" fill="currentColor" stroke="none" />
               </svg>
             </a>
-            <a href={config.social.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff">
+            <a href={config.social.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn" className="text-white/70 hover:text-white transition-colors">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M5 4 a1.8 1.8 0 1 0 0 3.6 A1.8 1.8 0 0 0 5 4Z M3.4 9 H6.6 V20 H3.4Z M9 9 h3 v1.5 c.5-.9 1.7-1.8 3.3-1.8 3 0 3.7 1.9 3.7 4.5 V20 h-3.2 v-5.2 c0-1.2-.4-2-1.5-2 -1 0-1.6.7-1.6 2 V20 H9Z" />
               </svg>
             </a>
-            <a href={config.social.youtube} target="_blank" rel="noopener" aria-label="YouTube">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff">
-                <path d="M22 8 a3 3 0 0 0-2.1-2.1C18 5.4 12 5.4 12 5.4 s-6 0-7.9.5 A3 3 0 0 0 2 8 a31 31 0 0 0 0 8 a3 3 0 0 0 2.1 2.1 c1.9.5 7.9.5 7.9.5 s6 0 7.9-.5 A3 3 0 0 0 22 16 a31 31 0 0 0 0-8Z M10 15 V9 l5 3 Z" fill="#fff" />
+            <a href={config.social.youtube} target="_blank" rel="noopener" aria-label="YouTube" className="text-white/70 hover:text-white transition-colors">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 8 a3 3 0 0 0-2.1-2.1C18 5.4 12 5.4 12 5.4 s-6 0-7.9.5 A3 3 0 0 0 2 8 a31 31 0 0 0 0 8 a3 3 0 0 0 2.1 2.1 c1.9.5 7.9.5 7.9.5 s6 0 7.9-.5 A3 3 0 0 0 22 16 a31 31 0 0 0 0-8Z M10 15 V9 l5 3 Z" />
               </svg>
             </a>
           </div>
         </div>
       </div>
-      <div className="wrap footer-identity">
-        <div className="fid-item">
-          <span className="fid-k">Razón social</span>
-          <span className="fid-v">{config.company.legalName}</span>
-        </div>
-        <div className="fid-item">
-          <span className="fid-k">NIT</span>
-          <span className="fid-v">{config.company.nit}</span>
-        </div>
-        <div className="fid-item">
-          <span className="fid-k">Domicilio</span>
-          <span className="fid-v">{config.company.address}</span>
-        </div>
-        <div className="fid-item">
-          <span className="fid-k">Atención al cliente</span>
-          <span className="fid-v">hola@credalia.co · Lun a Vie, 8:00–18:00</span>
+
+      <div className="mx-auto max-w-container px-6 py-6 border-t border-white/10 grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <span className="text-xs text-white/50 block">Razón social</span>
+            <span className="text-sm font-medium">{config.company.legalName}</span>
+          </div>
+          <div>
+            <span className="text-xs text-white/50 block">NIT</span>
+            <span className="text-sm font-medium">{config.company.nit}</span>
+          </div>
+          <div>
+            <span className="text-xs text-white/50 block">Domicilio</span>
+            <span className="text-sm font-medium">{config.company.address}</span>
+          </div>
+          <div>
+            <span className="text-xs text-white/50 block">Atención al cliente</span>
+            <span className="text-sm font-medium">hola@credalia.co · Lun a Vie, 8:00–18:00</span>
+          </div>
         </div>
       </div>
-      <div className="footer-bottom">
-        <span>© 2025 {config.company.legalName} Todos los derechos reservados.</span>
+
+      <div className="mx-auto max-w-container px-6 py-4 border-t border-white/10 flex flex-col sm:flex-row gap-2 justify-between">
+        <span className="text-xs text-white/50">
+          © {new Date().getFullYear()} {config.company.legalName} Todos los derechos reservados.
+        </span>
         {config.regulatorVerified && (
-          <span className="footer-bottom-reg">
+          <span className="text-xs text-white/50">
             Vigilado por la Superintendencia Financiera de Colombia.
           </span>
         )}

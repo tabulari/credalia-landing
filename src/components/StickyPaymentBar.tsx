@@ -5,23 +5,20 @@ import { fmtCOP } from '@/lib/credit';
 import { useSimulator } from './simulator-store';
 import { ScrollButton } from './ScrollButton';
 import { ApplyButton } from './ApplyButton';
+import { cn } from '@/lib/utils';
 
-/**
- * Sticky "tu cuota" bar (ported from solicitud.js). Slides up once the user
- * scrolls past the hero CTAs, but hides while the simulator card is on screen
- * (no need to duplicate it) and at the footer. Figures are synced live from the
- * store. Respects env(safe-area-inset-bottom) via CSS.
- */
 export function StickyPaymentBar() {
   const { sim } = useSimulator();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const heroCtas = document.querySelector('.hero-ctas');
+    const heroCtas = document.querySelector('[data-slot="hero-ctas"]');
     const simCard = document.getElementById('simulator');
-    const footer = document.querySelector('.footer');
+    const footer = document.querySelector('[data-slot="footer"]');
 
-    if (!('IntersectionObserver' in window)) {
+    const supportsIO = typeof IntersectionObserver !== 'undefined';
+
+    if (!supportsIO) {
       const onScroll = () => {
         const heroBottom = heroCtas
           ? heroCtas.getBoundingClientRect().bottom
@@ -94,31 +91,36 @@ export function StickyPaymentBar() {
     return () => document.body.classList.remove('has-payment-bar');
   }, [show]);
 
-  // When hidden (slid off-screen) the bar must leave the tab order and the a11y
-  // tree; `inert` does both, avoiding aria-hidden-with-focusable-children.
-  const hiddenProps = show
-    ? {}
-    : ({ inert: '' } as Record<string, string>);
-
   return (
     <div
-      className={`payment-bar${show ? ' show' : ''}`}
-      {...hiddenProps}
+      data-slot="payment-bar"
+      className={cn(
+        'fixed inset-x-0 bottom-0 z-50 flex items-center justify-center bg-white/97 backdrop-blur-md border-t border-border shadow-[0_-8px_24px_rgba(13,42,94,0.1)]',
+        'px-4 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))]',
+        show ? 'show' : 'translate-y-[130%]',
+      )}
+      inert={!show || undefined}
     >
-      <div className="payment-bar-inner">
-        <div className="payment-bar-info">
-          <span className="pb-label">Tu cuota estimada</span>
-          <span className="pb-value">
-            {`$${fmtCOP(sim.payment)}`}{' '}
-            <span id="pbUnit">{sim.unit}</span>
+      <div className="flex items-center gap-4 w-full max-w-[var(--maxw,1120px)]">
+        <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-2 shrink-0 min-w-0">
+          <span className="text-xs font-semibold text-muted-2 uppercase tracking-wide sm:normal-case sm:tracking-normal">
+            Tu cuota estimada
+          </span>
+          <span className="text-xl sm:text-2xl font-extrabold text-navy whitespace-nowrap tracking-tight">
+            {`$${fmtCOP(sim.payment)}`}
+            <span className="text-xs font-semibold text-muted-2 ml-1">{sim.unit}</span>
           </span>
         </div>
-        <span className="pb-detail">{`$${fmtCOP(sim.amount)} · ${sim.term} meses`}</span>
-        <div className="payment-bar-actions">
+        <span className="hidden sm:block text-sm font-semibold text-muted pl-4 border-l border-border whitespace-nowrap">
+          {`$${fmtCOP(sim.amount)} · ${sim.term} meses`}
+        </span>
+        <div className="flex items-center gap-3 ml-auto shrink-0">
           <ScrollButton
-            className="btn btn-ghost pb-adjust"
+            variant="ghost"
+            size="sm"
             target="#simula"
             aria-label="Ajustar tu simulación"
+            className="text-navy"
           >
             <svg
               width="17"
@@ -133,13 +135,13 @@ export function StickyPaymentBar() {
               <path d="M12 20 h9" />
               <path d="M16.5 3.5 a2.1 2.1 0 0 1 3 3 L7 19 l-4 1 1-4 Z" />
             </svg>
-            Ajustar
+            <span className="hidden sm:inline">Ajustar</span>
           </ScrollButton>
           <ApplyButton
             origin="simulator"
-            className="btn btn-navy pb-btn"
+            variant="default"
+            size="sm"
             disabled={!sim.valid}
-            aria-disabled={!sim.valid}
           >
             Solicitar crédito
           </ApplyButton>

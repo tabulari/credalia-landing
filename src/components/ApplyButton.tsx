@@ -1,33 +1,38 @@
-"use client";
+'use client';
 
-import { useSiteUi, type ApplyOrigin } from "./site-ui";
+import { useSiteUi, type ApplyOrigin } from './site-ui';
+import { Button, type buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import type { VariantProps } from 'class-variance-authority';
 
-/**
- * Every "Solicitar crédito" CTA (the prototype's `data-action="solicitud"`).
- * Opens the application modal via the shared seam. `origin="simulator"` is the
- * high-intent path that shows the confirmation chip (wired in Slice 4).
- */
 export function ApplyButton({
-  origin = "direct",
+  origin = 'direct',
   className,
   children,
   onClick,
+  variant,
+  size,
   ...rest
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+}: Omit<React.ComponentProps<typeof Button>, 'onClick'> & {
   origin?: ApplyOrigin;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  variant?: VariantProps<typeof buttonVariants>['variant'];
+  size?: VariantProps<typeof buttonVariants>['size'];
 }) {
   const { openApply } = useSiteUi();
   return (
-    <button
+    <Button
       type="button"
-      className={className}
+      variant={variant}
+      size={size}
+      className={cn(className)}
       onClick={(e) => {
-        onClick?.(e);
+        onClick?.(e as React.MouseEvent<HTMLButtonElement>);
         openApply(origin);
       }}
       {...rest}
     >
       {children}
-    </button>
+    </Button>
   );
 }

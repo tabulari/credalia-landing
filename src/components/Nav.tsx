@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ApplyButton } from './ApplyButton';
+import { cn } from '@/lib/utils';
 
 const LINKS = [
   { href: '#como-funciona', label: 'Cómo funciona' },
@@ -15,20 +16,18 @@ export function Nav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="nav" id="top">
-      <div className="wrap nav-inner">
+    <header
+      id="top"
+      className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-border"
+    >
+      <div className="mx-auto max-w-container px-6 flex items-center justify-between h-16">
         <a
-          className="brand"
           href="#top"
           aria-label="Credalia — inicio"
+          className="flex items-center gap-2.5"
         >
-          <span className="logo" aria-hidden="true">
-            <svg
-              width="42"
-              height="30"
-              viewBox="0 0 42 30"
-              fill="none"
-            >
+          <span aria-hidden="true">
+            <svg width="42" height="30" viewBox="0 0 42 30" fill="none">
               <path
                 d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z"
                 fill="#1e9e55"
@@ -39,34 +38,45 @@ export function Nav() {
               />
             </svg>
           </span>
-          <span className="brand-name">CREDALIA</span>
+          <span className="text-lg font-extrabold tracking-wider text-navy">
+            CREDALIA
+          </span>
         </a>
-        <nav className="nav-links">
+
+        <nav className="hidden md:flex items-center gap-7">
           {LINKS.map((l) => (
-            <a key={l.href} href={l.href}>
+            <a
+              key={l.href}
+              href={l.href}
+              className="text-sm font-semibold text-foreground/80 hover:text-navy transition-colors"
+            >
               {l.label}
             </a>
           ))}
         </nav>
-        <div className="nav-cta">
-          <ApplyButton className="btn btn-outline">
+
+        <div className="flex items-center gap-3">
+          <ApplyButton
+            variant="outline"
+            size="sm"
+            className="hidden md:inline-flex"
+          >
             Solicitar crédito
           </ApplyButton>
           <button
-            className="nav-toggle"
-            id="navToggle"
             type="button"
             aria-label="Abrir menú"
             aria-expanded={open}
             aria-controls="navMobile"
             onClick={() => setOpen((o) => !o)}
+            className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg text-navy hover:bg-muted"
           >
             <svg
               width="26"
               height="26"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#0d2a5e"
+              stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
             >
@@ -75,23 +85,32 @@ export function Nav() {
           </button>
         </div>
       </div>
+
       <div
-        className={`nav-mobile${open ? ' open' : ''}`}
         id="navMobile"
+        className={cn(
+          'md:hidden overflow-hidden transition-all',
+          open ? 'max-h-96 border-t border-border' : 'max-h-0',
+        )}
         onClick={(e) => {
-          // close after picking a link/button (matches prototype)
-          if ((e.target as HTMLElement).closest('a, .btn'))
+          if ((e.target as HTMLElement).closest('a, button'))
             setOpen(false);
         }}
       >
-        {LINKS.map((l) => (
-          <a key={l.href} href={l.href}>
-            {l.label}
-          </a>
-        ))}
-        <ApplyButton className="btn btn-outline btn-block">
-          Solicitar crédito
-        </ApplyButton>
+        <div className="px-6 py-4 flex flex-col gap-3">
+          {LINKS.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="text-sm font-semibold text-foreground/80 py-1.5"
+            >
+              {l.label}
+            </a>
+          ))}
+          <ApplyButton variant="outline" size="default" className="w-full">
+            Solicitar crédito
+          </ApplyButton>
+        </div>
       </div>
     </header>
   );

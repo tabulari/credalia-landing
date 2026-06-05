@@ -1,15 +1,8 @@
 import type { Config } from "tailwindcss";
 
-/**
- * Theme tokens are transcribed verbatim from the design handoff README
- * ("Design Tokens" section). Greens are intentionally split into a non-text
- * fill (`green`) and an AA-compliant text variant (`green-ink`). `muted-2`
- * was darkened from #8693a6 to #677085 to pass AA — do not revert.
- */
 const config: Config = {
   content: ["./src/**/*.{ts,tsx,mdx}"],
   theme: {
-    // Container: max-width 1120px, padding 0 24px (README "Spacing / shape").
     container: {
       center: true,
       padding: "24px",
@@ -17,21 +10,26 @@ const config: Config = {
     },
     extend: {
       colors: {
-        navy: "#0d2a5e",
-        "navy-deep": "#0a2150",
-        "navy-ink": "#11213f",
+        // ShadCN semantic tokens → brand colors
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        card: { DEFAULT: "var(--card)", foreground: "var(--card-foreground)" },
+        popover: { DEFAULT: "var(--popover)", foreground: "var(--popover-foreground)" },
+        primary: { DEFAULT: "var(--primary)", foreground: "var(--primary-foreground)" },
+        secondary: { DEFAULT: "var(--secondary)", foreground: "var(--secondary-foreground)" },
+        muted: { DEFAULT: "var(--muted)", foreground: "var(--muted-foreground)" },
+        accent: { DEFAULT: "var(--accent)", foreground: "var(--accent-foreground)" },
+        destructive: { DEFAULT: "var(--destructive)", foreground: "var(--destructive-foreground)" },
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+        // Brand tokens
+        navy: { DEFAULT: "#0d2a5e", deep: "#0a2150", ink: "#11213f" },
         orange: "#f5601b",
-        green: "#1e9e55",
-        "green-ink": "#15793f",
-        "green-soft": "#e8f2dd",
-        "green-soft-ink": "#137038", // active chip text on green-soft
-        "green-tint": "#e7faf4",
+        green: { DEFAULT: "#1e9e55", ink: "#15793f", soft: "#e8f2dd", "soft-ink": "#137038", tint: "#e7faf4" },
         ink: "#14213d",
-        muted: "#5d6b82",
         "muted-2": "#677085",
-        bg: "#ffffff",
         "bg-soft": "#f7f9fa",
-        border: "#e5e9ee",
         "border-2": "#eef1f4",
         error: "#d4483b",
         "hint-ink": "#9a4a16",
@@ -61,7 +59,6 @@ const config: Config = {
       maxWidth: {
         container: "1120px",
       },
-      // README breakpoints (max-width semantics handled in CSS where needed).
       screens: {
         sm: "600px",
         md: "720px",

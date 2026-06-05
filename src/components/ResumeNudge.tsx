@@ -1,15 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useSiteUi } from "./site-ui";
-import { track } from "@/lib/analytics";
+import { useEffect, useState } from 'react';
+import { useSiteUi } from './site-ui';
+import { track } from '@/lib/analytics';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
-/**
- * Resume nudge (ported from solicitud.js). A bottom-center toast that appears
- * after "Editar monto" returns the user to the simulator, offering to reopen the
- * in-progress application (draft restored). Slides up via a `.show` class
- * (setTimeout, not rAF, so it works in background tabs).
- */
 export function ResumeNudge() {
   const { resumeNudgeOpen, openApply, hideResumeNudge } = useSiteUi();
   const [mounted, setMounted] = useState(false);
@@ -25,41 +21,46 @@ export function ResumeNudge() {
     setShow(false);
     const t = setTimeout(() => setMounted(false), 360);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resumeNudgeOpen]);
+  }, [resumeNudgeOpen, mounted]);
 
   if (!mounted) return null;
 
   return (
-    <div className={`resume-nudge${show ? " show" : ""}`}>
-      <div className="resume-nudge-inner">
-        <span className="resume-nudge-ic" aria-hidden="true">
+    <div className="fixed inset-x-0 bottom-0 z-70 flex justify-center px-4 pb-[calc(18px+env(safe-area-inset-bottom))] pointer-events-none">
+      <div
+        className={cn(
+          'pointer-events-auto flex items-center gap-4 w-full max-w-[560px] bg-white border border-border rounded-2xl shadow-lg p-3.5 pl-4.5 transition-transform duration-300 ease-out',
+          show ? 'translate-y-0' : 'translate-y-[140%]',
+        )}
+      >
+        <span className="shrink-0 flex items-center justify-center w-10 h-10 rounded-[11px] bg-green-tint text-green" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M3 12 a9 9 0 1 0 9-9 a9 9 0 0 0-6.4 2.6 L3 8" />
             <path d="M3 4 v4 h4" />
           </svg>
         </span>
-        <div className="resume-nudge-txt">
-          <strong>Tienes una solicitud sin terminar</strong>
-          <span>Ajusta tu monto y continúa donde quedaste.</span>
+        <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+          <strong className="text-sm font-extrabold text-navy-ink">Tienes una solicitud sin terminar</strong>
+          <span className="text-xs text-muted">Ajusta tu monto y continúa donde quedaste.</span>
         </div>
-        <button
-          className="btn btn-navy resume-nudge-btn"
-          type="button"
+        <Button
+          variant="default"
+          size="sm"
+          className="shrink-0"
           onClick={() => {
-            track("apply_resume");
+            track('apply_resume');
             hideResumeNudge();
-            openApply("resume");
+            openApply('resume');
           }}
         >
-          Volver a tu solicitud <span className="btn-arrow">→</span>
-        </button>
+          Volver a tu solicitud →
+        </Button>
         <button
-          className="resume-nudge-close"
           type="button"
           aria-label="Descartar"
+          className="shrink-0 flex items-center justify-center w-8 h-8 rounded-lg text-muted-2 hover:bg-bg-soft hover:text-navy transition-colors"
           onClick={() => {
-            track("apply_resume_dismiss");
+            track('apply_resume_dismiss');
             hideResumeNudge();
           }}
         >
