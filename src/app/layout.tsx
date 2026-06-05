@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import { config } from "@/lib/config";
 import { SiteUiProvider } from "@/components/site-ui";
 import { SimulatorProvider } from "@/components/simulator-store";
+import { ApplyModal } from "@/components/ApplyModal";
 import { RevealController } from "@/components/RevealController";
 import "./globals.css";
 
@@ -57,8 +58,8 @@ export default function RootLayout({
         <SiteUiProvider>
           <SimulatorProvider>
             {children}
-            {/* overlays mount here in later slices: ApplyModal (4),
-                StickyPaymentBar + ResumeNudge (5) */}
+            <ApplyModal />
+            {/* StickyPaymentBar + ResumeNudge mount here in Slice 5 */}
           </SimulatorProvider>
         </SiteUiProvider>
 
