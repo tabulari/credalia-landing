@@ -13,6 +13,7 @@ import {
 } from "./simulator-store";
 import { ChipRadioGroup } from "./ChipRadioGroup";
 import { ApplyButton } from "./ApplyButton";
+import { track } from "@/lib/analytics";
 
 const TERMS = [3, 6, 9, 12, 18, 24].map((n) => ({
   value: n,
@@ -39,6 +40,14 @@ export function Simulator() {
   const [inputText, setInputText] = useState(() => fmtCOP(amount));
   const [hint, setHint] = useState("");
 
+  // analytics: fire once on the user's first interaction with the simulator
+  const interacted = useRef(false);
+  const markInteract = (control: string) => {
+    if (interacted.current) return;
+    interacted.current = true;
+    track("sim_interact", { control });
+  };
+
   // ---- exact-payment flash (no digit rolling); respects reduced-motion ----
   const paymentRef = useRef<HTMLDivElement>(null);
   const prevPayment = useRef(sim.payment);
@@ -59,6 +68,7 @@ export function Simulator() {
 
   // ---- monto input: mask, empty/out-of-range hint, compute with clamped value ----
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    markInteract("amount");
     const digits = e.target.value.replace(/\D/g, "");
     setInputText(digits ? fmtCOP(parseInt(digits, 10)) : "");
     if (!digits) {
@@ -82,6 +92,7 @@ export function Simulator() {
   };
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    markInteract("slider");
     setHint("");
     const v = Number(e.target.value);
     setAmount(v, true);
@@ -201,7 +212,10 @@ export function Simulator() {
           checkBefore
           options={TERMS}
           value={term}
-          onChange={setTerm}
+          onChange={(v) => {
+            markInteract("term");
+            setTerm(v);
+          }}
         />
       </div>
 
@@ -215,7 +229,10 @@ export function Simulator() {
           ariaLabelledBy="freqLabel"
           options={FREQUENCIES}
           value={frequency}
-          onChange={setFrequency}
+          onChange={(v) => {
+            markInteract("frequency");
+            setFrequency(v);
+          }}
         />
       </div>
 

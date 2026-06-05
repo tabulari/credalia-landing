@@ -10,6 +10,7 @@ import {
   validateField,
   type FieldName,
 } from "@/lib/application-schema";
+import { track } from "@/lib/analytics";
 import { useSiteUi } from "./site-ui";
 import { useSimulator } from "./simulator-store";
 
@@ -47,7 +48,7 @@ const tasaLabel = (s: Simulation) =>
   fmtPct(s.periodRate, 1) + (s.frequency === "biweekly" ? "% q." : "% m. v.");
 
 export function ApplyModal() {
-  const { applyOpen, applyOrigin, closeApply } = useSiteUi();
+  const { applyOpen, applyOrigin, closeApply, showResumeNudge } = useSiteUi();
   const { sim } = useSimulator();
 
   // latest sim, read at the moment of open to freeze a snapshot
@@ -228,6 +229,11 @@ export function ApplyModal() {
   /* ---- submit ---- */
   const submit = useCallback(async () => {
     setSubmitStatus("pending");
+    track("apply_submit", {
+      amount: frozen?.amount,
+      term: frozen?.term,
+      frequency: frozen?.frequency,
+    });
     const payload = { ...values, consent, terms: frozen };
     try {
       const forceError =
@@ -247,19 +253,23 @@ export function ApplyModal() {
       setRadicado(data.radicado);
       clearDraft();
       setSubmitStatus("success");
+      track("apply_submit_success", { radicado: data.radicado });
     } catch {
       // draft is preserved on error
       setSubmitStatus("error");
+      track("apply_submit_error");
     }
   }, [values, consent, frozen, clearDraft]);
 
   const onNext = () => {
     if (!validateStep(step)) return;
+    track("apply_step_complete", { step });
     if (step === 3) submit();
     else setStep((s) => s + 1);
   };
 
   const editMonto = () => {
+    track("apply_edit_monto", { step });
     closeApply();
     setTimeout(() => {
       const el = document.getElementById("simula");
@@ -269,7 +279,7 @@ export function ApplyModal() {
           behavior: "smooth",
         });
       document.getElementById("amountInput")?.focus();
-      // resume nudge is wired in Slice 5
+      showResumeNudge();
     }, 300);
   };
 
