@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { fmtCOP } from "@/lib/credit";
-import { useSimulator } from "./simulator-store";
-import { ScrollButton } from "./ScrollButton";
-import { ApplyButton } from "./ApplyButton";
+import { useEffect, useState } from 'react';
+import { fmtCOP } from '@/lib/credit';
+import { useSimulator } from './simulator-store';
+import { ScrollButton } from './ScrollButton';
+import { ApplyButton } from './ApplyButton';
 
 /**
  * Sticky "tu cuota" bar (ported from solicitud.js). Slides up once the user
@@ -17,21 +17,46 @@ export function StickyPaymentBar() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    if (!("IntersectionObserver" in window)) return;
-    const heroCtas = document.querySelector(".hero-ctas");
-    const simCard = document.getElementById("simulator");
-    const footer = document.querySelector(".footer");
+    const heroCtas = document.querySelector('.hero-ctas');
+    const simCard = document.getElementById('simulator');
+    const footer = document.querySelector('.footer');
+
+    if (!('IntersectionObserver' in window)) {
+      const onScroll = () => {
+        const heroBottom = heroCtas
+          ? heroCtas.getBoundingClientRect().bottom
+          : -1;
+        const pastHero = heroCtas
+          ? heroBottom < 0
+          : window.scrollY > 240;
+        const simRect = simCard?.getBoundingClientRect();
+        const simVisible = simRect
+          ? simRect.top < window.innerHeight * 0.75 &&
+            simRect.bottom > 0
+          : false;
+        const footerRect = footer?.getBoundingClientRect();
+        const atFooter = footerRect
+          ? footerRect.top < window.innerHeight
+          : false;
+        setShow(pastHero && !simVisible && !atFooter);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+      return () => window.removeEventListener('scroll', onScroll);
+    }
 
     let pastHero = false;
     let simVisible = false;
     let atFooter = false;
-    const update = () => setShow(pastHero && !simVisible && !atFooter);
+    const update = () =>
+      setShow(pastHero && !simVisible && !atFooter);
 
     const observers: IntersectionObserver[] = [];
     if (heroCtas) {
       const o = new IntersectionObserver(
         ([en]) => {
-          pastHero = !en.isIntersecting && en.boundingClientRect.top < 0;
+          pastHero =
+            !en.isIntersecting && en.boundingClientRect.top < 0;
           update();
         },
         { threshold: 0 },
@@ -65,21 +90,27 @@ export function StickyPaymentBar() {
   }, []);
 
   useEffect(() => {
-    document.body.classList.toggle("has-payment-bar", show);
-    return () => document.body.classList.remove("has-payment-bar");
+    document.body.classList.toggle('has-payment-bar', show);
+    return () => document.body.classList.remove('has-payment-bar');
   }, [show]);
 
   // When hidden (slid off-screen) the bar must leave the tab order and the a11y
   // tree; `inert` does both, avoiding aria-hidden-with-focusable-children.
-  const hiddenProps = show ? {} : ({ inert: "" } as Record<string, string>);
+  const hiddenProps = show
+    ? {}
+    : ({ inert: '' } as Record<string, string>);
 
   return (
-    <div className={`payment-bar${show ? " show" : ""}`} {...hiddenProps}>
+    <div
+      className={`payment-bar${show ? ' show' : ''}`}
+      {...hiddenProps}
+    >
       <div className="payment-bar-inner">
         <div className="payment-bar-info">
           <span className="pb-label">Tu cuota estimada</span>
           <span className="pb-value">
-            {`$${fmtCOP(sim.payment)}`} <span id="pbUnit">{sim.unit}</span>
+            {`$${fmtCOP(sim.payment)}`}{' '}
+            <span id="pbUnit">{sim.unit}</span>
           </span>
         </div>
         <span className="pb-detail">{`$${fmtCOP(sim.amount)} · ${sim.term} meses`}</span>
@@ -89,13 +120,27 @@ export function StickyPaymentBar() {
             target="#simula"
             aria-label="Ajustar tu simulación"
           >
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M12 20 h9" />
               <path d="M16.5 3.5 a2.1 2.1 0 0 1 3 3 L7 19 l-4 1 1-4 Z" />
             </svg>
             Ajustar
           </ScrollButton>
-          <ApplyButton origin="simulator" className="btn btn-navy pb-btn">
+          <ApplyButton
+            origin="simulator"
+            className="btn btn-navy pb-btn"
+            disabled={!sim.valid}
+            aria-disabled={!sim.valid}
+          >
             Solicitar crédito
           </ApplyButton>
         </div>
