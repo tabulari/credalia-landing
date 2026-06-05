@@ -4,6 +4,8 @@ import { config } from "@/lib/config";
 import { SiteUiProvider } from "@/components/site-ui";
 import { SimulatorProvider } from "@/components/simulator-store";
 import { ApplyModal } from "@/components/ApplyModal";
+import { StickyPaymentBar } from "@/components/StickyPaymentBar";
+import { ResumeNudge } from "@/components/ResumeNudge";
 import { RevealController } from "@/components/RevealController";
 import "./globals.css";
 
@@ -58,8 +60,9 @@ export default function RootLayout({
         <SiteUiProvider>
           <SimulatorProvider>
             {children}
+            <StickyPaymentBar />
             <ApplyModal />
-            {/* StickyPaymentBar + ResumeNudge mount here in Slice 5 */}
+            <ResumeNudge />
           </SimulatorProvider>
         </SiteUiProvider>
 
