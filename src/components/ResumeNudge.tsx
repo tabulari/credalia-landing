@@ -5,6 +5,7 @@ import { useSiteUi } from './site-ui';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { ReturnArrowIcon, CloseIcon } from './icons';
 
 export function ResumeNudge() {
   const { resumeNudgeOpen, openApply, hideResumeNudge } = useSiteUi();
@@ -28,16 +29,15 @@ export function ResumeNudge() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-70 flex justify-center px-4 pb-[calc(18px+env(safe-area-inset-bottom))] pointer-events-none">
       <div
+        role="status"
+        aria-live="polite"
         className={cn(
           'pointer-events-auto flex items-center gap-4 w-full max-w-[560px] bg-white border border-border rounded-2xl shadow-lg p-3.5 pl-4.5 transition-transform duration-300 ease-out',
           show ? 'translate-y-0' : 'translate-y-[140%]',
         )}
       >
         <span className="shrink-0 flex items-center justify-center w-10 h-10 rounded-[11px] bg-green-tint text-green" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 12 a9 9 0 1 0 9-9 a9 9 0 0 0-6.4 2.6 L3 8" />
-            <path d="M3 4 v4 h4" />
-          </svg>
+          <ReturnArrowIcon size={20} />
         </span>
         <div className="flex flex-col gap-0.5 min-w-0 flex-1">
           <strong className="text-sm font-extrabold text-navy-ink">Tienes una solicitud sin terminar</strong>
@@ -53,7 +53,7 @@ export function ResumeNudge() {
             openApply('resume');
           }}
         >
-          Volver a tu solicitud →
+          Volver a tu solicitud <span aria-hidden="true">→</span>
         </Button>
         <button
           type="button"
@@ -64,9 +64,7 @@ export function ResumeNudge() {
             hideResumeNudge();
           }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M6 6 l12 12 M18 6 l-12 12" />
-          </svg>
+          <CloseIcon size={18} />
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { VerifiedCircleIcon } from "./icons";
 
 /**
  * Accessible chip radiogroup (ported from `app.js` setupRadioGroup). Implements
@@ -10,18 +11,8 @@ import { useRef } from "react";
  */
 
 const Check = () => (
-  <span className="ck">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="#1e9e55">
-      <circle cx="12" cy="12" r="10" />
-      <path
-        d="M8 12 l2.5 2.5 L16 9"
-        stroke="#fff"
-        strokeWidth="2.4"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+  <span className="ck" aria-hidden="true">
+    <VerifiedCircleIcon size={16} />
   </span>
 );
 

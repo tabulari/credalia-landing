@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { config } from '@/lib/config';
 import { WhatsAppLink } from './WhatsAppLink';
+import { CredaliaLogo } from './icons';
 
 export function Footer() {
   return (
@@ -9,17 +10,12 @@ export function Footer() {
         <div className="col-span-2 lg:col-span-1">
           <a href="#top" className="flex items-center gap-2 mb-3">
             <span aria-hidden="true">
-              <svg width="44" height="27" viewBox="0 0 56 30">
-                <path d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z" fill="#1e9e55" />
-                <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#f5601b" />
-                <path d="M30 2 L39 2 L48 15 L39 28 L30 28 L39 15 Z" fill="#0d2a5e" />
-              </svg>
+              <CredaliaLogo size={44} />
             </span>
-            <span className="text-lg font-extrabold tracking-wider">CREDALIA</span>
+            <span className="text-lg font-extrabold tracking-wider">            {config.brandName.toUpperCase()}</span>
           </a>
           <p className="text-sm text-white/60 mb-4">
-            Plataforma de crédito digital simple, ágil y 100% en línea. Crédito
-            claro, tasa simple, segura y en línea.
+            Crédito digital simple, ágil y seguro. Tasa clara, 100% en línea y sin papeles.
           </p>
           <WhatsAppLink
             ctx="footer"
@@ -29,7 +25,7 @@ export function Footer() {
           </WhatsAppLink>
           <p className="text-xs text-white/50 mt-4">
             {config.regulatorVerified
-              ? 'Vigilado por la Superintendencia Financiera de Colombia. Tratamos tus datos conforme a la Ley 1581 de 2012 (Habeas Data).'
+              ? `Vigilado por la ${config.regulatorName}. Tratamos tus datos conforme a la Ley 1581 de 2012 (Habeas Data).`
               : 'Tratamos tus datos conforme a la Ley 1581 de 2012 (Habeas Data).'}
           </p>
         </div>
@@ -54,8 +50,8 @@ export function Footer() {
           <WhatsAppLink ctx="pqrs" className="text-sm text-white/70 hover:text-white transition-colors">PQRS</WhatsAppLink>
         </div>
         <div className="flex flex-col gap-2">
-          <h5 className="text-sm font-bold mb-1">Síguenos</h5>
-          <div className="flex gap-3">
+          <h5 id="social-heading" className="text-sm font-bold mb-1">Síguenos</h5>
+          <div className="flex gap-3" aria-labelledby="social-heading">
             <a href={config.social.facebook} target="_blank" rel="noopener" aria-label="Facebook" className="text-white/70 hover:text-white transition-colors">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M14 8 h2.5 V5 H14 c-2 0-3.3 1.3-3.3 3.4 V10 H8 v3 h2.7 v8 h3.3 v-8 H16 l.5-3 h-2.8 V8.8 C13.7 8.2 14 8 14 8Z" />
@@ -98,7 +94,7 @@ export function Footer() {
           </div>
           <div>
             <span className="text-xs text-white/50 block">Atención al cliente</span>
-            <span className="text-sm font-medium">hola@credalia.co · Lun a Vie, 8:00–18:00</span>
+            <span className="text-sm font-medium">{config.contactEmail} · {config.contactHours}</span>
           </div>
         </div>
       </div>
@@ -109,7 +105,7 @@ export function Footer() {
         </span>
         {config.regulatorVerified && (
           <span className="text-xs text-white/50">
-            Vigilado por la Superintendencia Financiera de Colombia.
+            Vigilado por la {config.regulatorName}.
           </span>
         )}
       </div>

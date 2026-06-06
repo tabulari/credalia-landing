@@ -1,47 +1,26 @@
 import Link from 'next/link';
 import { config } from '@/lib/config';
+import { LockKeyholeIcon, DocumentIcon, ShieldCheckIcon, SearchCheckIcon } from './icons';
 
 const CARDS = [
   {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="4" y="10" width="16" height="11" rx="2" />
-        <path d="M8 10 V7 a4 4 0 0 1 8 0 v3" />
-        <circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none" />
-      </svg>
-    ),
+    icon: <LockKeyholeIcon size={26} className="text-green" />,
     title: 'Datos cifrados',
     text: 'Tu información viaja y se almacena cifrada, protegida de extremo a extremo.',
   },
   {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14 3 H7 a2 2 0 0 0-2 2 v14 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 V8 Z M14 3 v5 h5" />
-        <path d="M9 13 h6 M9 16.5 h4" />
-      </svg>
-    ),
+    icon: <DocumentIcon size={26} className="text-green" />,
     title: 'Tratamiento conforme a la ley',
     text: 'Tratamos tus datos personales según la Ley 1581 de 2012 (Habeas Data).',
   },
   {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2 L20 5 V11 C20 16.5 16.5 20.5 12 22 C7.5 20.5 4 16.5 4 11 V5 Z" />
-        <path d="M9 12 l2 2 4-4.5" />
-      </svg>
-    ),
+    icon: <ShieldCheckIcon size={26} className="text-green" />,
     title: 'Entidad vigilada',
-    text: 'Operamos bajo la supervisión de la Superintendencia Financiera de Colombia.',
+    text: `Operamos bajo la supervisión de la ${config.regulatorName}.`,
     regulatorOnly: true,
   },
   {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="11" cy="11" r="7" />
-        <path d="M21 21 l-4.3-4.3" />
-        <path d="M8.5 11 l1.8 1.8 3.2-3.4" />
-      </svg>
-    ),
+    icon: <SearchCheckIcon size={26} className="text-green" />,
     title: 'Simular no afecta tu historial',
     text: 'La simulación es informativa y no genera consultas en centrales de riesgo.',
   },
@@ -49,11 +28,11 @@ const CARDS = [
 
 export function Security() {
   return (
-    <section id="seguridad" className="py-16 lg:py-24">
+    <section id="seguridad" aria-labelledby="sec-heading" className="py-16 lg:py-24">
       <div className="mx-auto max-w-container px-6">
         <div className="reveal text-center mb-10">
           <p className="text-sm font-semibold text-green-ink mb-2">Seguridad</p>
-          <h2 className="text-2xl lg:text-3xl font-extrabold text-navy mb-3">
+          <h2 id="sec-heading" className="text-2xl lg:text-3xl font-extrabold text-navy mb-3">
             Tu información está protegida en cada paso.
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
