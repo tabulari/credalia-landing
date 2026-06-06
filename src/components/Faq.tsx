@@ -13,17 +13,17 @@ export function Faq() {
   const col1 = FAQS.map((_, i) => i).filter((i) => i % 2 === 1);
 
   return (
-    <section id="preguntas" className="py-16 lg:py-24">
+    <section id="preguntas" aria-labelledby="faq-heading" className="py-16 lg:py-24">
       <div className="mx-auto max-w-container px-6">
         <div className="reveal text-center mb-10">
           <p className="text-sm font-bold text-muted-2 mb-1.5">
             Preguntas frecuentes
           </p>
-          <h2 className="text-2xl lg:text-3xl font-extrabold text-navy">
+          <h2 id="faq-heading" className="text-2xl lg:text-3xl font-extrabold text-navy">
             Resolvemos tus dudas, para que decidas con confianza.
           </h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-0 reveal d1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-0 reveal d1" role="group" aria-labelledby="faq-heading">
           <Accordion>
             {col0.map((i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border-b border-border">

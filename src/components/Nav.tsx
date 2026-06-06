@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ApplyButton } from './ApplyButton';
 import { cn } from '@/lib/utils';
+import { config } from '@/lib/config';
+import { CredaliaLogo, HamburgerIcon } from './icons';
 
 const LINKS = [
   { href: '#como-funciona', label: 'Cómo funciona' },
@@ -14,6 +16,26 @@ const LINKS = [
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (open) {
+      firstLinkRef.current?.focus();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
 
   return (
     <header
@@ -23,18 +45,14 @@ export function Nav() {
       <div className="mx-auto max-w-container px-6 flex items-center justify-between h-16">
         <a
           href="#top"
-          aria-label="Credalia — inicio"
+          aria-label={`${config.brandName} — inicio`}
           className="flex items-center gap-2.5"
         >
           <span aria-hidden="true">
-            <svg width="48" height="30" viewBox="0 0 56 30" fill="none">
-              <path d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z" fill="#1e9e55" />
-              <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#f5601b" />
-              <path d="M30 2 L39 2 L48 15 L39 28 L30 28 L39 15 Z" fill="#0d2a5e" />
-            </svg>
+            <CredaliaLogo size={48} />
           </span>
           <span className="text-lg font-extrabold tracking-wider text-navy">
-            CREDALIA
+            {config.brandName.toUpperCase()}
           </span>
         </a>
 
@@ -59,6 +77,7 @@ export function Nav() {
             Iniciar solicitud
           </ApplyButton>
           <button
+            ref={toggleRef}
             type="button"
             aria-label="Abrir menú"
             aria-expanded={open}
@@ -66,17 +85,7 @@ export function Nav() {
             onClick={() => setOpen((o) => !o)}
             className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg text-navy hover:bg-muted"
           >
-            <svg
-              width="26"
-              height="26"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="M4 7 h16 M4 12 h16 M4 17 h16" />
-            </svg>
+            <HamburgerIcon size={26} />
           </button>
         </div>
       </div>
@@ -93,10 +102,11 @@ export function Nav() {
         }}
       >
         <div className="px-6 py-4 flex flex-col gap-3">
-          {LINKS.map((l) => (
+          {LINKS.map((l, i) => (
             <a
               key={l.href}
               href={l.href}
+              ref={i === 0 ? firstLinkRef : undefined}
               className="text-sm font-semibold text-foreground/80 py-1.5"
             >
               {l.label}

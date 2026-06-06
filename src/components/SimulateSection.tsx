@@ -1,43 +1,24 @@
 import { WhatsAppLink } from './WhatsAppLink';
+import { SearchCheckIcon, ShieldCheckIcon, DocumentCheckIcon, LockIcon } from './icons';
 
 const FEATURES = [
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e9e55" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="11" cy="11" r="7" />
-        <path d="M21 21 l-4.3-4.3" />
-      </svg>
-    ),
+    icon: <SearchCheckIcon size={22} className="text-green" />,
     title: 'Conoce tu cuota antes de aplicar',
     text: 'Simula y conoce tu cuota y tasa antes de iniciar la solicitud.',
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e9e55" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2 L20 5 V11 C20 16.5 16.5 20.5 12 22 C7.5 20.5 4 16.5 4 11 V5 Z" />
-        <path d="M9 12 l2 2 4-4.5" />
-      </svg>
-    ),
+    icon: <ShieldCheckIcon size={22} className="text-green" />,
     title: '100% en línea, sin papeles',
     text: 'Todo el proceso es digital, sin visitas ni filas presenciales.',
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e9e55" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M7 3 H14 L19 8 V21 H7 Z M14 3 V8 H19" />
-        <path d="M9.5 14 l1.6 1.6 3.4-3.4" />
-      </svg>
-    ),
+    icon: <DocumentCheckIcon size={22} className="text-green" />,
     title: 'Simular no afecta tu historial',
     text: 'La simulación no genera consultas en centrales de riesgo.',
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e9e55" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="4" y="10" width="16" height="11" rx="2" />
-        <path d="M8 10 V7 a4 4 0 0 1 8 0 v3" />
-      </svg>
-    ),
+    icon: <LockIcon size={22} className="text-green" />,
     title: 'Desembolso directo a tu cuenta',
     text: 'Si te aprueban, recibes el dinero en tu cuenta bancaria.',
   },
@@ -45,13 +26,12 @@ const FEATURES = [
 
 export function SimulateSection({ children }: { children: React.ReactNode }) {
   return (
-    <section id="simula" className="py-16 lg:py-24 bg-bg-soft">
+    <section id="simula" tabIndex={-1} aria-labelledby="simula-heading" className="py-16 lg:py-24 bg-bg-soft">
       <div className="mx-auto max-w-container px-6">
-        <h2 className="text-2xl lg:text-3xl font-extrabold text-navy mb-8">
+        <h2 id="simula-heading" className="text-2xl lg:text-3xl font-extrabold text-navy mb-8">
           Simula tu crédito
         </h2>
-        <div className="grid lg:grid-cols-[380px_1fr] gap-8 items-start">
-          {/* Features card */}
+        <div className="grid stack:grid-cols-[380px_1fr] gap-8 items-start">
           <div className="reveal bg-card border border-border rounded-[22px] p-7 shadow-sm flex flex-col gap-5">
             {FEATURES.map((f) => (
               <div key={f.title} className="flex gap-3.5 items-start">
@@ -66,7 +46,6 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
             ))}
           </div>
 
-          {/* Simulator + WhatsApp link */}
           <div className="flex flex-col gap-4">
             {children}
             <WhatsAppLink

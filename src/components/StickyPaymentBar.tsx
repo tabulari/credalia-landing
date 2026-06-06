@@ -6,6 +6,7 @@ import { useSimulator } from './simulator-store';
 import { ScrollButton } from './ScrollButton';
 import { ApplyButton } from './ApplyButton';
 import { cn } from '@/lib/utils';
+import { PencilIcon } from './icons';
 
 export function StickyPaymentBar() {
   const { sim } = useSimulator();
@@ -19,23 +20,29 @@ export function StickyPaymentBar() {
     const supportsIO = typeof IntersectionObserver !== 'undefined';
 
     if (!supportsIO) {
+      let ticking = false;
       const onScroll = () => {
-        const heroBottom = heroCtas
-          ? heroCtas.getBoundingClientRect().bottom
-          : -1;
-        const pastHero = heroCtas
-          ? heroBottom < 0
-          : window.scrollY > 240;
-        const simRect = simCard?.getBoundingClientRect();
-        const simVisible = simRect
-          ? simRect.top < window.innerHeight * 0.75 &&
-            simRect.bottom > 0
-          : false;
-        const footerRect = footer?.getBoundingClientRect();
-        const atFooter = footerRect
-          ? footerRect.top < window.innerHeight
-          : false;
-        setShow(pastHero && !simVisible && !atFooter);
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const heroBottom = heroCtas
+            ? heroCtas.getBoundingClientRect().bottom
+            : -1;
+          const pastHero = heroCtas
+            ? heroBottom < 0
+            : window.scrollY > 240;
+          const simRect = simCard?.getBoundingClientRect();
+          const simVisible = simRect
+            ? simRect.top < window.innerHeight * 0.75 &&
+              simRect.bottom > 0
+            : false;
+          const footerRect = footer?.getBoundingClientRect();
+          const atFooter = footerRect
+            ? footerRect.top < window.innerHeight
+            : false;
+          setShow(pastHero && !simVisible && !atFooter);
+          ticking = false;
+        });
       };
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
@@ -101,6 +108,9 @@ export function StickyPaymentBar() {
       )}
       inert={!show || undefined}
     >
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {`Tu cuota estimada: $${fmtCOP(sim.payment)} ${sim.unit}. Monto: $${fmtCOP(sim.amount)}, plazo: ${sim.term} meses.`}
+      </div>
       <div className="flex items-center gap-4 w-full max-w-[var(--maxw,1120px)]">
         <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-2 shrink-0 min-w-0">
           <span className="text-xs font-semibold text-muted-2 uppercase tracking-wide sm:normal-case sm:tracking-normal">
@@ -122,19 +132,7 @@ export function StickyPaymentBar() {
             aria-label="Ajustar tu simulación"
             className="text-navy"
           >
-            <svg
-              width="17"
-              height="17"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 20 h9" />
-              <path d="M16.5 3.5 a2.1 2.1 0 0 1 3 3 L7 19 l-4 1 1-4 Z" />
-            </svg>
+            <PencilIcon size={17} />
             <span className="hidden sm:inline">Ajustar</span>
           </ScrollButton>
           <ApplyButton
