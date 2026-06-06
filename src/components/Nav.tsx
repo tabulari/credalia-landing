@@ -61,7 +61,7 @@ export function Nav() {
             <a
               key={l.href}
               href={l.href}
-              className="text-sm font-semibold text-foreground/80 hover:text-navy transition-colors relative after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:w-0 after:bg-navy after:transition-all after:duration-200 hover:after:w-full"
+              className="text-sm font-semibold text-foreground/80 hover:text-navy transition-colors relative after:content-[''] after:absolute after:bottom-px after:left-0 after:h-0.5 after:w-0 after:bg-navy after:transition-all after:duration-200 hover:after:w-full"
             >
               {l.label}
             </a>

@@ -64,7 +64,7 @@ export function HowItWorks() {
       });
     }
 
-    if (lineRef.current && !reduceMotion) {
+    if (lineRef.current) {
       gsap.fromTo(lineRef.current,
         { scaleX: 0 },
         {
@@ -94,10 +94,10 @@ export function HowItWorks() {
         <div className="relative">
           <div
             ref={lineRef}
-            className="hidden xl:block absolute top-5 left-[5%] right-[5%] h-[2px] bg-green/30 origin-left"
+            className="hidden xl:block absolute top-5 left-[5%] right-[5%] h-0.5 bg-green/30 origin-left"
             aria-hidden="true"
           />
-          <ol className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 xl:gap-6">
+          <ol className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {STEPS.map((s, i) => (
               <li key={i} data-hiw="step" className="flex flex-col gap-3 group xl:items-center xl:text-center xl:pt-8">
                 <div className="flex items-center gap-2.5 text-navy xl:flex-col xl:gap-1">

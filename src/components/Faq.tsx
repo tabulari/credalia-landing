@@ -42,7 +42,7 @@ export function Faq() {
           <Accordion className="min-w-0">
             {col0.map((i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border-b border-border">
-                <AccordionTrigger className="py-5 text-[15px] font-semibold text-navy-ink hover:no-underline text-left">
+                <AccordionTrigger className="py-5 text-base font-semibold text-navy-ink hover:no-underline text-left">
                   {FAQS[i].q}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-muted-foreground">
@@ -54,7 +54,7 @@ export function Faq() {
           <Accordion className="min-w-0 pt-0 lg:pt-0">
             {col1.map((i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border-b border-border">
-                <AccordionTrigger className="py-5 text-[15px] font-semibold text-navy-ink hover:no-underline">
+                <AccordionTrigger className="py-5 text-base font-semibold text-navy-ink hover:no-underline text-left">
                   {FAQS[i].q}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-muted-foreground">
