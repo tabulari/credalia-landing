@@ -58,10 +58,10 @@ export function Simulator() {
   }, { scope: simRef });
 
   return (
-    <div ref={simRef} id="simulator" className="bg-card border border-green/20 border-t-2 border-t-green/40 rounded-[22px] p-8 shadow-[0_0_0_1px_rgba(30,158,85,0.08),0_6px_24px_rgba(13,42,94,0.07)]">
-      <div className="flex items-center justify-between mb-[26px] flex-wrap gap-2.5">
-        <h3 className="text-xl font-extrabold text-navy">Simulador de crédito</h3>
-        <span className="border-l-2 border-green pl-2.5 text-xs font-semibold text-green-ink">
+    <div ref={simRef} id="simulator" className="bg-card border border-green/20 border-t-[3px] border-t-green/40 rounded-xl p-8 shadow-[0_0_0_1px_rgba(30,158,85,0.08),0_6px_24px_rgba(13,42,94,0.07)]">
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-2.5">
+        <h3 className="text-xl font-bold text-navy">Simulador de crédito</h3>
+        <span className="border-l-2 border-green pl-3 text-xs font-semibold text-green-ink">
           <ShieldCheckIcon size={14} className="text-green mr-1 inline -mt-0.5" />
           Sin afectar tu historial
         </span>
@@ -83,7 +83,7 @@ export function Simulator() {
           Elige el plazo <HelpIconLocal />
         </p>
         <ChipRadioGroup
-          className="flex gap-[10px]"
+          className="flex gap-2.5"
           ariaLabelledBy="plazoLabel"
           checkBefore
           options={TERMS}

@@ -42,7 +42,7 @@ export function Nav() {
       id="top"
       className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg shadow-[0_1px_0_rgba(13,42,94,0.05)]"
     >
-      <div className="mx-auto max-w-container px-6 flex items-center justify-between h-16">
+      <div className="mx-auto max-w-container px-6 flex items-center justify-between h-[68px]">
         <a
           href="#top"
           aria-label={`${config.brandName} — inicio`}
@@ -51,12 +51,12 @@ export function Nav() {
           <span aria-hidden="true">
             <CredaliaLogo size={48} />
           </span>
-          <span className="text-lg font-extrabold tracking-[0.15em] text-navy">
+          <span className="text-lg font-extrabold tracking-[0.08em] text-navy">
             {config.brandName.toUpperCase()}
           </span>
         </a>
 
-        <nav className="hidden md:flex items-center gap-7">
+        <nav className="hidden md:flex items-center gap-6">
           {LINKS.map((l) => (
             <a
               key={l.href}
@@ -94,7 +94,7 @@ export function Nav() {
         id="navMobile"
         className={cn(
           'md:hidden overflow-hidden transition-all',
-          open ? 'max-h-96 border-t border-border' : 'max-h-0',
+          open ? 'max-h-[600px] border-t border-border' : 'max-h-0',
         )}
         onClick={(e) => {
           if ((e.target as HTMLElement).closest('a, button'))
@@ -107,13 +107,13 @@ export function Nav() {
               key={l.href}
               href={l.href}
               ref={i === 0 ? firstLinkRef : undefined}
-              className="text-sm font-semibold text-foreground/80 py-1.5"
+              className="text-sm font-semibold text-foreground/80 py-3"
             >
               {l.label}
             </a>
           ))}
-          <ApplyButton variant="outline" size="default" className="w-full">
-            Solicitar crédito
+          <ApplyButton variant="default" size="default" className="w-full">
+            Iniciar solicitud
           </ApplyButton>
         </div>
       </div>

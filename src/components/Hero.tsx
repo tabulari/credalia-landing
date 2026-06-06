@@ -64,7 +64,7 @@ export function Hero() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} aria-labelledby="hero-heading" className="py-16 lg:py-20 overflow-hidden bg-[radial-gradient(ellipse_at_20%_50%,rgba(13,42,94,0.05),transparent_60%)]">
+    <section ref={containerRef} aria-labelledby="hero-heading" className="py-16 lg:py-24 overflow-hidden bg-[radial-gradient(ellipse_at_20%_50%,rgba(13,42,94,0.05),transparent_60%)]">
       <div className="mx-auto max-w-container px-6 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
         <div className="flex flex-col gap-6 relative z-10">
           <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
@@ -74,11 +74,11 @@ export function Hero() {
           <h1 ref={h1Ref} id="hero-heading" className="text-5xl lg:text-7xl font-display tracking-tight text-navy leading-tight">
             Crédito digital hasta{' '}
           </h1>
-          <span data-hero="amount" className="block text-6xl lg:text-8xl tracking-tighter font-extrabold text-orange leading-none">{`$${fmtCOP(config.simulator.amountMax).replace(',00','')}`}</span>
-          <p data-hero="subhead" className="text-lg font-light text-muted-foreground">
+          <span data-hero="amount" className="block text-6xl lg:text-8xl tracking-tight font-extrabold text-orange leading-none">{`$${fmtCOP(config.simulator.amountMax).replace(',00','')}`}</span>
+          <p data-hero="subhead" className="text-lg font-normal text-muted-foreground">
             Respuesta en minutos. Tasa clara. Sin papeles.
           </p>
-          <div data-hero="ctas" data-slot="hero-ctas" className="flex flex-wrap gap-3">
+          <div data-hero="ctas" data-slot="hero-ctas" className="flex flex-wrap gap-4">
             <ScrollButton variant="default" size="lg" target="#simula">
               Simular mi crédito <span aria-hidden="true">→</span>
             </ScrollButton>
@@ -89,7 +89,7 @@ export function Hero() {
           <WhatsAppLink
             data-hero="whatsapp"
             ctx="hero"
-            className="inline-flex items-center gap-2 text-sm text-green-ink hover:text-green-ink/80 transition-colors mt-1"
+            className="inline-flex items-center gap-2 text-sm text-green-ink hover:text-green-ink/80 transition-colors mt-3"
           >
             <span className="wa-ico" aria-hidden="true" />
             <span>
@@ -97,12 +97,12 @@ export function Hero() {
             </span>
           </WhatsAppLink>
           {config.regulatorVerified && (
-            <div className="flex flex-wrap gap-4 mt-2">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-2">
+            <div className="flex flex-wrap gap-4 mt-4">
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-2">
                 <ShieldCheckIcon size={20} className="text-muted-2" />
                 Vigilados por <b>{config.regulatorShortName}</b>
               </span>
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-2">
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-2">
                 <LockIcon size={20} className="text-muted-2" />
                 Datos <b>cifrados</b>
               </span>
@@ -111,7 +111,7 @@ export function Hero() {
         </div>
 
         <div data-hero="phone" className="relative hidden lg:flex items-center justify-center">
-          <div className="absolute w-[400px] h-[400px] bg-green/[0.06] rounded-full blur-[80px] pointer-events-none" aria-hidden="true" />
+          <div className="absolute w-[400px] h-[400px] bg-green/[0.08] rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
             <svg viewBox="0 0 560 560" fill="none" className="w-full opacity-50">
               <circle cx="280" cy="280" r="120" stroke="var(--green)" strokeWidth="1.5" opacity="0.15" />
@@ -131,7 +131,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div data-hero="trust-card" className="lg:hidden bg-card border border-border rounded-[22px] p-6 shadow-sm -mt-8 relative z-10">
+        <div data-hero="trust-card" className="lg:hidden bg-card border border-border rounded-xl p-6 shadow-sm mt-4 relative z-10">
           <div className="flex items-center gap-3 mb-4">
             <CredaliaLogo size={36} />
             <div>
@@ -139,7 +139,7 @@ export function Hero() {
               <p className="text-xs text-muted-2">Crédito digital 100% en línea</p>
             </div>
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <div data-hero="trust-item" className="flex items-center gap-2.5">
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-tint text-green shrink-0">
                 <ClockIcon size={18} />

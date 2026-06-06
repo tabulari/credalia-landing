@@ -28,14 +28,17 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
   return (
     <section id="simula" tabIndex={-1} aria-labelledby="simula-heading" className="py-16 lg:py-24 bg-bg-soft">
       <div className="mx-auto max-w-container px-6">
-        <h2 id="simula-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy mb-8">
-          Simula tu crédito
-        </h2>
+        <div className="mb-12 lg:mb-14">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Simulador</p>
+          <h2 id="simula-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
+            Simula tu crédito
+          </h2>
+        </div>
         <div className="grid stack:grid-cols-[380px_1fr] gap-8 items-start">
-          <div className="bg-card border border-border rounded-[22px] p-7 shadow-sm flex flex-col gap-5">
+          <div className="bg-card border border-border rounded-xl p-8 shadow-sm flex flex-col gap-5">
             {FEATURES.map((f) => (
               <div key={f.title} className="flex gap-3.5 items-start">
-                <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-[10px] bg-green-tint">
+                <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-md bg-green-tint">
                   {f.icon}
                 </div>
                 <div>
@@ -50,7 +53,7 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
             {children}
             <WhatsAppLink
               ctx="hero"
-              className="flex items-center justify-center gap-2 text-sm font-semibold text-green-ink hover:text-green-ink/80 transition-colors"
+              className="flex items-center justify-center gap-2.5 text-sm font-semibold text-green-ink hover:text-green-ink/80 transition-colors"
             >
               <span className="wa-ico" aria-hidden="true" />
               Hablar por WhatsApp

@@ -57,7 +57,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
   return (
     <>
       <p className="text-sm font-semibold text-navy mb-2">Monto solicitado</p>
-      <div className="flex items-center gap-3 border bg-white rounded-[12px] px-[18px] py-[14px] [border-width:1.5px] border-border">
+      <div className="flex items-center gap-3 border bg-white rounded-md px-5 py-3.5 border-2 border-border">
         <button
           type="button"
           aria-label="Disminuir monto"
@@ -68,7 +68,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           <MinusIcon size={18} />
         </button>
         <div className="flex items-center gap-1 flex-1 min-w-0">
-          <span className="text-[26px] font-extrabold text-navy leading-none">$</span>
+          <span className="text-2xl font-extrabold text-navy leading-none">$</span>
           <input
             ref={inputRef}
             type="text"
@@ -78,7 +78,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
             aria-describedby="amountHint"
             onChange={handleInputChange}
             onBlur={handleInputBlur}
-            className="flex-1 min-w-0 text-[26px] font-extrabold text-navy outline-none bg-transparent"
+            className="flex-1 min-w-0 text-2xl font-extrabold text-navy outline-none bg-transparent"
           />
         </div>
         <button
@@ -86,7 +86,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           aria-label="Aumentar monto"
           onClick={() => bump(1)}
           disabled={amount >= AMOUNT_MAX}
-          className="flex-shrink-0 flex items-center justify-center w-[38px] h-[38px] rounded-[10px] border border-border text-navy hover:bg-bg-soft disabled:opacity-40 transition-colors"
+          className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-border text-navy hover:bg-bg-soft disabled:opacity-40 transition-colors"
         >
           <PlusIcon size={18} />
         </button>
@@ -115,7 +115,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           aria-valuenow={amount}
           aria-valuetext={`$${fmtCOP(amount)} COP`}
           onChange={handleSliderChange}
-          className="w-full h-[6px] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[18px] [&::-webkit-slider-thumb]:h-[18px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-green [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-[18px] [&::-moz-range-thumb]:h-[18px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-green [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+          className="w-full h-2 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[18px] [&::-webkit-slider-thumb]:h-[18px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-green [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-[18px] [&::-moz-range-thumb]:h-[18px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-green [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
           style={{ background: `linear-gradient(to right, var(--green) 0% ${pct}%, var(--border) ${pct}% 100%)` }}
         />
         <div className="flex justify-between mt-1.5">
