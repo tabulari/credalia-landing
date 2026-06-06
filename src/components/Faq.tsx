@@ -19,7 +19,7 @@ export function Faq() {
           <p className="text-sm font-bold text-muted-2 mb-1.5">
             Preguntas frecuentes
           </p>
-          <h2 id="faq-heading" className="text-2xl lg:text-3xl font-extrabold text-navy">
+          <h2 id="faq-heading" className="text-3xl lg:text-4xl font-display tracking-tight text-navy">
             Resolvemos tus dudas, para que decidas con confianza.
           </h2>
         </div>

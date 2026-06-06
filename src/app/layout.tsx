@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, DM_Serif_Display } from "next/font/google";
 import Script from "next/script";
 import { config } from "@/lib/config";
 import { fmtCOP } from "@/lib/credit";
@@ -9,11 +9,17 @@ import { SimulatorProvider } from "@/components/simulator-store";
 import { RevealController } from "@/components/RevealController";
 import "./globals.css";
 
-// Plus Jakarta Sans — chosen to match the mockup (README "Typography").
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-jakarta",
+  display: "swap",
+});
+
+const display = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -70,7 +76,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className={jakarta.variable} suppressHydrationWarning>
+    <html lang="es" className={`${jakarta.variable} ${display.variable}`} suppressHydrationWarning>
       <body>
         {/* Set the JS flag before paint so `.reveal` content is never stranded
             hidden without JS (matches the prototype's inline head script). */}

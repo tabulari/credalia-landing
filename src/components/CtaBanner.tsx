@@ -15,7 +15,7 @@ export function CtaBanner() {
               </svg>
             </span>
             <div>
-              <h2 id="cta-heading" className="text-2xl font-extrabold">
+              <h2 id="cta-heading" className="text-2xl font-display tracking-tight">
                 Empieza tu solicitud con <span className="text-orange">claridad.</span>
               </h2>
               <p className="text-white/70 mt-1">

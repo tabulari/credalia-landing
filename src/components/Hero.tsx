@@ -15,11 +15,11 @@ export function Hero() {
             <ShieldCheckIcon size={20} className="text-green-ink" />
             Crédito 100% en línea
           </span>
-          <h1 id="hero-heading" className="text-4xl lg:text-5xl font-extrabold text-navy leading-tight">
+          <h1 id="hero-heading" className="text-5xl lg:text-7xl font-display tracking-tight text-navy leading-tight">
             Crédito digital hasta{' '}
-            <span className="text-orange">{`$${fmtCOP(config.simulator.amountMax).replace(',00','')}`}</span>
+            <span className="block text-6xl lg:text-8xl tracking-tighter font-extrabold text-orange">{`$${fmtCOP(config.simulator.amountMax).replace(',00','')}`}</span>
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg font-light text-muted-foreground">
             Respuesta en minutos. Tasa clara. Sin papeles.
           </p>
           <div data-slot="hero-ctas" className="flex flex-wrap gap-3">

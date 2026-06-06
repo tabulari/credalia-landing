@@ -28,7 +28,7 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
   return (
     <section id="simula" tabIndex={-1} aria-labelledby="simula-heading" className="py-16 lg:py-24 bg-bg-soft">
       <div className="mx-auto max-w-container px-6">
-        <h2 id="simula-heading" className="text-2xl lg:text-3xl font-extrabold text-navy mb-8">
+        <h2 id="simula-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy mb-8">
           Simula tu crédito
         </h2>
         <div className="grid stack:grid-cols-[380px_1fr] gap-8 items-start">

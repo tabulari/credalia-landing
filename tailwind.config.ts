@@ -43,6 +43,12 @@ const config: Config = {
           "system-ui",
           "sans-serif",
         ],
+        display: [
+          "var(--font-display)",
+          "DM Serif Display",
+          "Georgia",
+          "serif",
+        ],
       },
       borderRadius: {
         sm: "8px",

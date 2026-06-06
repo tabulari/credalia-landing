@@ -51,7 +51,7 @@ export function Nav() {
           <span aria-hidden="true">
             <CredaliaLogo size={48} />
           </span>
-          <span className="text-lg font-extrabold tracking-wider text-navy">
+          <span className="text-lg font-extrabold tracking-[0.15em] text-navy">
             {config.brandName.toUpperCase()}
           </span>
         </a>

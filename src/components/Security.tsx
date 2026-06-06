@@ -31,8 +31,8 @@ export function Security() {
     <section id="seguridad" aria-labelledby="sec-heading" className="py-16 lg:py-24">
       <div className="mx-auto max-w-container px-6">
         <div className="reveal text-center mb-10">
-          <p className="text-sm font-semibold text-green-ink mb-2">Seguridad</p>
-          <h2 id="sec-heading" className="text-2xl lg:text-3xl font-extrabold text-navy mb-3">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Seguridad</p>
+          <h2 id="sec-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy mb-3">
             Tu información está protegida en cada paso.
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">

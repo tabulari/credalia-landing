@@ -41,7 +41,7 @@ export function SimulationResults({ sim, frequency }: { sim: SimData; frequency:
       <div className="flex gap-6">
         <div className="flex-shrink-0">
           <p className="text-xs font-semibold text-muted-2 mb-1">Tu cuota estimada</p>
-          <div ref={paymentRef} className="font-extrabold text-navy leading-none" style={{ letterSpacing: '-0.02em' }}>
+          <div ref={paymentRef} className="font-extrabold text-navy leading-none" style={{ letterSpacing: '-0.03em' }}>
             <div className="text-[22px]">$</div>
             <div className="text-[42px]">{fmtCOP(sim.payment)} <span className="text-base font-semibold text-muted-2">{sim.unit}</span></div>
           </div>

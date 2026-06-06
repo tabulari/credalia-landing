@@ -33,8 +33,8 @@ export function HowItWorks() {
     <section id="como-funciona" aria-labelledby="hiw-heading" className="py-16 lg:py-24 bg-bg-soft">
       <div className="mx-auto max-w-container px-6">
         <div className="reveal mb-10">
-          <p className="text-sm font-semibold text-green-ink mb-2">Cómo funciona</p>
-          <h2 id="hiw-heading" className="text-2xl lg:text-3xl font-extrabold text-navy">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Cómo funciona</p>
+          <h2 id="hiw-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
             Un proceso claro en 5 pasos.
           </h2>
         </div>

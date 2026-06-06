@@ -24,7 +24,7 @@ export function Requirements() {
     <section id="requisitos-band" aria-labelledby="req-heading" className="py-16 lg:py-24">
       <div className="mx-auto max-w-container px-6">
         <div className="reveal mb-10 text-center">
-          <h2 id="req-heading" className="text-2xl lg:text-3xl font-extrabold text-navy mb-3">
+          <h2 id="req-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy mb-3">
             ¿Qué necesitas para aplicar?
           </h2>
           <p className="text-muted-foreground">
