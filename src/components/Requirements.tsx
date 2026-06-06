@@ -8,24 +8,44 @@ import { PersonIcon, IdCardIcon, CreditCardIcon, DocumentIcon, CheckIcon } from 
 
 const REQS = [
   {
-    icon: <PersonIcon size={22} className="text-green" />,
+    icon: <PersonIcon size={20} className="text-green" />,
     label: 'Ser mayor de edad',
     detail: 'Solo necesitas ser mayor de 18 años para comenzar tu solicitud.',
     featured: true,
   },
   {
-    icon: <IdCardIcon size={22} className="text-green" />,
+    icon: <IdCardIcon size={20} className="text-green" />,
     label: 'Cédula colombiana',
+    detail: 'Cédula de ciudadanía vigente, photographic por ambos lados.',
   },
   {
-    icon: <CreditCardIcon size={22} className="text-green" />,
-    label: 'Una cuenta bancaria a tu nombre',
+    icon: <CreditCardIcon size={20} className="text-green" />,
+    label: 'Cuenta bancaria a tu nombre',
+    detail: 'Cualquier banco en Colombia. El desembolso llega directo.',
   },
   {
-    icon: <DocumentIcon size={22} className="text-green" />,
+    icon: <DocumentIcon size={20} className="text-green" />,
     label: 'Un soporte de ingresos',
+    detail: 'Certificación laboral, extracto bancario o declaracion de renta.',
   },
 ];
+
+function AnimatedCheck() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 shrink-0" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" stroke="var(--green)" strokeWidth="1.5" className="opacity-30" />
+      <path
+        d="M8 12 l2.5 2.5 L16 9"
+        stroke="var(--green)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        data-req="checkmark"
+        style={{ strokeDasharray: 14, strokeDashoffset: 14 }}
+      />
+    </svg>
+  );
+}
 
 export function Requirements() {
   const containerRef = useRef<HTMLElement>(null);
@@ -34,23 +54,35 @@ export function Requirements() {
 
   useGSAP(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
 
     const heading = containerRef.current?.querySelector('[data-req="heading"]');
-    const cards = containerRef.current?.querySelectorAll('[data-req="card"]');
+    const items = containerRef.current?.querySelectorAll('[data-req="item"]');
+    const checkmarks = containerRef.current?.querySelectorAll('[data-req="checkmark"]');
 
     if (heading) {
       gsap.from(heading, { y: 20, autoAlpha: 0, duration: 0.6, ease: 'power2.out',
         scrollTrigger: { trigger: heading, start: 'top 85%' } });
     }
-    if (cards && cards.length) {
-      gsap.from(cards, {
-        y: 30,
+    if (items && items.length) {
+      gsap.from(items, {
+        x: -30,
         autoAlpha: 0,
-        stagger: 0.1,
+        stagger: 0.12,
         duration: 0.6,
         ease: 'power2.out',
         scrollTrigger: { trigger: containerRef.current, start: 'top 80%' },
+      });
+    }
+
+    if (checkmarks && checkmarks.length) {
+      checkmarks.forEach((cm, i) => {
+        gsap.to(cm, {
+          strokeDashoffset: 0,
+          duration: reduceMotion ? 0 : 0.5,
+          delay: reduceMotion ? 0 : 0.3 + i * 0.15,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: containerRef.current, start: 'top 80%' },
+        });
       });
     }
 
@@ -96,30 +128,39 @@ export function Requirements() {
             Requisitos simples. Si cumples con esto, puedes solicitar tu crédito.
           </p>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <div className="max-w-2xl mx-auto flex flex-col gap-3">
           {REQS.map((r) => (
             <div
               key={r.label}
-              data-req="card"
+              data-req="item"
               className={cn(
-                'flex flex-col items-center gap-4 p-6 rounded-xl border bg-card text-center hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 relative overflow-hidden',
-                r.featured ? 'lg:col-span-2 border-green/30 bg-green-soft' : 'border-border',
+                'flex items-start gap-4 p-5 rounded-xl border transition-all duration-300 relative overflow-hidden',
+                r.featured
+                  ? 'border-green/30 bg-green-soft'
+                  : 'border-border bg-card hover:-translate-y-0.5 hover:shadow-md',
               )}
             >
               {r.featured && (
                 <div ref={accentRef} className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-green to-green/0 origin-left" aria-hidden="true" />
               )}
-              <span className="flex items-center justify-center w-12 h-12 rounded-full bg-green-tint text-green">
+              <span className="flex items-center justify-center w-10 h-10 rounded-full bg-green-tint text-green shrink-0 mt-0.5">
                 {r.icon}
               </span>
-              <span className="text-sm font-semibold text-foreground">{r.label}</span>
-              {r.featured && r.detail && (
-                <p className="text-sm text-muted-foreground mt-0.5">{r.detail}</p>
-              )}
+              <div className="flex-1 min-w-0">
+                <span className="text-sm font-semibold text-foreground">{r.label}</span>
+                {r.detail && (
+                  <p className="text-sm text-muted-foreground mt-0.5">{r.detail}</p>
+                )}
+              </div>
+              <div className="shrink-0 mt-1">
+                <AnimatedCheck />
+              </div>
             </div>
           ))}
         </div>
-        <div className="mt-6 text-center">
+
+        <div className="mt-8 text-center">
           <span data-req="counter" className={cn(
             'inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-4 py-2 transition-opacity duration-500',
             countDone ? 'opacity-100' : 'opacity-80',
