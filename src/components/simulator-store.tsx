@@ -12,18 +12,21 @@ import {
   type Frequency,
   type Simulation,
 } from "@/lib/credit";
+import { config } from "@/lib/config";
 
 /**
  * Shared simulator store (ported from the prototype's window.Credalia bridge).
  * `useSimulator()` is the single source of truth read by the Simulator island,
  * the sticky payment bar, the apply modal (which freezes a snapshot on open),
  * the resume nudge, and the WhatsApp links.
+ *
+ * All numeric params come from config (env-driven).
  */
 
-export const AMOUNT_MIN = 50000;
-export const AMOUNT_MAX = 1000000;
-export const AMOUNT_STEP = 10000; // slider granularity
-export const AMOUNT_STEP_BIG = 50000; // ± stepper jump
+export const AMOUNT_MIN = config.simulator.amountMin;
+export const AMOUNT_MAX = config.simulator.amountMax;
+export const AMOUNT_STEP = config.simulator.amountStep;
+export const AMOUNT_STEP_BIG = config.simulator.amountStepBig;
 
 export const clampAmount = (v: number): number =>
   Math.max(AMOUNT_MIN, Math.min(AMOUNT_MAX, v));
@@ -45,8 +48,8 @@ interface SimulatorStore {
 const SimulatorContext = createContext<SimulatorStore | null>(null);
 
 export function SimulatorProvider({ children }: { children: React.ReactNode }) {
-  const [amount, setAmountState] = useState(500000);
-  const [term, setTerm] = useState(12);
+  const [amount, setAmountState] = useState(config.simulator.defaultAmount);
+  const [term, setTerm] = useState(config.simulator.defaultTerm);
   const [frequency, setFrequency] = useState<Frequency>("monthly");
 
   const setAmount = useCallback((value: number, round = true) => {
