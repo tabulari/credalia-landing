@@ -28,7 +28,7 @@ export function Faq() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} id="preguntas" aria-labelledby="faq-heading" className="py-16 lg:py-24">
+    <section ref={containerRef} id="preguntas" aria-labelledby="faq-heading" className="py-16 lg:py-24 relative overflow-hidden deco-circle">
       <div className="mx-auto max-w-container px-6">
         <div data-faq="heading" className="text-center mb-10">
           <p className="text-sm font-bold text-muted-2 mb-1.5">

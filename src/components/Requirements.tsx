@@ -52,7 +52,7 @@ export function Requirements() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} id="requisitos-band" aria-labelledby="req-heading" className="py-16 lg:py-24">
+    <section ref={containerRef} id="requisitos-band" aria-labelledby="req-heading" className="py-16 lg:py-24 relative overflow-hidden deco-diamond">
       <div className="mx-auto max-w-container px-6">
         <div data-req="heading" className="mb-10 text-center">
           <h2 id="req-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy mb-3">
