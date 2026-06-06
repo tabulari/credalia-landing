@@ -38,11 +38,11 @@ export function Faq() {
             Resolvemos tus dudas, para que decidas con confianza.
           </h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 lg:gap-x-12 gap-y-6 lg:gap-y-0" role="group" aria-labelledby="faq-heading">
-          <Accordion>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 lg:gap-x-12 gap-y-6 lg:gap-y-0 overflow-hidden" role="group" aria-labelledby="faq-heading">
+          <Accordion className="min-w-0">
             {col0.map((i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border-b border-border">
-                <AccordionTrigger className="py-5 text-[15px] font-semibold text-navy-ink hover:no-underline">
+                <AccordionTrigger className="py-5 text-[15px] font-semibold text-navy-ink hover:no-underline text-left">
                   {FAQS[i].q}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-muted-foreground">
@@ -51,7 +51,7 @@ export function Faq() {
               </AccordionItem>
             ))}
           </Accordion>
-          <Accordion>
+          <Accordion className="min-w-0 pt-0 lg:pt-0">
             {col1.map((i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border-b border-border">
                 <AccordionTrigger className="py-5 text-[15px] font-semibold text-navy-ink hover:no-underline">

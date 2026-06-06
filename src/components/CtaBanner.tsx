@@ -24,7 +24,7 @@ export function CtaBanner() {
               </p>
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center lg:flex-nowrap gap-4">
             <ScrollButton variant="white" size="default" target="#simula">
               Simular mi crédito <span aria-hidden="true">→</span>
             </ScrollButton>
