@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import { config } from "@/lib/config";
+import { fmtCOP } from "@/lib/credit";
 import { StructuredData } from "@/components/StructuredData";
 import { SiteUiProvider } from "@/components/site-ui";
 import { SimulatorProvider } from "@/components/simulator-store";
@@ -15,28 +17,31 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const MAX_AMOUNT_DISPLAY = `$${fmtCOP(config.simulator.amountMax).replace(',00','')}`;
 const DESCRIPTION =
-  "Crédito digital en Colombia hasta $1.000.000. Respuesta en minutos, tasa clara y sin papeles. Simula tu crédito sin afectar tu historial y solicita 100% en línea.";
-const OG_TITLE = "Credalia — Crédito digital hasta $1.000.000";
+  `Crédito digital en Colombia hasta ${MAX_AMOUNT_DISPLAY}. Respuesta en minutos, tasa clara y sin papeles. Simula tu crédito sin afectar tu historial y solicita 100% en línea.`;
+const OG_TITLE = `${config.brandName} — Crédito digital hasta ${MAX_AMOUNT_DISPLAY}`;
 
 // metadataBase makes OG/canonical URLs absolute (⚠️ NEXT_PUBLIC_SITE_URL must be
 // the real domain or WhatsApp/social previews break).
 export const metadata: Metadata = {
   metadataBase: new URL(config.siteUrl),
-  title: "Credalia — Crédito digital 100% en línea",
+  title: `${config.brandName} — Crédito digital 100% en línea`,
   description: DESCRIPTION,
-  authors: [{ name: "Credalia" }],
-  alternates: { canonical: "/" },
+  authors: [{ name: config.brandName }],
+  alternates: { canonical: "/", languages: { "es-CO": "/" } },
+  robots: { index: true, follow: true },
   openGraph: {
     type: "website",
-    siteName: "Credalia",
+    siteName: config.brandName,
     locale: "es_CO",
-    url: "/",
+    url: new URL("/", config.siteUrl).href,
     title: OG_TITLE,
     description:
       "Respuesta en minutos. Tasa clara. Sin papeles. Simula tu crédito sin afectar tu historial y solicita 100% en línea.",
     images: [
-      { url: "/og-image.png", width: 1200, height: 630, alt: OG_TITLE },
+      { url: "/og-image.webp", width: 1200, height: 630, alt: OG_TITLE, type: "image/webp" },
+      { url: "/og-image.png", width: 1200, height: 630, alt: OG_TITLE, type: "image/png" },
     ],
   },
   twitter: {
@@ -44,7 +49,7 @@ export const metadata: Metadata = {
     title: OG_TITLE,
     description:
       "Respuesta en minutos. Tasa clara. Sin papeles. Simula y solicita 100% en línea.",
-    images: ["/og-image.png"],
+    images: ["/og-image.webp", "/og-image.png"],
   },
   icons: {
     icon: [
@@ -56,7 +61,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0d2a5e",
+  themeColor: config.colors.navy,
   width: "device-width",
   initialScale: 1,
 };
@@ -104,6 +109,12 @@ export default function RootLayout({
         </SiteUiProvider>
 
         <RevealController />
+
+        {config.gtmId && (
+          <>
+            <Script id="gtm" strategy="afterInteractive">{`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${config.gtmId}');`}</Script>
+          </>
+        )}
       </body>
     </html>
   );
