@@ -36,6 +36,7 @@ export function ChipRadioGroup<T extends string | number>({
   onChange,
   ariaLabelledBy,
   className,
+  chipClassName,
   checkBefore = false,
 }: {
   options: Option<T>[];
@@ -43,6 +44,7 @@ export function ChipRadioGroup<T extends string | number>({
   onChange: (value: T) => void;
   ariaLabelledBy: string;
   className: string;
+  chipClassName?: string;
   checkBefore?: boolean;
 }) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -88,7 +90,7 @@ export function ChipRadioGroup<T extends string | number>({
             role="radio"
             aria-checked={active}
             tabIndex={active ? 0 : -1}
-            className={`chip${active ? " active" : ""}`}
+            className={`chip${active ? " active" : ""}${chipClassName ? ` ${chipClassName}` : ""}`}
             onClick={() => onChange(o.value)}
           >
             {checkBefore && <Check />}
