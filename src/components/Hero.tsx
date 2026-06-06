@@ -6,7 +6,7 @@ import { WhatsAppLink } from './WhatsAppLink';
 
 export function Hero() {
   return (
-    <section className="py-16 lg:py-24 overflow-hidden">
+    <section className="py-16 lg:py-20 overflow-hidden">
       <div className="mx-auto max-w-container px-6 grid lg:grid-cols-2 gap-12 items-center">
         <div className="flex flex-col gap-6">
           <span className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
@@ -88,21 +88,25 @@ export function Hero() {
         </div>
 
         <div className="relative hidden lg:flex items-center justify-center">
+          {/* Concentric rings */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
-            <svg viewBox="0 0 560 560" fill="none" className="w-full max-w-md opacity-60">
+            <svg viewBox="0 0 560 560" fill="none" className="w-full opacity-50">
               <circle cx="280" cy="280" r="120" stroke="#e0e6ef" strokeWidth="1.5" />
               <circle cx="280" cy="280" r="180" stroke="#e6ebf2" strokeWidth="1.5" />
               <circle cx="280" cy="280" r="250" stroke="#eef1f6" strokeWidth="1.5" />
             </svg>
           </div>
-          <div className="absolute top-4 left-8 pointer-events-none" aria-hidden="true">
-            <svg width="220" height="200" viewBox="0 0 220 200" fill="none">
+          {/* Decorative chevrons — sit behind the phone via z-index */}
+          <div className="absolute pointer-events-none" style={{ right: 'calc(50% + 60px)', top: '50%', transform: 'translateY(-50%)', zIndex: 0 }} aria-hidden="true">
+            <svg width="130" height="130" viewBox="0 0 220 200" fill="none">
               <path d="M10 26 C10 16 18 8 28 8 L70 8 L138 92 C144 99 144 109 138 116 L70 200 L28 200 C18 200 10 192 10 182 Z" fill="#1e9e55" />
               <path d="M70 26 C70 16 78 8 88 8 L130 8 L198 92 C204 99 204 109 198 116 L130 200 L88 200 C78 200 70 192 70 182 Z" fill="#f2691c" />
               <path d="M130 26 C130 16 138 8 148 8 L190 8 L258 92 C264 99 264 109 258 116 L190 200 L148 200 C138 200 130 192 130 182 Z" fill="#0d2a5e" />
             </svg>
           </div>
-          <PhoneChat />
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <PhoneChat />
+          </div>
         </div>
       </div>
     </section>

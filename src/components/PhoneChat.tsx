@@ -9,8 +9,9 @@ export function PhoneChat() {
     // chat is noise for screen readers and its timestamps are intentionally
     // styled like a real WhatsApp UI.
     <div className="phone" aria-hidden="true">
+      <div className="phone-body">
       <div className="phone-screen">
-        <div className="phone-notch" />
+        <div className="phone-notch" aria-hidden="true" />
         <div className="status-bar">
           <span>10:33</span>
           <span className="status-icons">
@@ -34,9 +35,10 @@ export function PhoneChat() {
         <div className="chat-header">
           <span className="back">←</span>
           <span className="logo" aria-hidden="true">
-            <svg width="22" height="16" viewBox="0 0 42 30">
+            <svg width="26" height="16" viewBox="0 0 56 30">
               <path d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z" fill="#1e9e55" />
-              <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#0d2a5e" />
+              <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#f5601b" />
+              <path d="M30 2 L39 2 L48 15 L39 28 L30 28 L39 15 Z" fill="#0d2a5e" />
             </svg>
           </span>
           <span className="who">
@@ -94,11 +96,13 @@ export function PhoneChat() {
           <span style={{ fontSize: "14px", color: "#97a0ad" }}>📎</span>
           <span style={{ fontSize: "14px", color: "#97a0ad" }}>📷</span>
           <span className="send">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff">
-              <path d="M12 4 v15 M6 13 l6 6 6-6" stroke="#fff" strokeWidth="2.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#fff">
+              <path d="M22 2 L11 13 M22 2 L15 22 L11 13 L2 9 Z" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
         </div>
+        <div className="phone-home" />
+      </div>
       </div>
     </div>
   );
