@@ -30,19 +30,19 @@ export function Faq() {
   return (
     <section ref={containerRef} id="preguntas" aria-labelledby="faq-heading" className="py-16 lg:py-24 relative overflow-hidden deco-circle">
       <div className="mx-auto max-w-container px-6">
-        <div data-faq="heading" className="text-center mb-10">
-          <p className="text-sm font-bold text-muted-2 mb-1.5">
+        <div data-faq="heading" className="text-center mb-12 lg:mb-14">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">
             Preguntas frecuentes
           </p>
-          <h2 id="faq-heading" className="text-3xl lg:text-4xl font-display tracking-tight text-navy">
+          <h2 id="faq-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
             Resolvemos tus dudas, para que decidas con confianza.
           </h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-0" role="group" aria-labelledby="faq-heading">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 lg:gap-x-12 gap-y-6 lg:gap-y-0" role="group" aria-labelledby="faq-heading">
           <Accordion>
             {col0.map((i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border-b border-border">
-                <AccordionTrigger className="py-4 text-sm font-bold text-navy-ink hover:no-underline">
+                <AccordionTrigger className="py-5 text-[15px] font-semibold text-navy-ink hover:no-underline">
                   {FAQS[i].q}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-muted-foreground">
@@ -51,10 +51,10 @@ export function Faq() {
               </AccordionItem>
             ))}
           </Accordion>
-          <Accordion className="pt-6">
+          <Accordion>
             {col1.map((i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border-b border-border">
-                <AccordionTrigger className="py-4 text-sm font-bold text-navy-ink hover:no-underline">
+                <AccordionTrigger className="py-5 text-[15px] font-semibold text-navy-ink hover:no-underline">
                   {FAQS[i].q}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-muted-foreground">

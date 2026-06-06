@@ -9,23 +9,23 @@ import { LockKeyholeIcon, DocumentIcon, ShieldCheckIcon, SearchCheckIcon } from 
 
 const CARDS = [
   {
-    icon: <LockKeyholeIcon size={26} className="text-navy" />,
+    icon: <LockKeyholeIcon size={26} className="text-green" />,
     title: 'Datos cifrados',
     text: 'Tu información viaja y se almacena cifrada, protegida de extremo a extremo.',
   },
   {
-    icon: <DocumentIcon size={26} className="text-navy" />,
+    icon: <DocumentIcon size={26} className="text-green" />,
     title: 'Tratamiento conforme a la ley',
     text: 'Tratamos tus datos personales según la Ley 1581 de 2012 (Habeas Data).',
   },
   {
-    icon: <ShieldCheckIcon size={26} className="text-navy" />,
+    icon: <ShieldCheckIcon size={26} className="text-green" />,
     title: 'Entidad vigilada',
     text: `Operamos bajo la supervisión de la ${config.regulatorName}.`,
     regulatorOnly: true,
   },
   {
-    icon: <SearchCheckIcon size={26} className="text-navy" />,
+    icon: <SearchCheckIcon size={26} className="text-green" />,
     title: 'Simular no afecta tu historial',
     text: 'La simulación es informativa y no genera consultas en centrales de riesgo.',
   },
@@ -65,7 +65,7 @@ export function Security() {
   return (
     <section ref={containerRef} id="seguridad" aria-labelledby="sec-heading" className="py-16 lg:py-24 bg-[radial-gradient(ellipse_at_bottom,rgba(13,42,94,0.04),transparent_70%)]">
       <div className="mx-auto max-w-container px-6">
-        <div className="text-center mb-10">
+        <div className="text-center mb-12 lg:mb-14">
           <p data-sec="eyebrow" className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Seguridad</p>
           <h2 data-sec="heading" id="sec-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy mb-3">
             Tu información está protegida en cada paso.
@@ -80,9 +80,9 @@ export function Security() {
             <div
               key={c.title}
               data-sec="card"
-              className="flex flex-col items-center gap-3 p-6 rounded-xl border border-border bg-card text-center hover:shadow-[0_0_0_1px_rgba(13,42,94,0.1)] transition-shadow duration-200"
+              className="flex flex-col items-center gap-4 p-6 rounded-xl border border-border bg-card text-center hover:-translate-y-0.5 hover:shadow-md transition-all duration-300"
             >
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-navy/[0.06] text-navy">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-tint text-green">
                 {c.icon}
               </div>
               <h4 className="text-base font-bold text-navy">{c.title}</h4>
@@ -90,7 +90,7 @@ export function Security() {
             </div>
           ))}
         </div>
-        <p className="text-center text-sm text-muted-foreground mt-8">
+        <p className="text-center text-sm text-muted-foreground mt-10">
           ¿Quieres saber más sobre cómo cuidamos tus datos? Lee nuestra{' '}
           <Link href="/legal/privacidad" className="text-navy font-semibold hover:underline">
             Política de Privacidad

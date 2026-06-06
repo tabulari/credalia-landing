@@ -7,27 +7,27 @@ import { CalculatorIcon, DocUploadIcon, ClockIcon, RefreshCheckIcon, BankIcon } 
 
 const STEPS = [
   {
-    icon: <CalculatorIcon size={26} className="text-navy" />,
+    icon: <CalculatorIcon size={22} className="text-navy" />,
     title: 'Simula tu crédito',
     text: 'Conoce tu cuota y tasa en segundos.',
   },
   {
-    icon: <DocUploadIcon size={26} className="text-navy" />,
+    icon: <DocUploadIcon size={22} className="text-navy" />,
     title: 'Sube tus documentos',
     text: 'Cédula y un soporte. 100% en línea.',
   },
   {
-    icon: <ClockIcon size={26} className="text-navy" />,
+    icon: <ClockIcon size={22} className="text-navy" />,
     title: 'Análisis en minutos',
     text: 'Evaluamos tu solicitud automáticamente.',
   },
   {
-    icon: <RefreshCheckIcon size={26} className="text-navy" />,
+    icon: <RefreshCheckIcon size={22} className="text-navy" />,
     title: 'Recibe tu decisión',
     text: 'Te avisamos por WhatsApp y correo.',
   },
   {
-    icon: <BankIcon size={26} className="text-navy" />,
+    icon: <BankIcon size={22} className="text-navy" />,
     title: 'Recibe tu dinero',
     text: 'Desembolso directo a tu cuenta.',
   },
@@ -84,7 +84,7 @@ export function HowItWorks() {
   return (
     <section ref={containerRef} id="como-funciona" aria-labelledby="hiw-heading" className="py-16 lg:py-24 bg-green-soft">
       <div className="mx-auto max-w-container px-6">
-        <div className="mb-10">
+        <div className="mb-12 lg:mb-14">
           <p data-hiw="eyebrow" className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Cómo funciona</p>
           <h2 data-hiw="heading" id="hiw-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
             Un proceso claro en 5 pasos.
@@ -94,14 +94,14 @@ export function HowItWorks() {
         <div className="relative">
           <div
             ref={lineRef}
-            className="hidden lg:block absolute top-5 left-[5%] right-[5%] h-[2px] bg-green/30 origin-left"
+            className="hidden xl:block absolute top-5 left-[5%] right-[5%] h-[2px] bg-green/30 origin-left"
             aria-hidden="true"
           />
-          <ol className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-4">
+          <ol className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 xl:gap-6">
             {STEPS.map((s, i) => (
-              <li key={i} data-hiw="step" className="flex flex-col gap-3 group lg:items-center lg:text-center lg:pt-8">
-                <div className="flex items-center gap-2.5 text-navy lg:flex-col lg:gap-1">
-                  <span className="relative z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white border-2 border-green/40 text-navy text-xs font-bold transition-transform duration-150 group-hover:scale-110 shadow-sm">
+              <li key={i} data-hiw="step" className="flex flex-col gap-3 group xl:items-center xl:text-center xl:pt-8">
+                <div className="flex items-center gap-2.5 text-navy xl:flex-col xl:gap-1">
+                  <span className="relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white border-2 border-green/40 text-navy text-sm font-bold transition-transform duration-150 group-hover:scale-110 shadow-sm">
                     {i + 1}
                   </span>
                   {s.icon}

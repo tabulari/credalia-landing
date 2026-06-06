@@ -313,10 +313,10 @@
   transform: none;
 }
 body.has-payment-bar {
-  padding-bottom: 78px;
+  padding-bottom: 82px;
 }
 @media (max-width: 760px) {
   body.has-payment-bar {
-    padding-bottom: 70px;
+    padding-bottom: 74px;
   }
 }
