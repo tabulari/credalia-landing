@@ -8,29 +8,27 @@ import { Faq } from "@/components/Faq";
 import { Security } from "@/components/Security";
 import { CtaBanner } from "@/components/CtaBanner";
 import { Footer } from "@/components/Footer";
-import { StickyPaymentBar } from "@/components/StickyPaymentBar";
-import { ApplyModal } from "@/components/ApplyModal";
-import { ResumeNudge } from "@/components/ResumeNudge";
+import { LandingOverlays } from "@/components/LandingOverlays";
 
 export default function Home() {
   return (
     <>
       <Nav />
-      <Hero />
-      <SimulateSection>
-        <Simulator />
-      </SimulateSection>
-      <Requirements />
-      <HowItWorks />
-      <Faq />
-      <Security />
-      <CtaBanner />
+      <main>
+        <Hero />
+        <SimulateSection>
+          <Simulator />
+        </SimulateSection>
+        <Requirements />
+        <HowItWorks />
+        <Faq />
+        <Security />
+        <CtaBanner />
+      </main>
       <Footer />
 
       {/* landing-only overlays */}
-      <StickyPaymentBar />
-      <ApplyModal />
-      <ResumeNudge />
+      <LandingOverlays />
     </>
   );
 }

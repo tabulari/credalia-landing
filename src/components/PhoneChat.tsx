@@ -2,12 +2,11 @@
  * Static iPhone WhatsApp-style chat mockup (Hero right column). Decorative;
  * framed honestly as a "simulación", no fabricated pre-approval %.
  */
+import { config } from '@/lib/config';
+import './phone-chat.css';
+
 export function PhoneChat() {
   return (
-    // Decorative product illustration (effectively a screenshot) — hidden from
-    // assistive tech and excluded from the axe contrast scan, since the fake
-    // chat is noise for screen readers and its timestamps are intentionally
-    // styled like a real WhatsApp UI.
     <div className="phone" aria-hidden="true">
       <div className="phone-body">
       <div className="phone-screen">
@@ -15,20 +14,20 @@ export function PhoneChat() {
         <div className="status-bar">
           <span>10:33</span>
           <span className="status-icons">
-            <svg width="17" height="11" viewBox="0 0 17 11" fill="#0b0d12">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="var(--navy-ink)">
               <rect x="0" y="7" width="3" height="4" rx="1" />
               <rect x="4.5" y="4.5" width="3" height="6.5" rx="1" />
               <rect x="9" y="2" width="3" height="9" rx="1" />
               <rect x="13.5" y="0" width="3" height="11" rx="1" />
             </svg>
-            <svg width="16" height="11" viewBox="0 0 16 11" fill="#0b0d12">
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="var(--navy-ink)">
               <path d="M8 2.2C10.5 2.2 12.7 3.2 14.3 4.8L13 6.1C11.7 4.8 10 4 8 4S4.3 4.8 3 6.1L1.7 4.8C3.3 3.2 5.5 2.2 8 2.2Z" />
               <path d="M8 5.6C9.2 5.6 10.3 6.1 11.1 6.9L8 10 4.9 6.9C5.7 6.1 6.8 5.6 8 5.6Z" />
             </svg>
             <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
-              <rect x="1" y="1" width="20" height="10" rx="3" stroke="#0b0d12" strokeWidth="1" opacity=".4" />
-              <rect x="2.5" y="2.5" width="15" height="7" rx="1.5" fill="#0b0d12" />
-              <rect x="22" y="4" width="1.5" height="4" rx="1" fill="#0b0d12" opacity=".5" />
+              <rect x="1" y="1" width="20" height="10" rx="3" stroke="var(--navy-ink)" strokeWidth="1" opacity=".4" />
+              <rect x="2.5" y="2.5" width="15" height="7" rx="1.5" fill="var(--navy-ink)" />
+              <rect x="22" y="4" width="1.5" height="4" rx="1" fill="var(--navy-ink)" opacity=".5" />
             </svg>
           </span>
         </div>
@@ -36,15 +35,15 @@ export function PhoneChat() {
           <span className="back">←</span>
           <span className="logo" aria-hidden="true">
             <svg width="26" height="16" viewBox="0 0 56 30">
-              <path d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z" fill="#1e9e55" />
-              <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#f5601b" />
-              <path d="M30 2 L39 2 L48 15 L39 28 L30 28 L39 15 Z" fill="#0d2a5e" />
+              <path d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z" fill="var(--green)" />
+              <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="var(--orange)" />
+              <path d="M30 2 L39 2 L48 15 L39 28 L30 28 L39 15 Z" fill="var(--navy)" />
             </svg>
           </span>
           <span className="who">
-            Credalia
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="#1e9e55">
-              <circle cx="12" cy="12" r="10" />
+            {config.brandName}
+            <svg width="15" height="15" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" fill="var(--green)" />
               <path d="M8 12 l2.5 2.5 L16 9" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
@@ -74,7 +73,7 @@ export function PhoneChat() {
           </div>
           <div className="bubble note" style={{ maxWidth: "88%" }}>
             <div className="ph">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5d6b82" strokeWidth="2">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted-2, #5d6b82)" strokeWidth="2">
                 <circle cx="12" cy="12" r="9" />
                 <path d="M12 11 v5 M12 8 h.01" strokeLinecap="round" />
               </svg>{" "}
@@ -93,8 +92,8 @@ export function PhoneChat() {
         <div className="chat-input">
           <span style={{ fontSize: "16px" }}>🙂</span>
           <div className="field">Escribe un mensaje</div>
-          <span style={{ fontSize: "14px", color: "#97a0ad" }}>📎</span>
-          <span style={{ fontSize: "14px", color: "#97a0ad" }}>📷</span>
+          <span style={{ fontSize: "14px", color: "var(--muted-2, #97a0ad)" }}>📎</span>
+          <span style={{ fontSize: "14px", color: "var(--muted-2, #97a0ad)" }}>📷</span>
           <span className="send">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="#fff">
               <path d="M22 2 L11 13 M22 2 L15 22 L11 13 L2 9 Z" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
