@@ -17,18 +17,18 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <SectionDivider shape="wave" to="#f7f9fa" />
+        <SectionDivider amplitude="soft" to="#f7f9fa" />
         <SimulateSection>
           <Simulator />
         </SimulateSection>
-        <SectionDivider shape="slant" to="#ffffff" />
+        <SectionDivider amplitude="soft" to="#ffffff" />
         <Requirements />
-        <SectionDivider shape="curve" to="#e8f2dd" />
+        <SectionDivider amplitude="medium" to="#e8f2dd" />
         <HowItWorks />
-        <SectionDivider shape="curve" flip to="#ffffff" />
+        <SectionDivider amplitude="medium" flip to="#ffffff" />
         <Faq />
         <Security />
-        <SectionDivider shape="slant" to="#0a2150" className="-mt-1 mb-0" />
+        <SectionDivider amplitude="bold" to="#0a2150" className="-mt-1 mb-0" />
         <CtaBanner />
       </main>
       <Footer />

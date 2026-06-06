@@ -1,27 +1,27 @@
 interface SectionDividerProps {
   to?: string;
-  shape?: 'wave' | 'curve' | 'slant';
+  amplitude?: 'soft' | 'medium' | 'bold';
   flip?: boolean;
   className?: string;
 }
 
-const PATHS = {
-  wave: {
+const WAVES = {
+  soft: {
+    viewBox: '0 0 1440 40',
+    d: 'M0 40V28C240 16 480 16 720 28C960 40 1200 40 1440 28V40H0Z',
+  },
+  medium: {
     viewBox: '0 0 1440 60',
     d: 'M0 60V30C240 0 480 0 720 30C960 60 1200 60 1440 30V60H0Z',
   },
-  curve: {
-    viewBox: '0 0 1440 48',
-    d: 'M0 48 C360 48 720 0 1080 0 C1260 0 1380 24 1440 48 Z',
-  },
-  slant: {
-    viewBox: '0 0 1440 40',
-    d: 'M0 40 C480 20 960 10 1440 0 V40 H0 Z',
+  bold: {
+    viewBox: '0 0 1440 80',
+    d: 'M0 80V40C360 0 720 0 1080 40C1260 60 1380 80 1440 40V80H0Z',
   },
 };
 
-export function SectionDivider({ to = '#f7f9fa', shape = 'wave', flip = false, className = '' }: SectionDividerProps) {
-  const { viewBox, d } = PATHS[shape];
+export function SectionDivider({ to = '#f7f9fa', amplitude = 'medium', flip = false, className = '' }: SectionDividerProps) {
+  const { viewBox, d } = WAVES[amplitude];
 
   return (
     <div className={`relative -mt-px ${className}`} aria-hidden="true">
