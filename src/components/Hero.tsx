@@ -65,7 +65,7 @@ export function Hero() {
 
   return (
     <section ref={containerRef} aria-labelledby="hero-heading" className="py-16 lg:py-24 overflow-hidden bg-[radial-gradient(ellipse_at_20%_50%,rgba(13,42,94,0.05),transparent_60%)]">
-      <div className="mx-auto max-w-container px-6 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+      <div className="mx-auto max-w-container px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
         <div className="flex flex-col gap-6 relative z-10">
           <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
             <ShieldCheckIcon size={20} className="text-green-ink" />
@@ -110,7 +110,7 @@ export function Hero() {
           )}
         </div>
 
-        <div data-hero="phone" className="relative hidden lg:flex items-center justify-center">
+        <div data-hero="phone" className="relative hidden stack:flex items-center justify-center">
           <div className="absolute w-[400px] h-[400px] bg-green/[0.08] rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
             <svg viewBox="0 0 560 560" fill="none" className="w-full opacity-50">
@@ -131,7 +131,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div data-hero="trust-card" className="lg:hidden bg-card border border-border rounded-xl p-6 shadow-sm mt-4 relative z-10">
+        <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-6 shadow-sm mt-4 relative z-10">
           <div className="flex items-center gap-3 mb-4">
             <CredaliaLogo size={36} />
             <div>
