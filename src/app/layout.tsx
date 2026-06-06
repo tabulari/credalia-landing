@@ -65,7 +65,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className={jakarta.variable}>
+    <html lang="es" className={jakarta.variable} suppressHydrationWarning>
       <body>
         {/* Set the JS flag before paint so `.reveal` content is never stranded
             hidden without JS (matches the prototype's inline head script). */}
