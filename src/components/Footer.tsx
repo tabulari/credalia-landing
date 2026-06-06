@@ -9,9 +9,10 @@ export function Footer() {
         <div className="col-span-2 lg:col-span-1">
           <a href="#top" className="flex items-center gap-2 mb-3">
             <span aria-hidden="true">
-              <svg width="38" height="27" viewBox="0 0 42 30">
+              <svg width="44" height="27" viewBox="0 0 56 30">
                 <path d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z" fill="#1e9e55" />
-                <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#f2691c" />
+                <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#f5601b" />
+                <path d="M30 2 L39 2 L48 15 L39 28 L30 28 L39 15 Z" fill="#0d2a5e" />
               </svg>
             </span>
             <span className="text-lg font-extrabold tracking-wider">CREDALIA</span>

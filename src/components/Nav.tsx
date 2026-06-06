@@ -27,15 +27,10 @@ export function Nav() {
           className="flex items-center gap-2.5"
         >
           <span aria-hidden="true">
-            <svg width="42" height="30" viewBox="0 0 42 30" fill="none">
-              <path
-                d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z"
-                fill="#1e9e55"
-              />
-              <path
-                d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z"
-                fill="#0d2a5e"
-              />
+            <svg width="48" height="30" viewBox="0 0 56 30" fill="none">
+              <path d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z" fill="#1e9e55" />
+              <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#f5601b" />
+              <path d="M30 2 L39 2 L48 15 L39 28 L30 28 L39 15 Z" fill="#0d2a5e" />
             </svg>
           </span>
           <span className="text-lg font-extrabold tracking-wider text-navy">
@@ -57,11 +52,11 @@ export function Nav() {
 
         <div className="flex items-center gap-3">
           <ApplyButton
-            variant="outline"
+            variant="default"
             size="sm"
             className="hidden md:inline-flex"
           >
-            Solicitar crédito
+            Iniciar solicitud
           </ApplyButton>
           <button
             type="button"
