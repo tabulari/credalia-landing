@@ -64,7 +64,7 @@ export function Hero() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} aria-labelledby="hero-heading" className="py-16 lg:py-20 overflow-hidden">
+    <section ref={containerRef} aria-labelledby="hero-heading" className="py-16 lg:py-20 overflow-hidden bg-[radial-gradient(ellipse_at_20%_50%,rgba(13,42,94,0.05),transparent_60%)]">
       <div className="mx-auto max-w-container px-6 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
         <div className="flex flex-col gap-6 relative z-10">
           <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">

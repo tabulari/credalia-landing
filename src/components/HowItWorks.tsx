@@ -35,6 +35,7 @@ const STEPS = [
 
 export function HowItWorks() {
   const containerRef = useRef<HTMLElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -62,6 +63,22 @@ export function HowItWorks() {
         scrollTrigger: { trigger: containerRef.current, start: 'top 80%' },
       });
     }
+
+    if (lineRef.current && !reduceMotion) {
+      gsap.fromTo(lineRef.current,
+        { scaleX: 0 },
+        {
+          scaleX: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 70%',
+            end: 'bottom 70%',
+            scrub: 1,
+          },
+        },
+      );
+    }
   }, { scope: containerRef });
 
   return (
@@ -73,20 +90,28 @@ export function HowItWorks() {
             Un proceso claro en 5 pasos.
           </h2>
         </div>
-        <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {STEPS.map((s, i) => (
-            <li key={i} data-hiw="step" className="flex flex-col gap-3 group">
-              <div className="flex items-center gap-2.5 text-navy">
-                {s.icon}
-                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-navy text-white text-xs font-bold transition-transform duration-150 group-hover:scale-110">
-                  {i + 1}
-                </span>
-              </div>
-              <h4 className="text-base font-bold text-navy">{s.title}</h4>
-              <p className="text-sm text-muted-foreground">{s.text}</p>
-            </li>
-          ))}
-        </ol>
+
+        <div className="relative">
+          <div
+            ref={lineRef}
+            className="hidden lg:block absolute top-5 left-[5%] right-[5%] h-[2px] bg-green/30 origin-left"
+            aria-hidden="true"
+          />
+          <ol className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-4">
+            {STEPS.map((s, i) => (
+              <li key={i} data-hiw="step" className="flex flex-col gap-3 group lg:items-center lg:text-center lg:pt-8">
+                <div className="flex items-center gap-2.5 text-navy lg:flex-col lg:gap-1">
+                  <span className="relative z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white border-2 border-green/40 text-navy text-xs font-bold transition-transform duration-150 group-hover:scale-110 shadow-sm">
+                    {i + 1}
+                  </span>
+                  {s.icon}
+                </div>
+                <h4 className="text-base font-bold text-navy">{s.title}</h4>
+                <p className="text-sm text-muted-foreground">{s.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </section>
   );

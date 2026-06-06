@@ -17,6 +17,7 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
+        <SectionDivider from="#ffffff" to="#f7f9fa" />
         <SimulateSection>
           <Simulator />
         </SimulateSection>
