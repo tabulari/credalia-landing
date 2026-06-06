@@ -34,7 +34,7 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
             Simula tu crédito
           </h2>
         </div>
-        <div className="grid grid-cols-1 stack:grid-cols-[380px_1fr] gap-8 items-start overflow-hidden">
+        <div className="grid grid-cols-1 stack:grid-cols-[380px_1fr] gap-8 items-start overflow-hidden stack:overflow-visible">
           <div className="bg-card border border-border rounded-xl p-8 shadow-sm flex flex-col gap-5">
             {FEATURES.map((f) => (
               <div key={f.title} className="flex gap-3.5 items-start">
@@ -49,7 +49,7 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
             ))}
           </div>
 
-          <div className="flex flex-col gap-4 -mt-8 lg:-mt-12 relative z-10">
+          <div className="flex flex-col gap-4 -mt-4 lg:-mt-8 relative z-10">
             {children}
             <WhatsAppLink
               ctx="hero"

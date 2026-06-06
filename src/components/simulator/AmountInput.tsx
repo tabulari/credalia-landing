@@ -57,13 +57,13 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
   return (
     <>
       <p className="text-sm font-semibold text-navy mb-2">Monto solicitado</p>
-      <div className="flex items-center gap-3 border bg-white rounded-md px-5 py-3.5 border-2 border-border">
+      <div className="flex items-center gap-2 sm:gap-3 border bg-white rounded-md px-3 sm:px-5 py-3.5 border-2 border-border flex-wrap">
         <button
           type="button"
           aria-label="Disminuir monto"
           onClick={() => bump(-1)}
           disabled={amount <= AMOUNT_MIN}
-          className="flex-shrink-0 flex items-center justify-center w-[38px] h-[38px] rounded-[10px] border border-border text-navy hover:bg-bg-soft disabled:opacity-40 transition-colors"
+          className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-border text-navy hover:bg-bg-soft disabled:opacity-40 transition-colors"
         >
           <MinusIcon size={18} />
         </button>
@@ -90,12 +90,12 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
         >
           <PlusIcon size={18} />
         </button>
-        <span className="text-xs font-semibold text-muted-2 flex-shrink-0">COP</span>
-        <span className="w-px h-5 bg-border flex-shrink-0" />
+        <span className="text-xs font-semibold text-muted-2 flex-shrink-0 hidden sm:inline">COP</span>
+        <span className="w-px h-5 bg-border flex-shrink-0 hidden sm:block" />
         <button
           type="button"
           onClick={() => { inputRef.current?.focus(); inputRef.current?.select(); }}
-          className="text-xs font-semibold text-navy hover:underline flex-shrink-0 whitespace-nowrap"
+          className="text-xs font-semibold text-navy hover:underline flex-shrink-0 whitespace-nowrap hidden sm:inline"
         >
           Ingresar monto exacto
         </button>
