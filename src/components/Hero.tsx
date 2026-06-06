@@ -64,9 +64,9 @@ export function Hero() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} aria-labelledby="hero-heading" className="py-16 lg:py-24 overflow-hidden bg-[radial-gradient(ellipse_at_20%_50%,rgba(13,42,94,0.05),transparent_60%)]">
-      <div className="mx-auto max-w-container px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
-        <div className="flex flex-col gap-6 relative z-10">
+    <section ref={containerRef} aria-labelledby="hero-heading" className="pt-12 pb-8 lg:pt-16 lg:pb-12 overflow-hidden bg-[radial-gradient(ellipse_at_20%_50%,rgba(13,42,94,0.05),transparent_60%)]">
+      <div className="mx-auto max-w-container px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
+        <div className="flex flex-col gap-3 lg:gap-4 relative z-10">
           <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
             <ShieldCheckIcon size={20} className="text-green-ink" />
             Crédito 100% en línea
@@ -86,28 +86,31 @@ export function Hero() {
               Solicitar crédito <span aria-hidden="true">→</span>
             </ApplyButton>
           </div>
-          <WhatsAppLink
-            data-hero="whatsapp"
-            ctx="hero"
-            className="inline-flex items-center gap-2 text-sm text-green-ink hover:text-green-ink/80 transition-colors mt-3"
-          >
-            <span className="wa-ico" aria-hidden="true" />
-            <span>
-              ¿Dudas? Escríbenos por <b>WhatsApp</b>
-            </span>
-          </WhatsAppLink>
-          {config.regulatorVerified && (
-            <div className="flex flex-wrap gap-4 mt-4">
-              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-2">
-                <ShieldCheckIcon size={20} className="text-muted-2" />
-                Vigilados por <b>{config.regulatorShortName}</b>
+          <div data-hero="whatsapp" className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-1">
+            <WhatsAppLink
+              ctx="hero"
+              className="inline-flex items-center gap-2 text-sm text-green-ink hover:text-green-ink/80 transition-colors"
+            >
+              <span className="wa-ico" aria-hidden="true" />
+              <span>
+                ¿Dudas? Escríbenos por <b>WhatsApp</b>
               </span>
-              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-2">
-                <LockIcon size={20} className="text-muted-2" />
-                Datos <b>cifrados</b>
-              </span>
-            </div>
-          )}
+            </WhatsAppLink>
+            {config.regulatorVerified && (
+              <>
+                <span className="hidden sm:inline text-border" aria-hidden="true">·</span>
+                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-2">
+                  <ShieldCheckIcon size={16} className="text-muted-2" />
+                  Vigilados por <b>{config.regulatorShortName}</b>
+                </span>
+                <span className="hidden sm:inline text-border" aria-hidden="true">·</span>
+                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-2">
+                  <LockIcon size={16} className="text-muted-2" />
+                  Datos <b>cifrados</b>
+                </span>
+              </>
+            )}
+          </div>
         </div>
 
         <div data-hero="phone" className="relative hidden stack:flex items-center justify-center">
@@ -131,15 +134,15 @@ export function Hero() {
           </div>
         </div>
 
-        <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-6 shadow-sm mt-4 relative z-10">
-          <div className="flex items-center gap-3 mb-4">
-            <CredaliaLogo size={36} />
+        <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-4 shadow-sm mt-2 relative z-10">
+          <div className="flex items-center gap-2.5 mb-3">
+            <CredaliaLogo size={28} />
             <div>
-              <p className="text-base font-extrabold text-navy">{config.brandName}</p>
+              <p className="text-sm font-extrabold text-navy">{config.brandName}</p>
               <p className="text-xs text-muted-2">Crédito digital 100% en línea</p>
             </div>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <div data-hero="trust-item" className="flex items-center gap-2.5">
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-tint text-green shrink-0">
                 <ClockIcon size={18} />
@@ -160,7 +163,7 @@ export function Hero() {
             </div>
           </div>
           {config.regulatorVerified && (
-            <p className="mt-3 text-xs text-muted-2 border-t border-border pt-3">
+            <p className="mt-2 text-xs text-muted-2 border-t border-border pt-2">
               Vigilado por la {config.regulatorName}
             </p>
           )}
