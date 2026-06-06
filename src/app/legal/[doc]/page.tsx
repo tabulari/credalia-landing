@@ -26,9 +26,9 @@ export async function generateMetadata({
   const { doc } = await params;
   const title = DOCS[doc];
   return {
-    title: title ? `${title} — Credalia` : "Legal — Credalia",
+    title: title ? `${title} — ${config.brandName}` : `Legal — ${config.brandName}`,
     description:
-      "Documentos legales de Credalia: términos y condiciones, política de privacidad y tratamiento de datos.",
+      `Documentos legales de ${config.brandName}: términos y condiciones, política de privacidad y tratamiento de datos.`,
     robots: { index: false, follow: false },
   };
 }
@@ -58,7 +58,7 @@ export default async function LegalDoc({
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 18 l-6-6 6-6" />
           </svg>
-          Volver a Credalia
+          Volver a {config.brandName}
         </Link>
 
         <p className="legal-eyebrow">Documento legal</p>
@@ -73,7 +73,7 @@ export default async function LegalDoc({
           <p>
             <b>Borrador de prototipo.</b> Este documento es un marcador de
             posición. El texto legal definitivo debe ser redactado y revisado por
-            el equipo legal de Credalia antes de publicar.
+            el equipo legal de {config.brandName} antes de publicar.
           </p>
         </div>
 
@@ -84,7 +84,7 @@ export default async function LegalDoc({
           <Skeleton />
           <h2>3. Tratamiento de datos personales</h2>
           <p>
-            Credalia trata los datos personales de sus usuarios conforme a la Ley
+            {config.brandName} trata los datos personales de sus usuarios conforme a la Ley
             1581 de 2012 (Habeas Data) y demás normativa colombiana aplicable. El
             contenido detallado de esta sección está pendiente de redacción.
           </p>

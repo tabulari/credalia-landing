@@ -6,13 +6,12 @@
  * pricing engine can be swapped in without touching any UI. Keep the
  * signatures and return shapes stable.
  *
- * ⚠️ PLACEHOLDER pricing/eligibility — `MONTHLY_RATE` and the
- * `validateApplication` thresholds are illustrative. Replace with Credalia's
- * real product matrix.
- *
+ * Rate and eligibility thresholds are sourced from config (env-driven).
  * Internal identifiers are English; user-facing strings (the eligibility
  * `message` and the display `unit` "/mes" · "/quincena") stay in Spanish.
  */
+
+import { config } from './config';
 
 export type Frequency = "monthly" | "biweekly";
 
@@ -40,7 +39,7 @@ export interface Validity {
  * Eligibility / constraint rules. Returns { ok, message } — message is shown to
  * the user and the apply CTA is disabled while ok === false.
  *
- * ⚠️ PLACEHOLDER RULES — replace thresholds with Credalia's real product matrix.
+ * Thresholds come from config (env-driven, interim until real rate engine).
  */
 export function validateApplication(
   amount: number,
@@ -48,20 +47,20 @@ export function validateApplication(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _frequency: Frequency,
 ): Validity {
-  // Example rule 1: small amounts aren't offered on long terms.
-  if (amount < 200000 && termMonths >= 18) {
+  const { smallAmountThreshold, smallAmountMaxTerm, highAmountThreshold, highAmountMinTerm } = config.credit;
+
+  if (amount < smallAmountThreshold && termMonths >= smallAmountMaxTerm) {
     return {
       ok: false,
       message:
-        "Este monto no aplica para plazos de 18 meses o más. Reduce el plazo o aumenta el monto.",
+        `Este monto no aplica para plazos de ${smallAmountMaxTerm} meses o más. Reduce el plazo o aumenta el monto.`,
     };
   }
-  // Example rule 2: high amounts require a minimum term.
-  if (amount > 800000 && termMonths < 6) {
+  if (amount > highAmountThreshold && termMonths < highAmountMinTerm) {
     return {
       ok: false,
       message:
-        "Para montos superiores a $800.000 el plazo mínimo es de 6 meses.",
+        `Para montos superiores a $${fmtCOP(highAmountThreshold)} el plazo mínimo es de ${highAmountMinTerm} meses.`,
     };
   }
   return { ok: true, message: "" };
@@ -72,8 +71,7 @@ export function calculatePayment(
   termMonths: number,
   frequency: Frequency,
 ): Simulation {
-  // ⚠️ Placeholder rate. Replace with the real pricing engine.
-  const MONTHLY_RATE = 0.026; // 2,6% m. v.
+  const MONTHLY_RATE = config.credit.monthlyRate;
   const isBiweekly = frequency === "biweekly";
 
   const periodsPerMonth = isBiweekly ? 2 : 1;

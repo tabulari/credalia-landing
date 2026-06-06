@@ -14,9 +14,9 @@ export function buildWhatsAppMessage(
   ctx: WaContext,
   sim: Pick<Simulation, "amount" | "term" | "payment" | "unit">,
 ): string {
-  if (ctx === "pqrs") return "Hola, quiero radicar una PQRS con Credalia.";
+  if (ctx === "pqrs") return `Hola, quiero radicar una PQRS con ${config.brandName}.`;
   if (ctx === "contact" || ctx === "footer")
-    return "Hola, quiero información sobre un crédito en Credalia.";
+    return `Hola, quiero información sobre un crédito en ${config.brandName}.`;
   // hero + any sim-aware entry point
   return (
     `Hola, simulé un crédito de $${fmtCOP(sim.amount)} a ${sim.term} meses ` +

@@ -1,21 +1,17 @@
 import { z } from "zod";
+import { config } from "./config";
 
 /**
  * Single source of validation for the application form — used by the client
  * (inline per-field + per-step) AND the server route. Rules and messages are
  * ported verbatim from the prototype `solicitud.js` RULES. Field identifiers
  * are English; user-facing messages/options stay Spanish.
+ *
+ * Banks and employment types come from config (env-driven).
  */
 
-export const EMPLOYMENT_TYPES = ["Empleado", "Independiente", "Pensionado"] as const;
-export const BANKS = [
-  "Bancolombia",
-  "Davivienda",
-  "BBVA",
-  "Banco de Bogotá",
-  "Nequi",
-  "Daviplata",
-] as const;
+export const EMPLOYMENT_TYPES = config.application.employmentTypes;
+export const BANKS = config.application.banks;
 
 const MSG = {
   fullName: "Ingresa tu nombre y apellido.",

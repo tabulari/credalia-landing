@@ -1,10 +1,9 @@
 /**
  * Credalia — centralized runtime configuration.
  *
- * Every business value flagged ⚠️ in the design handoff README (WhatsApp number,
- * canonical domain, legal name, NIT, domicilio, contact phone, social URLs, and
- * the application submit endpoint) is sourced from the environment here and
- * NOWHERE ELSE. Components import from this module; they never hardcode a value.
+ * Every business value flagged ⚠️ in the design handoff README is sourced from
+ * the environment here and NOWHERE ELSE. Components import from this module;
+ * they never hardcode a value.
  *
  * `PLACEHOLDERS` holds the prototype's stand-in values. They double as dev-time
  * fallbacks AND as the sentinels the production guard rejects: if any survives a
@@ -51,6 +50,31 @@ function read(key: PlaceholderKey, env: Env = process.env): string {
   return v && v.length > 0 ? v : PLACEHOLDERS[key];
 }
 
+function readNum(key: string, fallback: number, env: Env = process.env): number {
+  const v = env[key];
+  if (!v || v.length === 0) return fallback;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function readStr(key: string, fallback: string, env: Env = process.env): string {
+  const v = env[key];
+  return v && v.length > 0 ? v : fallback;
+}
+
+function readStrList(key: string, fallback: string[], env: Env = process.env): string[] {
+  const v = env[key];
+  if (!v || v.trim().length === 0) return fallback;
+  return v.split(",").map((s) => s.trim()).filter(Boolean);
+}
+
+function readNumList(key: string, fallback: number[], env: Env = process.env): number[] {
+  const v = env[key];
+  if (!v || v.trim().length === 0) return fallback;
+  const parsed = v.split(",").map((s) => Number(s.trim())).filter(Number.isFinite);
+  return parsed.length > 0 ? parsed : fallback;
+}
+
 /**
  * Returns the ⚠️ keys whose value is missing or still equal to the placeholder.
  * Pure — accepts an injected env so the production guard can be unit-tested.
@@ -87,6 +111,25 @@ export const config = {
     address: read("NEXT_PUBLIC_COMPANY_ADDRESS"),
     contactPhone: read("NEXT_PUBLIC_CONTACT_PHONE"),
   },
+
+  /** Brand display name — used in nav, footer, legal pages, WhatsApp messages, etc. */
+  brandName: readStr("NEXT_PUBLIC_BRAND_NAME", "Credalia"),
+
+  /** Contact email shown in footer. */
+  contactEmail: readStr("NEXT_PUBLIC_CONTACT_EMAIL", "hola@credalia.co"),
+
+  /** Contact hours shown in footer. */
+  contactHours: readStr("NEXT_PUBLIC_CONTACT_HOURS", "Lun a Vie, 8:00–18:00"),
+
+  /** Regulator display name (e.g. "Superintendencia Financiera de Colombia"). */
+  regulatorName: readStr("NEXT_PUBLIC_REGULATOR_NAME", "Superintendencia Financiera de Colombia"),
+
+  /** Short regulator name (e.g. "Superfinanciera"). */
+  regulatorShortName: readStr("NEXT_PUBLIC_REGULATOR_SHORT_NAME", "Superfinanciera"),
+
+  /** Radicado prefix for application tracking codes. */
+  radicadoPrefix: readStr("NEXT_PUBLIC_RADICADO_PREFIX", "CR-2026"),
+
   social: {
     facebook: read("NEXT_PUBLIC_SOCIAL_FACEBOOK"),
     instagram: read("NEXT_PUBLIC_SOCIAL_INSTAGRAM"),
@@ -101,6 +144,56 @@ export const config = {
    * explicitly "true". Defaults to false (claim hidden) until legal signs off.
    */
   regulatorVerified: process.env.NEXT_PUBLIC_REGULATOR_VERIFIED === "true",
+
+  /** --- Simulator / product parameters --- */
+  simulator: {
+    amountMin: readNum("NEXT_PUBLIC_SIM_AMOUNT_MIN", 50000),
+    amountMax: readNum("NEXT_PUBLIC_SIM_AMOUNT_MAX", 1000000),
+    amountStep: readNum("NEXT_PUBLIC_SIM_AMOUNT_STEP", 10000),
+    amountStepBig: readNum("NEXT_PUBLIC_SIM_AMOUNT_STEP_BIG", 50000),
+    defaultAmount: readNum("NEXT_PUBLIC_SIM_DEFAULT_AMOUNT", 500000),
+    defaultTerm: readNum("NEXT_PUBLIC_SIM_DEFAULT_TERM", 12),
+    /** Comma-separated term options in months. */
+    termOptions: readNumList("NEXT_PUBLIC_SIM_TERM_OPTIONS", [3, 6, 9, 12, 18, 24]),
+  },
+
+  /** --- Credit rate (interim — will come from Credalia dashboard API) --- */
+  credit: {
+    /** Monthly interest rate as decimal (e.g. 0.026 = 2.6%). */
+    monthlyRate: readNum("NEXT_PUBLIC_CREDIT_MONTHLY_RATE", 0.026),
+    /** Eligibility: small-amount threshold below which long terms aren't offered. */
+    smallAmountThreshold: readNum("NEXT_PUBLIC_CREDIT_SMALL_AMOUNT_THRESHOLD", 200000),
+    /** Eligibility: max term (months) for amounts below smallAmountThreshold. */
+    smallAmountMaxTerm: readNum("NEXT_PUBLIC_CREDIT_SMALL_AMOUNT_MAX_TERM", 18),
+    /** Eligibility: high-amount threshold above which a minimum term applies. */
+    highAmountThreshold: readNum("NEXT_PUBLIC_CREDIT_HIGH_AMOUNT_THRESHOLD", 800000),
+    /** Eligibility: min term (months) for amounts above highAmountThreshold. */
+    highAmountMinTerm: readNum("NEXT_PUBLIC_CREDIT_HIGH_AMOUNT_MIN_TERM", 6),
+  },
+
+  /** --- Application form options --- */
+  application: {
+    /** Comma-separated bank names for the bank dropdown. */
+    banks: readStrList(
+      "NEXT_PUBLIC_APPLICATION_BANKS",
+      ["Bancolombia", "Davivienda", "BBVA", "Banco de Bogotá", "Nequi", "Daviplata"],
+    ),
+    /** Comma-separated employment types for the employment dropdown. */
+    employmentTypes: readStrList(
+      "NEXT_PUBLIC_APPLICATION_EMPLOYMENT_TYPES",
+      ["Empleado", "Independiente", "Pensionado"],
+    ),
+  },
+
+  /** --- Brand colors (CSS hex, used for manifest/theme-color) --- */
+  colors: {
+    navy: readStr("NEXT_PUBLIC_COLOR_NAVY", "#0d2a5e"),
+    orange: readStr("NEXT_PUBLIC_COLOR_ORANGE", "#f5601b"),
+    green: readStr("NEXT_PUBLIC_COLOR_GREEN", "#1e9e55"),
+  },
+
+  /** --- GTM/GA4 container ID (optional — if set, the GTM script is loaded) --- */
+  gtmId: readStr("NEXT_PUBLIC_GTM_ID", ""),
 } as const;
 
 // Fail a production build if any ⚠️ value is still a placeholder. Dev and test
@@ -113,4 +206,16 @@ if (
   process.env.NEXT_PUBLIC_CREDALIA_ALLOW_PLACEHOLDERS !== "true"
 ) {
   assertProductionConfig();
+}
+
+/** Runtime warning if placeholder rate is detected in production. */
+if (
+  process.env.NODE_ENV === "production" &&
+  typeof window !== "undefined" &&
+  config.credit.monthlyRate === 0.026
+) {
+  console.warn(
+    "⚠️ Credalia: running in production with the placeholder monthly rate (2.6%). " +
+    "Set NEXT_PUBLIC_CREDIT_MONTHLY_RATE to the real value."
+  );
 }

@@ -1,4 +1,5 @@
 import { config } from "@/lib/config";
+import { fmtCOP } from "@/lib/credit";
 import { FAQS } from "@/lib/faqs";
 
 /**
@@ -13,9 +14,9 @@ export function StructuredData() {
   const financialService = {
     "@context": "https://schema.org",
     "@type": "FinancialService",
-    name: "Credalia",
+    name: config.brandName,
     description:
-      "Crédito digital en Colombia hasta $1.000.000. Respuesta en minutos, tasa clara y sin papeles. Simula tu crédito sin afectar tu historial y solicita 100% en línea.",
+      `Crédito digital en Colombia hasta $${fmtCOP(config.simulator.amountMax).replace(',00','')}. Respuesta en minutos, tasa clara y sin papeles. Simula tu crédito sin afectar tu historial y solicita 100% en línea.`,
     url: `${base}/`,
     logo: `${base}/favicon.svg`,
     image: `${base}/og-image.png`,
