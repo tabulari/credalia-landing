@@ -51,7 +51,7 @@ export function Faq() {
               </AccordionItem>
             ))}
           </Accordion>
-          <Accordion>
+          <Accordion className="pt-6">
             {col1.map((i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border-b border-border">
                 <AccordionTrigger className="py-4 text-sm font-bold text-navy-ink hover:no-underline">

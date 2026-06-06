@@ -65,7 +65,7 @@ export function Hero() {
 
   return (
     <section ref={containerRef} aria-labelledby="hero-heading" className="py-16 lg:py-20 overflow-hidden">
-      <div className="mx-auto max-w-container px-6 grid lg:grid-cols-2 gap-12 items-center">
+      <div className="mx-auto max-w-container px-6 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
         <div className="flex flex-col gap-6">
           <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
             <ShieldCheckIcon size={20} className="text-green-ink" />
@@ -130,7 +130,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div data-hero="trust-card" className="lg:hidden bg-card border border-border rounded-[22px] p-6 shadow-sm">
+        <div data-hero="trust-card" className="lg:hidden bg-card border border-border rounded-[22px] p-6 shadow-sm -mt-8 relative z-10">
           <div className="flex items-center gap-3 mb-4">
             <CredaliaLogo size={36} />
             <div>

@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { cn } from '@/lib/utils';
 import { PersonIcon, IdCardIcon, CreditCardIcon, DocumentIcon } from './icons';
 
 const REQS = [
@@ -62,11 +63,14 @@ export function Requirements() {
           </p>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {REQS.map((r) => (
+          {REQS.map((r, i) => (
             <div
               key={r.label}
               data-req="card"
-              className="flex flex-col items-center gap-3 p-6 rounded-xl border border-border bg-card text-center hover:-translate-y-1 hover:shadow-lg transition-all duration-200"
+              className={cn(
+                'flex flex-col items-center gap-3 p-6 rounded-xl border bg-card text-center hover:-translate-y-1 hover:shadow-lg transition-all duration-200',
+                i === 0 ? 'lg:col-span-2 border-green/30 bg-green-soft' : 'border-border',
+              )}
             >
               <span className="flex items-center justify-center w-11 h-11 rounded-full bg-green-tint text-green">
                 {r.icon}

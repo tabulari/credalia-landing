@@ -46,7 +46,7 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
             ))}
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 -mt-8 lg:-mt-12 relative z-10">
             {children}
             <WhatsAppLink
               ctx="hero"

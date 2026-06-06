@@ -9,6 +9,7 @@ import { Security } from "@/components/Security";
 import { CtaBanner } from "@/components/CtaBanner";
 import { Footer } from "@/components/Footer";
 import { LandingOverlays } from "@/components/LandingOverlays";
+import { SectionDivider } from "@/components/SectionDivider";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
         <HowItWorks />
         <Faq />
         <Security />
+        <SectionDivider from="#ffffff" to="#0a2150" className="-mt-1 mb-0" />
         <CtaBanner />
       </main>
       <Footer />

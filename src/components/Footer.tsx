@@ -6,7 +6,7 @@ import { CredaliaLogo } from './icons';
 export function Footer() {
   return (
     <footer data-slot="footer" className="bg-gradient-to-b from-navy-deep to-[#071940] text-white">
-      <div className="mx-auto max-w-container px-6 py-14 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+      <div className="mx-auto max-w-container px-6 py-14 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr] gap-8">
         <div className="col-span-2 lg:col-span-1">
           <a href="#top" className="flex items-center gap-2 mb-3">
             <span aria-hidden="true">
