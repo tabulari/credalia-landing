@@ -32,7 +32,7 @@ const REQS = [
 
 function AnimatedCheck() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 shrink-0" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="shrink-0" aria-hidden="true">
       <circle cx="12" cy="12" r="10" stroke="var(--green)" strokeWidth="1.5" className="opacity-30" />
       <path
         d="M8 12 l2.5 2.5 L16 9"
