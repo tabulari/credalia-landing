@@ -1,6 +1,8 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { fmtCOP, type Frequency } from '@/lib/credit';
 import { config } from '@/lib/config';
 import { useSimulator } from './simulator-store';
@@ -31,6 +33,7 @@ export function Simulator() {
   const { amount, term, frequency, sim, setAmount, setTerm, setFrequency } = useSimulator();
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const simRef = useRef<HTMLDivElement>(null);
   const [inputText, setInputText] = useState(() => fmtCOP(amount));
   const [hint, setHint] = useState('');
 
@@ -41,12 +44,25 @@ export function Simulator() {
     track('sim_interact', { control });
   };
 
+  useGSAP(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || !simRef.current) return;
+    gsap.from(simRef.current, {
+      y: 20,
+      scale: 0.98,
+      autoAlpha: 0,
+      duration: 0.7,
+      ease: 'back.out(1.2)',
+      scrollTrigger: { trigger: simRef.current, start: 'top 85%' },
+    });
+  }, { scope: simRef });
+
   return (
-    <div id="simulator" className="reveal d1 bg-card border border-border rounded-[22px] p-8 shadow-md">
+    <div ref={simRef} id="simulator" className="bg-card border border-green/20 border-t-2 border-t-green/40 rounded-[22px] p-8 shadow-[0_0_0_1px_rgba(30,158,85,0.08),0_6px_24px_rgba(13,42,94,0.07)]">
       <div className="flex items-center justify-between mb-[26px] flex-wrap gap-2.5">
         <h3 className="text-xl font-extrabold text-navy">Simulador de crédito</h3>
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5">
-          <ShieldCheckIcon size={16} className="text-green" />
+        <span className="border-l-2 border-green pl-2.5 text-xs font-semibold text-green-ink">
+          <ShieldCheckIcon size={14} className="text-green mr-1 inline -mt-0.5" />
           Sin afectar tu historial
         </span>
       </div>

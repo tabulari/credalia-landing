@@ -1,38 +1,73 @@
+'use client';
+
+import { useRef } from 'react';
 import Link from 'next/link';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { config } from '@/lib/config';
 import { LockKeyholeIcon, DocumentIcon, ShieldCheckIcon, SearchCheckIcon } from './icons';
 
 const CARDS = [
   {
-    icon: <LockKeyholeIcon size={26} className="text-green" />,
+    icon: <LockKeyholeIcon size={26} className="text-navy" />,
     title: 'Datos cifrados',
     text: 'Tu información viaja y se almacena cifrada, protegida de extremo a extremo.',
   },
   {
-    icon: <DocumentIcon size={26} className="text-green" />,
+    icon: <DocumentIcon size={26} className="text-navy" />,
     title: 'Tratamiento conforme a la ley',
     text: 'Tratamos tus datos personales según la Ley 1581 de 2012 (Habeas Data).',
   },
   {
-    icon: <ShieldCheckIcon size={26} className="text-green" />,
+    icon: <ShieldCheckIcon size={26} className="text-navy" />,
     title: 'Entidad vigilada',
     text: `Operamos bajo la supervisión de la ${config.regulatorName}.`,
     regulatorOnly: true,
   },
   {
-    icon: <SearchCheckIcon size={26} className="text-green" />,
+    icon: <SearchCheckIcon size={26} className="text-navy" />,
     title: 'Simular no afecta tu historial',
     text: 'La simulación es informativa y no genera consultas en centrales de riesgo.',
   },
 ];
 
 export function Security() {
+  const containerRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const heading = containerRef.current?.querySelector('[data-sec="heading"]');
+    const eyebrow = containerRef.current?.querySelector('[data-sec="eyebrow"]');
+    const cards = containerRef.current?.querySelectorAll('[data-sec="card"]');
+
+    if (eyebrow) {
+      gsap.from(eyebrow, { y: 15, autoAlpha: 0, duration: 0.5, ease: 'power2.out',
+        scrollTrigger: { trigger: eyebrow, start: 'top 85%' } });
+    }
+    if (heading) {
+      gsap.from(heading, { y: 20, autoAlpha: 0, duration: 0.6, ease: 'power2.out',
+        scrollTrigger: { trigger: heading, start: 'top 85%' } });
+    }
+    if (cards && cards.length) {
+      gsap.from(cards, {
+        y: 30,
+        autoAlpha: 0,
+        stagger: 0.1,
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: containerRef.current, start: 'top 80%' },
+      });
+    }
+  }, { scope: containerRef });
+
   return (
-    <section id="seguridad" aria-labelledby="sec-heading" className="py-16 lg:py-24">
+    <section ref={containerRef} id="seguridad" aria-labelledby="sec-heading" className="py-16 lg:py-24 bg-[radial-gradient(ellipse_at_bottom,rgba(13,42,94,0.04),transparent_70%)]">
       <div className="mx-auto max-w-container px-6">
-        <div className="reveal text-center mb-10">
-          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Seguridad</p>
-          <h2 id="sec-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy mb-3">
+        <div className="text-center mb-10">
+          <p data-sec="eyebrow" className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Seguridad</p>
+          <h2 data-sec="heading" id="sec-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy mb-3">
             Tu información está protegida en cada paso.
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -40,13 +75,14 @@ export function Security() {
             tratamos conforme a la ley colombiana.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 reveal d1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {CARDS.filter((c) => !c.regulatorOnly || config.regulatorVerified).map((c) => (
             <div
               key={c.title}
-              className="flex flex-col items-center gap-3 p-6 rounded-xl border border-border bg-card text-center"
+              data-sec="card"
+              className="flex flex-col items-center gap-3 p-6 rounded-xl border border-border bg-card text-center hover:shadow-[0_0_0_1px_rgba(13,42,94,0.1)] transition-shadow duration-200"
             >
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-tint text-green">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-navy/[0.06] text-navy">
                 {c.icon}
               </div>
               <h4 className="text-base font-bold text-navy">{c.title}</h4>
@@ -54,7 +90,7 @@ export function Security() {
             </div>
           ))}
         </div>
-        <p className="reveal text-center text-sm text-muted-foreground mt-8">
+        <p className="text-center text-sm text-muted-foreground mt-8">
           ¿Quieres saber más sobre cómo cuidamos tus datos? Lee nuestra{' '}
           <Link href="/legal/privacidad" className="text-navy font-semibold hover:underline">
             Política de Privacidad

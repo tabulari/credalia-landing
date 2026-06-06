@@ -5,7 +5,7 @@ import { CredaliaLogo } from './icons';
 
 export function Footer() {
   return (
-    <footer data-slot="footer" className="bg-navy-deep text-white">
+    <footer data-slot="footer" className="bg-gradient-to-b from-navy-deep to-[#071940] text-white">
       <div className="mx-auto max-w-container px-6 py-14 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
         <div className="col-span-2 lg:col-span-1">
           <a href="#top" className="flex items-center gap-2 mb-3">
@@ -32,10 +32,10 @@ export function Footer() {
 
         <div className="flex flex-col gap-2">
           <h5 className="text-sm font-bold mb-1">Producto</h5>
-          <a href="#simula" className="text-sm text-white/70 hover:text-white transition-colors">Simula tu crédito</a>
-          <a href="#requisitos-band" className="text-sm text-white/70 hover:text-white transition-colors">Requisitos</a>
-          <a href="#seguridad" className="text-sm text-white/70 hover:text-white transition-colors">Seguridad</a>
-          <a href="#preguntas" className="text-sm text-white/70 hover:text-white transition-colors">Preguntas</a>
+          <a href="#simula" className="text-sm text-white/70 hover:text-white transition-colors relative after:content-[''] after:absolute after:bottom-[-1px] after:left-0 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-200 hover:after:w-full">Simula tu crédito</a>
+          <a href="#requisitos-band" className="text-sm text-white/70 hover:text-white transition-colors relative after:content-[''] after:absolute after:bottom-[-1px] after:left-0 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-200 hover:after:w-full">Requisitos</a>
+          <a href="#seguridad" className="text-sm text-white/70 hover:text-white transition-colors relative after:content-[''] after:absolute after:bottom-[-1px] after:left-0 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-200 hover:after:w-full">Seguridad</a>
+          <a href="#preguntas" className="text-sm text-white/70 hover:text-white transition-colors relative after:content-[''] after:absolute after:bottom-[-1px] after:left-0 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-200 hover:after:w-full">Preguntas</a>
         </div>
         <div className="flex flex-col gap-2">
           <h5 className="text-sm font-bold mb-1">Empresa</h5>

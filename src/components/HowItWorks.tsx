@@ -1,3 +1,8 @@
+'use client';
+
+import { useRef } from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { CalculatorIcon, DocUploadIcon, ClockIcon, RefreshCheckIcon, BankIcon } from './icons';
 
 const STEPS = [
@@ -29,21 +34,51 @@ const STEPS = [
 ];
 
 export function HowItWorks() {
+  const containerRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const cards = containerRef.current?.querySelectorAll('[data-hiw="step"]');
+    const heading = containerRef.current?.querySelector('[data-hiw="heading"]');
+    const eyebrow = containerRef.current?.querySelector('[data-hiw="eyebrow"]');
+
+    if (eyebrow) {
+      gsap.from(eyebrow, { y: 15, autoAlpha: 0, duration: 0.5, ease: 'power2.out',
+        scrollTrigger: { trigger: eyebrow, start: 'top 85%' } });
+    }
+    if (heading) {
+      gsap.from(heading, { y: 20, autoAlpha: 0, duration: 0.6, ease: 'power2.out',
+        scrollTrigger: { trigger: heading, start: 'top 85%' } });
+    }
+    if (cards && cards.length) {
+      gsap.from(cards, {
+        y: 30,
+        autoAlpha: 0,
+        stagger: 0.1,
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: containerRef.current, start: 'top 80%' },
+      });
+    }
+  }, { scope: containerRef });
+
   return (
-    <section id="como-funciona" aria-labelledby="hiw-heading" className="py-16 lg:py-24 bg-bg-soft">
+    <section ref={containerRef} id="como-funciona" aria-labelledby="hiw-heading" className="py-16 lg:py-24 bg-green-soft">
       <div className="mx-auto max-w-container px-6">
-        <div className="reveal mb-10">
-          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Cómo funciona</p>
-          <h2 id="hiw-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
+        <div className="mb-10">
+          <p data-hiw="eyebrow" className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Cómo funciona</p>
+          <h2 data-hiw="heading" id="hiw-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
             Un proceso claro en 5 pasos.
           </h2>
         </div>
-        <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 reveal d1">
+        <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {STEPS.map((s, i) => (
-            <li key={i} className="flex flex-col gap-3">
+            <li key={i} data-hiw="step" className="flex flex-col gap-3 group">
               <div className="flex items-center gap-2.5 text-navy">
                 {s.icon}
-                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-navy text-white text-xs font-bold">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-navy text-white text-xs font-bold transition-transform duration-150 group-hover:scale-110">
                   {i + 1}
                 </span>
               </div>

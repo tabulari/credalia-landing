@@ -7,6 +7,7 @@ import { StructuredData } from "@/components/StructuredData";
 import { SiteUiProvider } from "@/components/site-ui";
 import { SimulatorProvider } from "@/components/simulator-store";
 import { RevealController } from "@/components/RevealController";
+import { GsapProvider } from "@/components/GsapProvider";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -108,10 +109,9 @@ export default function RootLayout({
         </noscript>
 
         <SiteUiProvider>
-          {/* Landing-only overlays (sticky bar, apply modal, resume nudge) are
-              rendered by the landing page itself, not here, so other routes
-              (e.g. /legal) don't mount them. */}
-          <SimulatorProvider>{children}</SimulatorProvider>
+          <GsapProvider>
+            <SimulatorProvider>{children}</SimulatorProvider>
+          </GsapProvider>
         </SiteUiProvider>
 
         <RevealController />

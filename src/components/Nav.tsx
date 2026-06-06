@@ -40,7 +40,7 @@ export function Nav() {
   return (
     <header
       id="top"
-      className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-border"
+      className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg shadow-[0_1px_0_rgba(13,42,94,0.05)]"
     >
       <div className="mx-auto max-w-container px-6 flex items-center justify-between h-16">
         <a
@@ -61,7 +61,7 @@ export function Nav() {
             <a
               key={l.href}
               href={l.href}
-              className="text-sm font-semibold text-foreground/80 hover:text-navy transition-colors"
+              className="text-sm font-semibold text-foreground/80 hover:text-navy transition-colors relative after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:w-0 after:bg-navy after:transition-all after:duration-200 hover:after:w-full"
             >
               {l.label}
             </a>

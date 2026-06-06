@@ -3,8 +3,9 @@ import { ScrollButton } from './ScrollButton';
 
 export function CtaBanner() {
   return (
-    <section aria-labelledby="cta-heading" className="bg-navy-deep text-white py-16">
-      <div className="mx-auto max-w-container px-6 reveal">
+    <section aria-labelledby="cta-heading" className="bg-navy-deep text-white py-16 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+      <div className="mx-auto max-w-container px-6 relative">
         <div className="flex flex-col lg:flex-row items-center gap-8">
           <div className="flex items-center gap-6 flex-1 min-w-0">
             <span aria-hidden="true" className="hidden sm:block shrink-0">

@@ -45,7 +45,7 @@ export function SimulationResults({ sim, frequency }: { sim: SimData; frequency:
             <div className="text-[22px]">$</div>
             <div className="text-[42px]">{fmtCOP(sim.payment)} <span className="text-base font-semibold text-muted-2">{sim.unit}</span></div>
           </div>
-          <span className="inline-flex items-center gap-[6px] mt-3 bg-green-tint text-green-ink font-bold text-[13px] px-3 py-1.5 rounded-full">
+          <span className="inline-flex items-center gap-[6px] mt-3 text-green-ink font-bold text-[13px]">
             <LightningIcon size={13} className="text-green" />
             Respuesta rápida
           </span>
