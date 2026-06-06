@@ -31,7 +31,7 @@ test("apply modal (open) has no axe violations", async ({ page }) => {
     .click();
   await page.getByRole("dialog").waitFor();
   const results = await new AxeBuilder({ page })
-    .include(".apply-overlay")
+    .include("[role='dialog']")
     .withTags(TAGS)
     .analyze();
   expect(results.violations).toEqual([]);
