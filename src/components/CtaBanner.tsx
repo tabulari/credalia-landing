@@ -94,17 +94,9 @@ export function CtaBanner() {
   return (
     <section ref={containerRef} aria-labelledby="cta-heading" className="bg-navy-deep text-white py-16 lg:py-24 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
-      <div className="absolute right-0 bottom-0 opacity-5 pointer-events-none cta-chevron" aria-hidden="true">
-        <svg width="200" height="160" viewBox="0 0 270 200" fill="none">
-          <path d="M10 26 C10 16 18 8 28 8 L70 8 L138 92 C144 99 144 109 138 116 L70 200 L28 200 C18 200 10 192 10 182 Z" fill="white" />
-          <path d="M70 26 C70 16 78 8 88 8 L130 8 L198 92 C204 99 204 109 198 116 L130 200 L88 200 C78 200 70 192 70 182 Z" fill="white" />
-          <path d="M130 26 C130 16 138 8 148 8 L190 8 L258 92 C264 99 264 109 258 116 L190 200 L148 200 C138 200 130 192 130 182 Z" fill="white" />
-        </svg>
-      </div>
-      {/* ambient colored light blooms behind the panel */}
-      <div className="absolute -left-24 top-1/2 -translate-y-1/2 w-72 h-72 cta-glow cta-glow--green pointer-events-none" aria-hidden="true" />
-      <div className="absolute right-10 -bottom-16 w-80 h-80 cta-glow cta-glow--orange pointer-events-none" aria-hidden="true" />
-      <div className="mx-auto max-w-container px-6 relative">
+      {/* ambient green light bloom behind the panel */}
+      <div className="absolute left-1/4 top-12 -translate-x-1/2 w-72 h-72 cta-glow cta-glow--green pointer-events-none" aria-hidden="true" />
+      <div className="mx-auto max-w-container px-6 relative pb-6 lg:pb-10">
         <div data-cta="panel" className="relative flex flex-col lg:flex-row items-stretch gap-6 lg:gap-10 rounded-2xl bg-white/[0.04] ring-1 ring-white/10 p-6 sm:p-8 lg:p-10 backdrop-blur-sm">
           <span className="cta-sheen" aria-hidden="true" />
           <div className="flex-1 min-w-0 relative">
