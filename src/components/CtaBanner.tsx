@@ -119,12 +119,12 @@ export function CtaBanner() {
           </div>
           <div className="flex flex-col justify-center items-stretch gap-3 lg:w-[260px] lg:shrink-0 lg:border-l lg:border-white/10 lg:pl-10 relative">
             <div data-cta="action">
-              <ScrollButton variant="white" size="lg" target="#simula" className="w-full">
+              <ScrollButton variant="white" size="lg" target="#simula" className="w-full min-h-[52px]">
                 Simular mi crédito <span aria-hidden="true">→</span>
               </ScrollButton>
             </div>
             <div data-cta="action">
-              <ApplyButton variant="ghost-dark" size="default" className="w-full">
+              <ApplyButton variant="ghost-dark" size="lg" className="w-full min-h-[52px]">
                 Solicitar crédito <span aria-hidden="true">→</span>
               </ApplyButton>
             </div>
