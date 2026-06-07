@@ -85,14 +85,14 @@ export function Security() {
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-tint text-green">
                 {c.icon}
               </div>
-              <h4 className="text-base font-bold text-navy">{c.title}</h4>
+              <h3 className="text-base font-bold text-navy">{c.title}</h3>
               <p className="text-sm text-muted-foreground">{c.text}</p>
             </div>
           ))}
         </div>
         <p className="text-center text-sm text-muted-foreground mt-10">
           ¿Quieres saber más sobre cómo cuidamos tus datos? Lee nuestra{' '}
-          <Link href="/legal/privacidad" className="text-navy font-semibold hover:underline">
+          <Link href="/legal/privacidad" className="text-navy font-semibold hover:underline py-4">
             Política de Privacidad
           </Link>.
         </p>

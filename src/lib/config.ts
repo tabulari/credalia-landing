@@ -192,6 +192,9 @@ export const config = {
     green: readStr("NEXT_PUBLIC_COLOR_GREEN", "#1e9e55"),
   },
 
+  /** --- Disbursement time claim (e.g. "24 horas"). Empty = no claim shown (compliance-safe). --- */
+  disbursementTime: readStr("NEXT_PUBLIC_DISBURSEMENT_TIME", ""),
+
   /** --- GTM/GA4 container ID (optional — if set, the GTM script is loaded) --- */
   gtmId: readStr("NEXT_PUBLIC_GTM_ID", ""),
 } as const;

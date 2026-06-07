@@ -3,6 +3,8 @@
 import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { config } from '@/lib/config';
+import { cn } from '@/lib/utils';
 import { CalculatorIcon, DocUploadIcon, ClockIcon, RefreshCheckIcon, BankIcon } from './icons';
 
 const STEPS = [
@@ -29,7 +31,9 @@ const STEPS = [
   {
     icon: <BankIcon size={22} className="text-navy" />,
     title: 'Recibe tu dinero',
-    text: 'Desembolso directo a tu cuenta.',
+    text: config.disbursementTime
+      ? `Desembolso en ${config.disbursementTime} directo a tu cuenta.`
+      : 'Desembolso directo a tu cuenta.',
   },
 ];
 
@@ -98,18 +102,29 @@ export function HowItWorks() {
             aria-hidden="true"
           />
           <ol className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {STEPS.map((s, i) => (
-              <li key={i} data-hiw="step" className="flex flex-col gap-3 group xl:items-center xl:text-center xl:pt-8">
-                <div className="flex items-center gap-2.5 text-navy xl:flex-col xl:gap-1">
-                  <span className="relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white border-2 border-green/40 text-navy text-sm font-bold transition-transform duration-150 group-hover:scale-110 shadow-sm">
-                    {i + 1}
-                  </span>
-                  {s.icon}
-                </div>
-                <h4 className="text-base font-bold text-navy">{s.title}</h4>
-                <p className="text-sm text-muted-foreground">{s.text}</p>
-              </li>
-            ))}
+            {STEPS.map((s, i) => {
+              const isBookend = i === 0 || i === STEPS.length - 1;
+              return (
+                <li key={i} data-hiw="step" className={cn(
+                  'flex flex-col gap-3 group xl:items-center xl:text-center xl:pt-8',
+                  isBookend ? '' : 'opacity-75',
+                )}>
+                  <div className="flex items-center gap-2.5 text-navy xl:flex-col xl:gap-1">
+                    <span className={cn(
+                      'relative z-10 flex items-center justify-center rounded-full border-2 text-sm font-bold transition-transform duration-150 group-hover:scale-110 shadow-sm',
+                      isBookend
+                        ? 'w-12 h-12 border-green bg-green-tint text-green-ink text-base'
+                        : 'w-10 h-10 border-green/40 bg-white text-navy',
+                    )}>
+                      {i + 1}
+                    </span>
+                    {s.icon}
+                  </div>
+                  <h3 className={cn('text-navy', isBookend ? 'text-base font-bold' : 'text-sm font-semibold')}>{s.title}</h3>
+                  <p className={cn('text-muted-foreground', isBookend ? 'text-sm' : 'text-xs')}>{s.text}</p>
+                </li>
+              );
+            })}
           </ol>
         </div>
       </div>
