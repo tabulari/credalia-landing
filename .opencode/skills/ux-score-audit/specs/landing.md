@@ -32,8 +32,8 @@
 
 | Pts | Criterion | Precision | Verify With |
 |-----|-----------|-----------|-------------|
-| 2 | Section order: Hero → Simulate → Security → Requirements → HowItWorks → Faq → CtaBanner | fuzzy⚠️ | `<section>` order by DOM position |
-| 2 | Section backgrounds alternate correctly: white → soft → white → white → green-soft → white → navy-deep | fuzzy⚠️ | `getComputedStyle().backgroundColor` per section |
+| 2 | Section order: Hero → Simulate → Requirements → HowItWorks → Faq → CtaBanner | fuzzy⚠️ | `<section>` order by DOM position |
+| 2 | Section backgrounds alternate correctly: white → soft → white → green-soft → white → navy-deep | fuzzy⚠️ | `getComputedStyle().backgroundColor` per section |
 | 1 | Wave dividers between sections (5 total, amplitudes: soft/soft/medium/medium/bold) | fuzzy⚠️ | Count `SectionDivider` SVGs, check viewBox heights |
 | 1 | Every section has eyebrow (`uppercase tracking-widest text-xs`) + h2 (`font-display tracking-tight`) | exact | Query eyebrow and h2 in each section |
 | 1 | All h2 use `--font-display` | exact | `getComputedStyle().fontFamily` contains `DM Serif Display` |
@@ -113,11 +113,10 @@ back to the browser default `1px auto` ring.
 | Hero badge | `bg-green-tint rounded-full px-3 py-1.5`, conditional disbursement time |
 | Phone | 260×563px, Dynamic Island 80×22px, 4-layer navy shadow, green glow |
 | Simulator | green glow border-t-[3px], chip radio group, flash animation |
-| Security | 4-col grid, icons in green-tint circles, hover translate-y |
 | Requirements | max-w-lg, 18px icons, 20px animated checks, counter chip |
-| HowItWorks | 5-step bookends (w-12 green) vs dimmed (w-10 white, opacity-75), xl:5-col |
+| HowItWorks | 4-step white cards (rounded-lg, shadow-sm) on green-soft, progressive left-border accent (bg-green/25→50→75→100), step 4 destination treatment (bordered badge, ring-1 ring-green/30, green glow); grid 1→2→4 cols; compact mobile (p-3, w-8 badges, text-xs); CTA after step 4; timeline connector at lg+ |
 | Faq | max-w-3xl, preview text line-clamp-1, WA CTA at bottom |
 | CtaBanner | dot-grid bg, contained action panel (bg-white/[0.04] ring-1 ring-white/10 rounded-2xl), CheckCircleIcon bullets, urgency subtext, conditional disbursement. **Eyebrow uses `text-green-bright` (#2bbd6a)** — the standard `--green` fails AA (4.06:1) on the lightened panel bg; green-bright = 5.73:1 |
 | Footer | 3-tier structure: (1) 4-col grid `1.5fr_1fr_1fr_1fr` (brand+WhatsApp / Empresa / Ayuda / Síguenos), (2) legal+contact strip (Razón social · NIT · Contacto mailto, all ≥44px), (3) slim copyright bar (© + regulator note + Habeas Data); each tier `border-t border-white/10`, top border separates from CtaBanner. WhatsApp link uses `text-green` (#1e9e55 = 4.97:1 on footer gradient, AA pass); social icon SVGs `aria-hidden` inside `aria-label`ed anchors |
 | StickyBar | bg-white/95, safe-area-inset-bottom padding, shows past hero/simulator hidden |
-| SectionDividers | 5 total: medium/soft/soft/medium/bold amplitudes |
+| SectionDividers | 4 total: soft/soft/medium/bold amplitudes |

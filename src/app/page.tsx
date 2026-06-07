@@ -5,7 +5,6 @@ import { Simulator } from "@/components/Simulator";
 import { Requirements } from "@/components/Requirements";
 import { HowItWorks } from "@/components/HowItWorks";
 import { Faq } from "@/components/Faq";
-import { Security } from "@/components/Security";
 import { CtaBanner } from "@/components/CtaBanner";
 import { Footer } from "@/components/Footer";
 import { LandingOverlays } from "@/components/LandingOverlays";
@@ -22,7 +21,6 @@ export default function Home() {
           <Simulator />
         </SimulateSection>
         <SectionDivider amplitude="soft" to="#ffffff" />
-        <Security />
         <Requirements />
         <SectionDivider amplitude="medium" to="#e8f2dd" />
         <HowItWorks />
