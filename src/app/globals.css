@@ -318,36 +318,20 @@ body.has-payment-bar {
   }
 }
 
-/* ===== CTA banner ambient glow (continuous "wow" ambiance) ===== */
-@keyframes cta-glow-drift {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.55; }
-  50%      { transform: translate3d(6%, -8%, 0) scale(1.15); opacity: 0.9; }
-}
-@keyframes cta-sheen {
-  0%   { transform: translateX(-120%) skewX(-18deg); }
-  100% { transform: translateX(220%) skewX(-18deg); }
-}
-@keyframes cta-chevron-drift {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50%      { transform: translate3d(-10px, -6px, 0); }
-}
-/* Soft colored light blooms behind the panel — slow, meditative */
+/* ===== CTA banner ambient glow (static depth, no perpetual motion) ===== */
 .cta-glow {
   position: absolute;
   border-radius: 9999px;
   filter: blur(64px);
-  will-change: transform, opacity;
-  animation: cta-glow-drift 11s ease-in-out infinite;
+  opacity: 0.5;
 }
 .cta-glow--green {
   background: radial-gradient(circle, rgba(43, 189, 106, 0.5), transparent 70%);
 }
 .cta-glow--orange {
   background: radial-gradient(circle, rgba(245, 96, 27, 0.35), transparent 70%);
-  animation-duration: 14s;
-  animation-direction: reverse;
 }
-/* One-pass sheen that sweeps across the panel ring after entrance */
+/* One-shot sheen that sweeps across the panel ring on entrance (driven by GSAP) */
 .cta-sheen {
   position: absolute;
   inset: 0;
@@ -363,11 +347,6 @@ body.has-payment-bar {
   width: 45%;
   height: 100%;
   background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.12), transparent);
-  animation: cta-sheen 6.5s ease-in-out 1.2s infinite;
-}
-.cta-chevron {
-  animation: cta-chevron-drift 9s ease-in-out infinite;
-  will-change: transform;
 }
 
 /* ===== reduced motion ===== */
@@ -383,9 +362,5 @@ body.has-payment-bar {
   .flash { animation: none !important; }
   [data-slot="payment-bar"] { transition: none !important; }
   .hero-atmosphere { animation: none !important; }
-  .cta-glow,
-  .cta-sheen::before,
-  .cta-chevron { animation: none !important; }
-  .cta-glow { opacity: 0.5 !important; }
   body::before { display: none; }
 }

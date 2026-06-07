@@ -34,6 +34,7 @@ export function CtaBanner() {
     const bulletEls = root.querySelectorAll('[data-cta="bullet"]');
     const buttons = root.querySelectorAll('[data-cta="action"]');
     const reassure = root.querySelector('[data-cta="reassure"]');
+    const sheen = root.querySelector('.cta-sheen');
     const heading = headingRef.current;
 
     const ctx = gsap.context(() => {
@@ -79,6 +80,12 @@ export function CtaBanner() {
         tl.from(buttons, { y: 22, scale: 0.92, autoAlpha: 0, stagger: 0.12, duration: 0.5, ease: 'back.out(1.5)' }, 0.8);
       }
       if (reassure) tl.from(reassure, { autoAlpha: 0, duration: 0.4 }, 1.05);
+
+      // 7. One-shot sheen sweep across the panel ring
+      if (sheen) {
+        gsap.set(sheen, { xPercent: -270 });
+        tl.to(sheen, { xPercent: 270, duration: 0.9, ease: 'power2.inOut' }, 1.1);
+      }
     }, containerRef);
 
     return () => ctx.revert();
