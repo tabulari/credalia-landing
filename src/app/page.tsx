@@ -22,12 +22,12 @@ export default function Home() {
           <Simulator />
         </SimulateSection>
         <SectionDivider amplitude="soft" to="#ffffff" />
+        <Security />
         <Requirements />
         <SectionDivider amplitude="medium" to="#e8f2dd" />
         <HowItWorks />
         <SectionDivider amplitude="medium" flip to="#ffffff" />
         <Faq />
-        <Security />
         <SectionDivider amplitude="bold" to="#0a2150" className="-mt-1 mb-0" />
         <CtaBanner />
       </main>

@@ -51,7 +51,8 @@ export function Hero() {
       if (whatsapp) tl.from(whatsapp, { autoAlpha: 0, duration: 0.4 }, 0.85);
 
       if (phone) {
-        tl.from(phone, { y: 40, autoAlpha: 0, duration: 0.8 }, 0.15);
+        const phoneEl = phone.querySelector('.phone');
+        if (phoneEl) tl.from(phoneEl, { y: 60, autoAlpha: 0, rotateY: -8, scale: 0.92, duration: 1.0, ease: 'power3.out' }, 0.15);
       }
 
       if (trustCard) {
@@ -64,12 +65,15 @@ export function Hero() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} aria-labelledby="hero-heading" className="pt-12 pb-8 lg:pt-16 lg:pb-12 overflow-hidden bg-[radial-gradient(ellipse_at_20%_50%,rgba(13,42,94,0.05),transparent_60%)]">
+    <section ref={containerRef} aria-labelledby="hero-heading" className="pt-12 pb-8 lg:pt-16 lg:pb-12 overflow-hidden hero-atmosphere">
       <div className="mx-auto max-w-container px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
         <div className="flex flex-col gap-3 lg:gap-4 relative z-10">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-1">Crédito digital</p>
           <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
             <ShieldCheckIcon size={20} className="text-green-ink" />
-            Crédito 100% en línea
+            {config.disbursementTime
+              ? `100% en línea · Dinero en ${config.disbursementTime}`
+              : '100% en línea'}
           </span>
           <h1 ref={h1Ref} id="hero-heading" className="text-5xl lg:text-7xl font-display tracking-tight text-navy leading-tight">
             Crédito digital hasta{' '}
@@ -89,7 +93,7 @@ export function Hero() {
           <div data-hero="whatsapp" className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-1">
             <WhatsAppLink
               ctx="hero"
-              className="inline-flex items-center gap-2 text-sm text-green-ink hover:text-green-ink/80 transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-green-ink hover:text-green-ink/80 transition-colors py-3"
             >
               <span className="wa-ico" aria-hidden="true" />
               <span>
@@ -113,23 +117,8 @@ export function Hero() {
           </div>
         </div>
 
-        <div data-hero="phone" className="relative hidden stack:flex items-center justify-center">
-          <div className="absolute w-[400px] h-[400px] bg-green/[0.08] rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
-            <svg viewBox="0 0 560 560" fill="none" className="w-full opacity-50">
-              <circle cx="280" cy="280" r="120" stroke="var(--green)" strokeWidth="1.5" opacity="0.15" />
-              <circle cx="280" cy="280" r="180" stroke="var(--navy)" strokeWidth="1.5" opacity="0.10" />
-              <circle cx="280" cy="280" r="250" stroke="var(--border)" strokeWidth="1.5" />
-            </svg>
-          </div>
-          <div className="absolute pointer-events-none" style={{ right: 'calc(50% + 60px)', top: '50%', transform: 'translateY(-50%)', zIndex: 0 }} aria-hidden="true">
-            <svg width="130" height="130" viewBox="0 0 220 200" fill="none">
-              <path d="M10 26 C10 16 18 8 28 8 L70 8 L138 92 C144 99 144 109 138 116 L70 200 L28 200 C18 200 10 192 10 182 Z" fill="var(--green)" />
-              <path d="M70 26 C70 16 78 8 88 8 L130 8 L198 92 C204 99 204 109 198 116 L130 200 L88 200 C78 200 70 192 70 182 Z" fill="var(--orange)" />
-              <path d="M130 26 C130 16 138 8 148 8 L190 8 L258 92 C264 99 264 109 258 116 L190 200 L148 200 C138 200 130 192 130 182 Z" fill="var(--navy)" />
-            </svg>
-          </div>
-          <div style={{ position: 'relative', zIndex: 1 }}>
+        <div data-hero="phone" className="relative hidden stack:flex items-center justify-center" style={{ perspective: '1200px' }}>
+          <div style={{ transformStyle: 'preserve-3d' }}>
             <PhoneChat />
           </div>
         </div>
@@ -147,7 +136,11 @@ export function Hero() {
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-tint text-green shrink-0">
                 <ClockIcon size={18} />
               </span>
-              <span className="text-sm font-medium text-navy-ink">Respuesta en minutos</span>
+              <span className="text-sm font-medium text-navy-ink">
+                {config.disbursementTime
+                  ? `Dinero en tu cuenta en ${config.disbursementTime}`
+                  : 'Respuesta en minutos'}
+              </span>
             </div>
             <div data-hero="trust-item" className="flex items-center gap-2.5">
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-tint text-green shrink-0">
