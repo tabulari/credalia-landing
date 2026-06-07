@@ -63,7 +63,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           aria-label="Disminuir monto"
           onClick={() => bump(-1)}
           disabled={amount <= AMOUNT_MIN}
-          className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-border text-navy hover:bg-bg-soft disabled:opacity-40 transition-colors"
+          className="flex-shrink-0 flex items-center justify-center w-[46px] h-[46px] rounded-md border border-border text-navy hover:bg-bg-soft disabled:opacity-40 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <MinusIcon size={18} />
         </button>
@@ -78,7 +78,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
             aria-describedby="amountHint"
             onChange={handleInputChange}
             onBlur={handleInputBlur}
-            className="flex-1 min-w-0 text-2xl font-extrabold text-navy outline-none bg-transparent"
+            className="flex-1 min-w-0 text-2xl font-extrabold text-navy outline-none bg-transparent min-h-[44px] rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           />
         </div>
         <button
@@ -86,7 +86,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           aria-label="Aumentar monto"
           onClick={() => bump(1)}
           disabled={amount >= AMOUNT_MAX}
-          className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-border text-navy hover:bg-bg-soft disabled:opacity-40 transition-colors"
+          className="flex-shrink-0 flex items-center justify-center w-[46px] h-[46px] rounded-md border border-border text-navy hover:bg-bg-soft disabled:opacity-40 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <PlusIcon size={18} />
         </button>
@@ -95,7 +95,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
         <button
           type="button"
           onClick={() => { inputRef.current?.focus(); inputRef.current?.select(); }}
-          className="text-xs font-semibold text-navy hover:underline flex-shrink-0 whitespace-nowrap hidden sm:inline"
+          className="text-xs font-semibold text-navy hover:underline flex-shrink-0 whitespace-nowrap hidden sm:inline min-h-[46px] flex items-center rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           Ingresar monto exacto
         </button>
@@ -115,7 +115,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           aria-valuenow={amount}
           aria-valuetext={`$${fmtCOP(amount)} COP`}
           onChange={handleSliderChange}
-          className="w-full h-2 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[18px] [&::-webkit-slider-thumb]:h-[18px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-green [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-[18px] [&::-moz-range-thumb]:h-[18px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-green [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+          className="w-full h-11 py-[18px] box-border bg-clip-content rounded-full appearance-none cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[18px] [&::-webkit-slider-thumb]:h-[18px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-green [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-[18px] [&::-moz-range-thumb]:h-[18px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-green [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
           style={{ background: `linear-gradient(to right, var(--green) 0% ${pct}%, var(--border) ${pct}% 100%)` }}
         />
         <div className="flex justify-between mt-1.5">

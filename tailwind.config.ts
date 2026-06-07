@@ -25,8 +25,8 @@ const config: Config = {
         ring: "var(--ring)",
         // Brand tokens
         navy: { DEFAULT: "#0d2a5e", deep: "#0a2150", ink: "#11213f" },
-        orange: "#f5601b",
-        green: { DEFAULT: "#1e9e55", ink: "#15793f", soft: "#e8f2dd", "soft-ink": "#137038", tint: "#e7faf4" },
+        orange: { DEFAULT: "#f5601b", ink: "#c2440a" },
+        green: { DEFAULT: "#1e9e55", ink: "#15793f", soft: "#e8f2dd", "soft-ink": "#137038", tint: "#e7faf4", bright: "#2bbd6a" },
         ink: "#14213d",
         "muted-2": "#677085",
         "bg-soft": "#f7f9fa",

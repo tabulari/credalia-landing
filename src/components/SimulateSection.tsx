@@ -42,7 +42,7 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
                   {f.icon}
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-navy leading-snug">{f.title}</h4>
+                  <h3 className="text-sm font-bold text-navy leading-snug">{f.title}</h3>
                   <p className="text-sm text-muted-foreground mt-0.5">{f.text}</p>
                 </div>
               </div>
@@ -53,7 +53,7 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
             {children}
             <WhatsAppLink
               ctx="hero"
-              className="flex items-center justify-center gap-2.5 text-sm font-semibold text-green-ink hover:text-green-ink/80 transition-colors"
+              className="flex items-center justify-center gap-2.5 text-sm font-semibold text-green-ink hover:text-green-ink/80 transition-colors py-3"
             >
               <span className="wa-ico" aria-hidden="true" />
               Hablar por WhatsApp

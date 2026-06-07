@@ -121,16 +121,16 @@ export function StickyPaymentBar() {
             <span className="text-xs font-semibold text-muted-2 ml-1">{sim.unit}</span>
           </span>
         </div>
-        <span className="hidden sm:block text-sm font-semibold text-muted pl-4 border-l border-border whitespace-nowrap">
+        <span className="hidden sm:block text-sm font-semibold text-muted-2 pl-4 border-l border-border whitespace-nowrap">
           {`$${fmtCOP(sim.amount)} · ${sim.term} meses`}
         </span>
-        <div className="flex items-center gap-3 ml-auto shrink-0">
+        <div className="flex items-center gap-3 ml-auto shrink-0 min-h-[44px]">
           <ScrollButton
             variant="ghost"
             size="sm"
             target="#simula"
             aria-label="Ajustar tu simulación"
-            className="text-navy"
+            className="text-navy h-11"
           >
             <PencilIcon size={17} />
             <span className="hidden sm:inline">Ajustar</span>
@@ -140,6 +140,7 @@ export function StickyPaymentBar() {
             variant="default"
             size="sm"
             disabled={!sim.valid}
+            className="h-11"
           >
             Solicitar crédito
           </ApplyButton>

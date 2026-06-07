@@ -46,7 +46,7 @@ export function Nav() {
         <a
           href="#top"
           aria-label={`${config.brandName} — inicio`}
-          className="flex items-center gap-2.5"
+          className="flex items-center gap-2.5 py-2"
         >
           <span aria-hidden="true">
             <CredaliaLogo size={48} />
@@ -61,7 +61,7 @@ export function Nav() {
             <a
               key={l.href}
               href={l.href}
-              className="text-sm font-semibold text-foreground/80 hover:text-navy transition-colors relative after:content-[''] after:absolute after:bottom-px after:left-0 after:h-0.5 after:w-0 after:bg-navy after:transition-all after:duration-200 hover:after:w-full"
+              className="text-sm font-semibold text-foreground/80 hover:text-navy transition-colors py-3 relative after:content-[''] after:absolute after:bottom-px after:left-0 after:h-0.5 after:w-0 after:bg-navy after:transition-all after:duration-200 hover:after:w-full"
             >
               {l.label}
             </a>
@@ -72,7 +72,7 @@ export function Nav() {
           <ApplyButton
             variant="default"
             size="sm"
-            className="hidden md:inline-flex"
+            className="hidden md:inline-flex min-h-[44px]"
           >
             Iniciar solicitud
           </ApplyButton>
@@ -83,7 +83,7 @@ export function Nav() {
             aria-expanded={open}
             aria-controls="navMobile"
             onClick={() => setOpen((o) => !o)}
-            className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg text-navy hover:bg-muted"
+            className="md:hidden flex items-center justify-center w-11 h-11 rounded-lg text-navy hover:bg-muted"
           >
             <HamburgerIcon size={26} />
           </button>
