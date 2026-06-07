@@ -42,13 +42,16 @@ export function Requirements() {
     const checkmarks = containerRef.current?.querySelectorAll('[data-req="checkmark"]');
 
     if (heading) {
-      gsap.from(heading, { y: 20, autoAlpha: 0, duration: 0.6, ease: 'power2.out',
+      gsap.fromTo(heading, { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: 'power2.out',
         scrollTrigger: { trigger: heading, start: 'top 85%' } });
     }
     if (items && items.length) {
-      gsap.from(items, {
+      gsap.fromTo(items, {
         x: -20,
         autoAlpha: 0,
+      }, {
+        x: 0,
+        autoAlpha: 1,
         stagger: 0.1,
         duration: 0.5,
         ease: 'power2.out',

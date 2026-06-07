@@ -47,10 +47,14 @@ export function Simulator() {
   useGSAP(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion || !simRef.current) return;
-    gsap.from(simRef.current, {
+    gsap.fromTo(simRef.current, {
       y: 20,
       scale: 0.98,
       autoAlpha: 0,
+    }, {
+      y: 0,
+      scale: 1,
+      autoAlpha: 1,
       duration: 0.7,
       ease: 'back.out(1.2)',
       scrollTrigger: { trigger: simRef.current, start: 'top 85%' },

@@ -24,13 +24,16 @@ export function Faq() {
     const cta = containerRef.current?.querySelector('[data-faq="cta"]');
 
     if (heading) {
-      gsap.from(heading, { y: 20, autoAlpha: 0, duration: 0.6, ease: 'power2.out',
+      gsap.fromTo(heading, { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: 'power2.out',
         scrollTrigger: { trigger: heading, start: 'top 85%' } });
     }
     if (items && items.length) {
-      gsap.from(items, {
+      gsap.fromTo(items, {
         y: 20,
         autoAlpha: 0,
+      }, {
+        y: 0,
+        autoAlpha: 1,
         stagger: 0.08,
         duration: 0.5,
         ease: 'power2.out',
@@ -38,7 +41,7 @@ export function Faq() {
       });
     }
     if (cta) {
-      gsap.from(cta, { y: 15, autoAlpha: 0, duration: 0.5, ease: 'power2.out',
+      gsap.fromTo(cta, { y: 15, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power2.out',
         scrollTrigger: { trigger: cta, start: 'top 90%' } });
     }
   }, { scope: containerRef });
