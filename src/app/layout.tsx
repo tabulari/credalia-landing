@@ -100,7 +100,7 @@ export default function RootLayout({
             <a
               href={`https://wa.me/${config.whatsappPhone}`}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
             >
               WhatsApp
             </a>{" "}

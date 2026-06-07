@@ -93,7 +93,7 @@ export default async function LegalDoc({
 
         <p className="legal-foot">
           ¿Tienes preguntas sobre este documento? Escríbenos por{" "}
-          <a href={`https://wa.me/${config.whatsappPhone}`} target="_blank" rel="noopener">
+          <a href={`https://wa.me/${config.whatsappPhone}`} target="_blank" rel="noopener noreferrer">
             WhatsApp
           </a>
           .

@@ -131,7 +131,7 @@ export function Step3({ values, consent, consentError, setConsent, setConsentErr
         />
         <span className="text-muted-foreground">
           Autorizo el tratamiento de mis datos personales conforme a la{' '}
-          <a href="/legal/privacidad" target="_blank" rel="noopener" className="text-navy font-semibold hover:underline">Política de Privacidad</a>{' '}
+          <a href="/legal/privacidad" target="_blank" rel="noopener noreferrer" className="text-navy font-semibold hover:underline">Política de Privacidad</a>{' '}
           y la Ley 1581 de 2012 (Habeas Data).
         </span>
       </label>

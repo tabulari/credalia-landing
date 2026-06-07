@@ -25,7 +25,7 @@ export function WhatsAppLink({
       className={className}
       href={buildWhatsAppUrl(ctx, sim)}
       target="_blank"
-      rel="noopener"
+      rel="noopener noreferrer"
       data-wa-ctx={ctx}
       onClick={() => track("whatsapp_click", { ctx })}
     >
