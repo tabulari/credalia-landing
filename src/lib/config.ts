@@ -215,7 +215,8 @@ if (
 if (
   process.env.NODE_ENV === "production" &&
   typeof window !== "undefined" &&
-  config.credit.monthlyRate === 0.026
+  config.credit.monthlyRate === 0.026 &&
+  process.env.NEXT_PUBLIC_CREDALIA_ALLOW_PLACEHOLDERS !== "true"
 ) {
   console.warn(
     "⚠️ Credalia: running in production with the placeholder monthly rate (2.6%). " +
