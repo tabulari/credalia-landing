@@ -5,7 +5,8 @@ import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { config } from '@/lib/config';
 import { cn } from '@/lib/utils';
-import { CalculatorIcon, DocUploadIcon, ClockIcon, RefreshCheckIcon, BankIcon } from './icons';
+import { CalculatorIcon, DocUploadIcon, RefreshCheckIcon, BankIcon } from './icons';
+import { ApplyButton } from './ApplyButton';
 
 const STEPS = [
   {
@@ -19,23 +20,25 @@ const STEPS = [
     text: 'Cédula y un soporte. 100% en línea.',
   },
   {
-    icon: <ClockIcon size={22} className="text-navy" />,
-    title: 'Análisis en minutos',
-    text: 'Evaluamos tu solicitud automáticamente.',
-  },
-  {
     icon: <RefreshCheckIcon size={22} className="text-navy" />,
-    title: 'Recibe tu decisión',
-    text: 'Te avisamos por WhatsApp y correo.',
+    title: 'Confirma tu aprobación',
+    text: 'Te avisamos por WhatsApp al instante.',
   },
   {
-    icon: <BankIcon size={22} className="text-navy" />,
+    icon: <BankIcon size={22} className="text-green" />,
     title: 'Recibe tu dinero',
     text: config.disbursementTime
       ? `Desembolso en ${config.disbursementTime} directo a tu cuenta.`
       : 'Desembolso directo a tu cuenta.',
   },
 ];
+
+const STEP_ACCENTS = [
+  'bg-green/25',
+  'bg-green/50',
+  'bg-green/75',
+  'bg-green',
+] as const;
 
 export function HowItWorks() {
   const containerRef = useRef<HTMLElement>(null);
@@ -48,24 +51,85 @@ export function HowItWorks() {
     const cards = containerRef.current?.querySelectorAll('[data-hiw="step"]');
     const heading = containerRef.current?.querySelector('[data-hiw="heading"]');
     const eyebrow = containerRef.current?.querySelector('[data-hiw="eyebrow"]');
+    const cta = containerRef.current?.querySelector('[data-hiw="cta"]');
 
     if (eyebrow) {
-      gsap.from(eyebrow, { y: 15, autoAlpha: 0, duration: 0.5, ease: 'power2.out',
-        scrollTrigger: { trigger: eyebrow, start: 'top 85%' } });
+      gsap.fromTo(eyebrow,
+        { y: 15, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power2.out',
+          scrollTrigger: { trigger: eyebrow, start: 'top 85%' } });
     }
     if (heading) {
-      gsap.from(heading, { y: 20, autoAlpha: 0, duration: 0.6, ease: 'power2.out',
-        scrollTrigger: { trigger: heading, start: 'top 85%' } });
+      gsap.fromTo(heading,
+        { y: 20, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.6, ease: 'power2.out',
+          scrollTrigger: { trigger: heading, start: 'top 85%' } });
     }
+
     if (cards && cards.length) {
-      gsap.from(cards, {
-        y: 30,
-        autoAlpha: 0,
-        stagger: 0.1,
-        duration: 0.6,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: containerRef.current, start: 'top 80%' },
+      const isDesktop = window.innerWidth >= 1280;
+
+      const tl = gsap.timeline({
+        scrollTrigger: isDesktop
+          ? {
+              trigger: containerRef.current,
+              start: 'top 75%',
+              end: 'center 40%',
+              scrub: 0.8,
+            }
+          : { trigger: containerRef.current, start: 'top 78%' },
       });
+
+      const stepGap = isDesktop ? 0.18 : 0.14;
+      const cardDur = isDesktop ? 0.35 : 0.5;
+      const cardEase = isDesktop ? 'power2.out' : 'power3.out';
+
+      cards.forEach((card, i) => {
+        const isLast = i === cards.length - 1;
+        const accent = card.querySelector('[data-hiw="accent"]');
+        const badge = card.querySelector('[data-hiw="badge"]');
+        const glow = card.querySelector('[data-hiw="glow"]');
+        const pos = i * stepGap;
+
+        if (accent) {
+          tl.fromTo(accent,
+            { scaleY: 0 },
+            { scaleY: 1, duration: isDesktop ? 0.25 : 0.35, ease: 'power2.out', transformOrigin: 'top' },
+            pos
+          );
+        }
+
+        tl.fromTo(card,
+          { y: isDesktop ? 20 : 25, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: cardDur, ease: cardEase },
+          pos
+        );
+
+        if (badge) {
+          tl.fromTo(badge,
+            { scale: 0.5, autoAlpha: 0 },
+            { scale: 1, autoAlpha: 1, duration: isDesktop ? 0.25 : 0.35, ease: 'back.out(2.5)' },
+            pos + (isDesktop ? 0.1 : 0.08)
+          );
+        }
+
+        if (isLast && glow) {
+          tl.fromTo(glow,
+            { autoAlpha: 0, scale: 0.7 },
+            { autoAlpha: 1, scale: 1, duration: isDesktop ? 0.3 : 0.5, ease: 'power2.out' },
+            pos + (isDesktop ? 0.2 : 0.2)
+          );
+        }
+      });
+
+      if (cta) {
+        const lastPos = (cards.length - 1) * stepGap;
+        tl.fromTo(cta,
+          { y: 15, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power2.out' },
+          lastPos + 0.3
+        );
+      }
     }
 
     if (lineRef.current) {
@@ -77,7 +141,7 @@ export function HowItWorks() {
           scrollTrigger: {
             trigger: containerRef.current,
             start: 'top 70%',
-            end: 'bottom 70%',
+            end: 'center 50%',
             scrub: 1,
           },
         },
@@ -91,41 +155,72 @@ export function HowItWorks() {
         <div className="mb-12 lg:mb-14">
           <p data-hiw="eyebrow" className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Cómo funciona</p>
           <h2 data-hiw="heading" id="hiw-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
-            Un proceso claro en 5 pasos.
+            Un proceso claro en 4 pasos.
           </h2>
         </div>
 
         <div className="relative">
           <div
             ref={lineRef}
-            className="hidden xl:block absolute top-5 left-[5%] right-[5%] h-0.5 bg-green/30 origin-left"
+            className="hidden lg:block absolute top-8 left-[8%] right-[8%] h-0.5 bg-green/25 origin-left"
             aria-hidden="true"
           />
-          <ol className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <ol className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {STEPS.map((s, i) => {
-              const isBookend = i === 0 || i === STEPS.length - 1;
+              const isLast = i === STEPS.length - 1;
               return (
                 <li key={i} data-hiw="step" className={cn(
-                  'flex flex-col gap-3 group xl:items-center xl:text-center xl:pt-8',
-                  isBookend ? '' : 'opacity-75',
+                  'relative rounded-lg bg-white',
+                  'p-3 sm:p-5',
+                  'shadow-[0_1px_3px_rgba(13,42,94,0.08)]',
+                  'hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(13,42,94,0.12)]',
+                  'transition-[shadow,transform] duration-300',
+                  'lg:flex lg:flex-col lg:items-center lg:text-center lg:pt-8',
+                  isLast && 'ring-1 ring-green/30',
                 )}>
-                  <div className="flex items-center gap-2.5 text-navy xl:flex-col xl:gap-1">
-                    <span className={cn(
-                      'relative z-10 flex items-center justify-center rounded-full border-2 text-sm font-bold transition-transform duration-150 group-hover:scale-110 shadow-sm',
-                      isBookend
-                        ? 'w-12 h-12 border-green bg-green-tint text-green-ink text-base'
-                        : 'w-10 h-10 border-green/40 bg-white text-navy',
-                    )}>
-                      {i + 1}
+                  <div
+                    data-hiw="accent"
+                    className={cn(
+                      'absolute left-0 top-3 bottom-3 w-1 rounded-full',
+                      STEP_ACCENTS[i],
+                    )}
+                    aria-hidden="true"
+                  />
+
+                  <div className="flex items-center gap-2 sm:gap-2.5 lg:flex-col lg:gap-1">
+                    <span
+                      data-hiw="badge"
+                      className={cn(
+                        'flex items-center justify-center rounded-full font-bold shrink-0',
+                        isLast
+                          ? 'w-9 h-9 sm:w-11 sm:h-11 bg-green-tint text-green-ink text-sm sm:text-base border-2 border-green'
+                          : 'w-8 h-8 sm:w-10 sm:h-10 bg-green-tint text-green-ink text-xs sm:text-sm',
+                      )}
+                    >
+                      <span className="sr-only">Paso </span>{i + 1}
                     </span>
                     {s.icon}
                   </div>
-                  <h3 className={cn('text-navy', isBookend ? 'text-base font-bold' : 'text-sm font-semibold')}>{s.title}</h3>
-                  <p className={cn('text-muted-foreground', isBookend ? 'text-sm' : 'text-xs')}>{s.text}</p>
+                  <h3 className={cn('mt-1.5 sm:mt-2 text-navy', isLast ? 'text-sm sm:text-base font-bold' : 'text-xs sm:text-sm font-semibold')}>{s.title}</h3>
+                  <p className={cn('mt-0.5 sm:mt-1', isLast ? 'text-xs sm:text-sm text-navy/70' : 'text-[11px] sm:text-xs text-muted-foreground')}>{s.text}</p>
+
+                  {isLast && (
+                    <div
+                      data-hiw="glow"
+                      className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4/5 h-4 bg-green/15 blur-lg rounded-full"
+                      aria-hidden="true"
+                    />
+                  )}
                 </li>
               );
             })}
           </ol>
+
+          <div data-hiw="cta" className="mt-8 text-center">
+            <ApplyButton origin="hiw" size="lg">
+              Comienza tu solicitud
+            </ApplyButton>
+          </div>
         </div>
       </div>
     </section>
