@@ -15,26 +15,6 @@ const phoneSim = calculatePayment(
 
 const SCROLL_AFTER = [0, 0, 60, 120, 170, 240, 300, 360, 420, 480, 540];
 
-function startMeditativeFloat(shell: HTMLElement) {
-  gsap.to(shell, {
-    y: 3,
-    rotateX: 0.8,
-    duration: 2.25,
-    ease: 'sine.inOut',
-    yoyo: true,
-    repeat: -1,
-  });
-  gsap.to(shell, {
-    y: -3,
-    rotateX: -0.8,
-    duration: 2.25,
-    ease: 'sine.inOut',
-    yoyo: true,
-    repeat: -1,
-    delay: 2.25,
-  });
-}
-
 function startMouseTilt(
   shell: HTMLElement,
   wrapper: HTMLElement,
@@ -43,16 +23,24 @@ function startMouseTilt(
   const isDesktop = window.matchMedia('(min-width: 980px)').matches;
   if (reduceMotion || !isDesktop) return () => {};
 
-  const setTilt = gsap.quickTo(shell, 'rotateY', { duration: 0.6, ease: 'power2.out' });
-  const setTiltX = gsap.quickTo(shell, 'rotateX', { duration: 0.6, ease: 'power2.out' });
+  // Establish a clean, explicit 3D transform baseline so GSAP tracks all
+  // transform components from a known-zero state (avoids the "not eligible for
+  // reset" issue that left the parallax tilt silently never rendering).
+  gsap.set(shell, { x: 0, y: 0, rotateX: 0, rotateY: 0, transformPerspective: 1000, transformOrigin: 'center center' });
+
+  const applyTilt = (rotY: number, rotX: number) => {
+    gsap.to(shell, { rotateY: rotY, rotateX: rotX, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+  };
 
   const onMove = (e: MouseEvent) => {
     const rect = wrapper.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-    setTilt(x * 3);
-    setTiltX(-y * 2);
+    applyTilt(x * 3, -y * 2);
   };
+
+  // Ease back to a perfectly level resting state when the cursor leaves the page.
+  const onLeave = () => applyTilt(0, 0);
 
   let rafId: number;
   const onRafMove = (e: MouseEvent) => {
@@ -61,8 +49,10 @@ function startMouseTilt(
   };
 
   window.addEventListener('mousemove', onRafMove);
+  document.documentElement.addEventListener('mouseleave', onLeave);
   return () => {
     window.removeEventListener('mousemove', onRafMove);
+    document.documentElement.removeEventListener('mouseleave', onLeave);
     cancelAnimationFrame(rafId);
   };
 }
@@ -163,8 +153,10 @@ export function PhoneChat() {
     }
 
     tl.call(() => {
+      // Settle the phone to a stable, level resting state — no perpetual motion.
+      // A fintech device mockup should sit still and authoritative; motion comes
+      // only from intentful user interaction (desktop cursor parallax below).
       gsap.set(shell, { clearProps: 'transform' });
-      startMeditativeFloat(shell);
       if (containerRef.current) {
         mouseCleanupRef.current = startMouseTilt(shell, containerRef.current);
       }

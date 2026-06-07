@@ -13,7 +13,8 @@
 | 1 | Drop-shadow: 4 layers, all navy-tinted (rgba(13,42,94,...)), no gray shadows | exact | `getComputedStyle().filter` or computed shadow |
 | 1 | Metallic edge visible (side buttons, body outline) | range | `::before`/`::after` pseudo-elements exist on `.phone` |
 | 1 | Green glow under phone: 140×28px, rgba(30,158,85,0.08), blur 32px | exact | `getBoundingClientRect()` + `getComputedStyle()` on glow element |
-| 1 | Float animation: `phone-floating` class, translateY ≤6px, period 3-5s | range | `getComputedStyle().animationName`, keyframe values |
+| 1 | Resting state: phone sits perfectly still (NO perpetual float/bob — reads as childish for a fintech). After the chat entrance settles, the shell holds a fixed level transform with `animationName: none` and no GSAP yoyo tween. | exact | Sample `getComputedStyle().transform` 5× over ~2.5s with no input → all identical |
+| 1 | Desktop parallax: on `min-width:980px` (non-reduced-motion), the phone tilts toward the cursor in 3D (`matrix3d`, rotateY/rotateX a few degrees) and eases back to level on `mouseleave`. Mobile + reduced-motion = fully static, no tilt. | range | Real `mouse.move` to opposite corners → distinct `matrix3d` transforms; reduced-motion/mobile → `transform: none` constant |
 
 ### Category 9: Simulator Integrity (10pts)
 
@@ -93,7 +94,7 @@ back to the browser default `1px auto` ring.
 |-----------|--------------|---------------|
 | Hero entrance | SplitText chars, stagger 25ms | — |
 | Phone entrance | rotateY -8 → 0, scale 0.92 → 1 | — |
-| Phone float | translateY ±6px, 4s period | — |
+| Phone motion | Still at rest; desktop cursor parallax only (no perpetual float) | — |
 | Simulator spring | `back.out(1.2)`, 700ms | — |
 | Card reveals | ScrollTrigger, y:30, stagger 100ms | — |
 
