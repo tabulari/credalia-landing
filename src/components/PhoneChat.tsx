@@ -15,10 +15,64 @@ const phoneSim = calculatePayment(
 
 const SCROLL_AFTER = [0, 0, 60, 120, 170, 240, 300, 360, 420, 480, 540];
 
+function startMeditativeFloat(shell: HTMLElement) {
+  gsap.to(shell, {
+    y: 3,
+    rotateX: 0.8,
+    duration: 2.25,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1,
+  });
+  gsap.to(shell, {
+    y: -3,
+    rotateX: -0.8,
+    duration: 2.25,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1,
+    delay: 2.25,
+  });
+}
+
+function startMouseTilt(
+  shell: HTMLElement,
+  wrapper: HTMLElement,
+): () => void {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isDesktop = window.matchMedia('(min-width: 980px)').matches;
+  if (reduceMotion || !isDesktop) return () => {};
+
+  const setTilt = gsap.quickTo(shell, 'rotateY', { duration: 0.6, ease: 'power2.out' });
+  const setTiltX = gsap.quickTo(shell, 'rotateX', { duration: 0.6, ease: 'power2.out' });
+
+  const onMove = (e: MouseEvent) => {
+    const rect = wrapper.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    setTilt(x * 3);
+    setTiltX(-y * 2);
+  };
+
+  let rafId: number;
+  const onRafMove = (e: MouseEvent) => {
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => onMove(e));
+  };
+
+  window.addEventListener('mousemove', onRafMove);
+  return () => {
+    window.removeEventListener('mousemove', onRafMove);
+    cancelAnimationFrame(rafId);
+  };
+}
+
 export function PhoneChat() {
   const containerRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const chatBodyRef = useRef<HTMLDivElement>(null);
+
+  const mouseCleanupRef = useRef<(() => void) | null>(null);
 
   useGSAP(() => {
     if (typeof window === 'undefined') return;
@@ -37,7 +91,6 @@ export function PhoneChat() {
       if (typing) gsap.set(typing, { autoAlpha: 0 });
       if (waBtns) gsap.set(waBtns, { autoAlpha: 1, y: 0 });
       chatBody.scrollTop = chatBody.scrollHeight;
-      shell.classList.add('phone-floating');
       return;
     }
 
@@ -111,8 +164,15 @@ export function PhoneChat() {
 
     tl.call(() => {
       gsap.set(shell, { clearProps: 'transform' });
-      shell.classList.add('phone-floating');
+      startMeditativeFloat(shell);
+      if (containerRef.current) {
+        mouseCleanupRef.current = startMouseTilt(shell, containerRef.current);
+      }
     }, undefined, '+=0.5');
+
+    return () => {
+      mouseCleanupRef.current?.();
+    };
   }, { scope: containerRef });
 
   return (

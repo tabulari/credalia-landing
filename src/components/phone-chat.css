@@ -6,6 +6,8 @@
 .phone-wrapper {
   display: flex;
   justify-content: center;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
 }
 
 .phone {
@@ -21,10 +23,6 @@
     drop-shadow(0 48px 80px rgba(13,42,94,0.06));
   z-index: 1;
   will-change: transform;
-}
-
-.phone-floating {
-  animation: phone-float 4s ease-in-out infinite;
 }
 
 .phone-body {
@@ -450,5 +448,4 @@
 @media (prefers-reduced-motion: reduce) {
   .typing-indicator span { animation: none; }
   .phone-shine { display: none; }
-  .phone-floating { animation: none; }
 }
