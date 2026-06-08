@@ -190,7 +190,7 @@ export function Nav() {
             aria-expanded={open}
             aria-controls="navMobile"
             onClick={() => setOpen((o) => !o)}
-            className="md:hidden flex items-center justify-center w-11 h-11 rounded-lg text-navy hover:bg-muted"
+            className="md:hidden flex items-center justify-center w-11 h-11 rounded-lg text-navy hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <HamburgerIcon size={26} />
           </button>
@@ -201,16 +201,14 @@ export function Nav() {
         <div
           id="navMobile"
           ref={mobilePanelRef}
-          role={open ? 'dialog' : undefined}
-          aria-modal={open || undefined}
-          aria-label="Menú de navegación"
+          inert={!open || undefined}
           className={cn(
             'md:hidden overflow-hidden transition-[max-height,border-color] duration-200',
             open ? 'max-h-[600px] border-t border-border' : 'max-h-0 border-t border-transparent',
           )}
           onClick={(e) => {
             if ((e.target as HTMLElement).closest('a, button'))
-              setOpen(false);
+              close();
           }}
         >
           <div className="px-6 py-4 flex flex-col gap-1">
