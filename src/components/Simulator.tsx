@@ -89,7 +89,7 @@ export function Simulator() {
           Elige el plazo
         </p>
         <ChipRadioGroup
-          className="flex gap-2.5"
+          className="flex flex-wrap gap-2.5"
           ariaLabelledBy="plazoLabel"
           checkBefore
           options={TERMS}
