@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { fmtCOP, type Frequency } from '@/lib/credit';
@@ -25,15 +25,11 @@ const FREQUENCIES: { value: Frequency; label: string }[] = [
   { value: 'biweekly', label: 'Quincenal' },
 ];
 
-const HelpIconLocal = () => (
-  <HelpIconSvg size={15} className="text-muted-2 ml-1" />
-);
-
 export function Simulator() {
   const { amount, term, frequency, sim, setAmount, setTerm, setFrequency } = useSimulator();
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const simRef = useRef<HTMLDivElement>(null);
+  const simRef = useRef<HTMLFormElement>(null);
   const [inputText, setInputText] = useState(() => fmtCOP(amount));
   const [hint, setHint] = useState('');
 
@@ -61,8 +57,15 @@ export function Simulator() {
     });
   }, { scope: simRef });
 
+  const srText = `Cuota estimada: $${fmtCOP(sim.payment)} ${sim.unit}. Monto: $${fmtCOP(sim.amount)}, plazo: ${sim.term} meses.`;
+  const [debouncedSr, setDebouncedSr] = useState(srText);
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSr(srText), 150);
+    return () => clearTimeout(id);
+  }, [srText]);
+
   return (
-    <div ref={simRef} id="simulator" className="bg-card border border-green/20 border-t-[3px] border-t-green/40 rounded-xl p-8 shadow-[0_0_0_1px_rgba(30,158,85,0.08),0_6px_24px_rgba(13,42,94,0.07)]">
+    <form ref={simRef} id="simulator" aria-label="Simulador de crédito" onSubmit={(e) => e.preventDefault()} className="bg-card border border-green/20 border-t-[3px] border-t-green/40 rounded-xl p-5 sm:p-8 shadow-[0_0_0_1px_rgba(30,158,85,0.08),0_6px_24px_rgba(13,42,94,0.07)]">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-2.5">
         <h3 className="text-xl font-bold text-navy">Simulador de crédito</h3>
         <span className="border-l-2 border-green pl-3 text-xs font-semibold text-green-ink">
@@ -84,7 +87,7 @@ export function Simulator() {
 
       <div className="mt-6">
         <p className="text-sm font-semibold text-navy mb-2.5" id="plazoLabel">
-          Elige el plazo <HelpIconLocal />
+          Elige el plazo <HelpIconSvg size={15} className="text-muted-2 ml-1" />
         </p>
         <ChipRadioGroup
           className="flex gap-2.5"
@@ -98,7 +101,7 @@ export function Simulator() {
 
       <div className="mt-5">
         <p className="text-sm font-semibold text-navy mb-2.5" id="freqLabel">
-          Frecuencia de pago <HelpIconLocal />
+          Frecuencia de pago <HelpIconSvg size={15} className="text-muted-2 ml-1" />
         </p>
         <ChipRadioGroup
           className="flex gap-3"
@@ -111,7 +114,7 @@ export function Simulator() {
       </div>
 
       <div aria-live="polite" aria-atomic="true" className="sr-only">
-        {`Cuota estimada: $${fmtCOP(sim.payment)} ${sim.unit}. Monto: $${fmtCOP(sim.amount)}, plazo: ${sim.term} meses.`}
+        {debouncedSr}
       </div>
 
       <SimulationResults sim={sim} frequency={frequency} />
@@ -130,6 +133,6 @@ export function Simulator() {
           Solicitar este crédito <span aria-hidden="true">→</span>
         </ApplyButton>
       </div>
-    </div>
+    </form>
   );
 }

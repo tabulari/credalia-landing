@@ -112,6 +112,8 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           step={AMOUNT_STEP}
           value={amount}
           aria-label="Selector de monto"
+          aria-valuemin={AMOUNT_MIN}
+          aria-valuemax={AMOUNT_MAX}
           aria-valuenow={amount}
           aria-valuetext={`$${fmtCOP(amount)} COP`}
           onChange={handleSliderChange}
