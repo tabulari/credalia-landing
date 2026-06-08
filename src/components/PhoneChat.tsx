@@ -89,6 +89,7 @@ export function PhoneChat() {
     if (typeof window === 'undefined') return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isDesktop = window.matchMedia('(min-width: 980px)').matches;
     const shell = shellRef.current;
     const chatBody = chatBodyRef.current;
     if (!shell || !chatBody) return;
@@ -174,12 +175,23 @@ export function PhoneChat() {
     }
 
     tl.call(() => {
-      // Settle the phone to a stable, level resting state — no perpetual motion.
-      // A fintech device mockup should sit still and authoritative; motion comes
-      // only from intentful user interaction (desktop cursor parallax below).
       gsap.set(shell, { clearProps: 'transform' });
       if (containerRef.current) {
         mouseCleanupRef.current = startMouseTilt(shell, containerRef.current);
+
+        const heroSection = containerRef.current.closest('section[aria-labelledby="hero-heading"]');
+        if (heroSection && isDesktop) {
+          gsap.to(shell, {
+            y: -30,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: heroSection,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: true,
+            },
+          });
+        }
       }
     }, undefined, '+=0.5');
 

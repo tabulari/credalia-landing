@@ -52,7 +52,7 @@ export function Hero() {
 
       if (phone) {
         const phoneEl = phone.querySelector('.phone');
-        if (phoneEl) tl.from(phoneEl, { y: 60, autoAlpha: 0, rotateY: -8, scale: 0.92, duration: 1.0, ease: 'power3.out' }, 0.15);
+        if (phoneEl) tl.from(phoneEl, { y: 50, autoAlpha: 0, rotateY: -8, scale: 0.94, duration: 0.7, ease: 'power3.out' }, 0.15);
       }
 
       if (trustCard) {
