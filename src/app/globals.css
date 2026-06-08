@@ -213,19 +213,12 @@ a:focus-visible {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
 }
-@keyframes hero-gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
 .hero-atmosphere {
   background:
     radial-gradient(ellipse 60% 70% at 20% 50%, rgba(13,42,94,0.04), transparent),
     radial-gradient(ellipse 50% 60% at 75% 55%, rgba(30,158,85,0.03), transparent),
     radial-gradient(ellipse 40% 50% at 30% 70%, rgba(245,96,27,0.015), transparent),
     #ffffff;
-  background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
-  animation: hero-gradient-shift 20s ease-in-out infinite;
 }
 
 .btn-spinner {
@@ -358,6 +351,5 @@ body.has-payment-bar {
   .btn-spinner { animation: none !important; }
   .flash { animation: none !important; }
   [data-slot="payment-bar"] { transition: none !important; }
-  .hero-atmosphere { animation: none !important; }
   body::before { display: none; }
 }
