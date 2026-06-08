@@ -55,6 +55,7 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 68px;
     font-family: var(--font-jakarta), 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
   }
 

@@ -101,6 +101,8 @@ export function StickyPaymentBar() {
   return (
     <div
       data-slot="payment-bar"
+      role="region"
+      aria-label="Resumen de simulación"
       className={cn(
         'fixed inset-x-0 bottom-0 z-50 flex items-center justify-center bg-white/95 backdrop-blur-md border-t border-border shadow-[0_-4px_16px_rgba(13,42,94,0.08)]',
         'px-4 pt-4 pb-[calc(16px+env(safe-area-inset-bottom))]',
