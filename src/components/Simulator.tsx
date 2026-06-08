@@ -13,7 +13,7 @@ import { SimulationResults } from './simulator/SimulationResults';
 import { ReassuranceChips } from './simulator/ReassuranceChips';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
-import { ShieldCheckIcon, HelpIcon as HelpIconSvg } from './icons';
+import { ShieldCheckIcon } from './icons';
 
 const TERMS = config.simulator.termOptions.map((n) => ({
   value: n,
@@ -87,7 +87,7 @@ export function Simulator() {
 
       <div className="mt-6">
         <p className="text-sm font-semibold text-navy mb-2.5" id="plazoLabel">
-          Elige el plazo <HelpIconSvg size={15} className="text-muted-2 ml-1" />
+          Elige el plazo
         </p>
         <ChipRadioGroup
           className="flex gap-2.5"
@@ -101,7 +101,7 @@ export function Simulator() {
 
       <div className="mt-5">
         <p className="text-sm font-semibold text-navy mb-2.5" id="freqLabel">
-          Frecuencia de pago <HelpIconSvg size={15} className="text-muted-2 ml-1" />
+          Frecuencia de pago
         </p>
         <ChipRadioGroup
           className="flex gap-3"
