@@ -10,7 +10,6 @@ import { ChipRadioGroup } from './ChipRadioGroup';
 import { ApplyButton } from './ApplyButton';
 import { AmountInput } from './simulator/AmountInput';
 import { SimulationResults } from './simulator/SimulationResults';
-import { ReassuranceChips } from './simulator/ReassuranceChips';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { ShieldCheckIcon } from './icons';
@@ -118,8 +117,6 @@ export function Simulator() {
       </div>
 
       <SimulationResults sim={sim} frequency={frequency} />
-
-      <ReassuranceChips />
 
       <div className="mt-5">
         <p
