@@ -1,64 +1,24 @@
 import { WhatsAppLink } from './WhatsAppLink';
-import { SearchCheckIcon, ShieldCheckIcon, DocumentCheckIcon, LockIcon } from './icons';
-
-const FEATURES = [
-  {
-    icon: <SearchCheckIcon size={22} className="text-green" />,
-    title: 'Conoce tu cuota antes de aplicar',
-    text: 'Simula y conoce tu cuota y tasa antes de iniciar la solicitud.',
-  },
-  {
-    icon: <ShieldCheckIcon size={22} className="text-green" />,
-    title: '100% en línea, sin papeles',
-    text: 'Todo el proceso es digital, sin visitas ni filas presenciales.',
-  },
-  {
-    icon: <DocumentCheckIcon size={22} className="text-green" />,
-    title: 'Simular no afecta tu historial',
-    text: 'La simulación no genera consultas en centrales de riesgo.',
-  },
-  {
-    icon: <LockIcon size={22} className="text-green" />,
-    title: 'Desembolso directo a tu cuenta',
-    text: 'Si te aprueban, recibes el dinero en tu cuenta bancaria.',
-  },
-];
 
 export function SimulateSection({ children }: { children: React.ReactNode }) {
   return (
     <section id="simula" tabIndex={-1} aria-labelledby="simula-heading" className="py-16 lg:py-24 bg-bg-soft">
       <div className="mx-auto max-w-container px-6">
-        <div className="mb-12 lg:mb-14">
+        <div className="mb-12 lg:mb-14 text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Simulador</p>
           <h2 id="simula-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
             Simula tu crédito
           </h2>
         </div>
-        <div className="grid grid-cols-1 stack:grid-cols-[380px_1fr] gap-8 items-start overflow-hidden stack:overflow-visible">
-          <div className="bg-card border border-border rounded-xl p-8 shadow-sm flex flex-col gap-5">
-            {FEATURES.map((f) => (
-              <div key={f.title} className="flex gap-3.5 items-start">
-                <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-md bg-green-tint">
-                  {f.icon}
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-navy leading-snug">{f.title}</h3>
-                  <p className="text-sm text-muted-foreground mt-0.5">{f.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-col gap-4 -mt-4 lg:-mt-8 relative z-10 min-w-0 overflow-hidden">
-            {children}
-            <WhatsAppLink
-              ctx="hero"
-              className="flex items-center justify-center gap-2.5 text-sm font-semibold text-green-ink hover:text-green-ink/80 transition-colors py-3"
-            >
-              <span className="wa-ico" aria-hidden="true" />
-              Hablar por WhatsApp
-            </WhatsAppLink>
-          </div>
+        <div className="mx-auto max-w-3xl flex flex-col gap-4">
+          {children}
+          <WhatsAppLink
+            ctx="hero"
+            className="flex items-center justify-center gap-2.5 text-sm font-semibold text-green-ink hover:text-green-ink/80 transition-colors py-3"
+          >
+            <span className="wa-ico" aria-hidden="true" />
+            Hablar por WhatsApp
+          </WhatsAppLink>
         </div>
       </div>
     </section>
