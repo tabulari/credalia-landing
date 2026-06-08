@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -56,9 +57,20 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
     setAmountState(round ? clampRoundAmount(value) : clampAmount(value));
   }, []);
 
+  // Settle the amount before deriving sim. Dragging the slider fires every ~15ms;
+  // rendering every change (~90/sec) reads as an odometer not a calculation.
+  // Debounce to a calm settled value used for all downstream displays (payment,
+  // total cost, validity, sticky bar, etc.) — keeps them all consistent and
+  // responsive, not rolling.
+  const [settledAmount, setSettledAmount] = useState(config.simulator.defaultAmount);
+  useEffect(() => {
+    const t = setTimeout(() => setSettledAmount(amount), 150);
+    return () => clearTimeout(t);
+  }, [amount]);
+
   const sim = useMemo(
-    () => calculatePayment(amount, term, frequency),
-    [amount, term, frequency],
+    () => calculatePayment(settledAmount, term, frequency),
+    [settledAmount, term, frequency],
   );
 
   const value = useMemo<SimulatorStore>(

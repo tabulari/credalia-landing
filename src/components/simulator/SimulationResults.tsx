@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { fmtCOP, fmtPct, type Frequency } from '@/lib/credit';
 import { CalendarIcon, LightningIcon, HomeIcon, ClockIcon } from '../icons';
 
@@ -18,19 +18,9 @@ export function SimulationResults({ sim, frequency }: { sim: SimData; frequency:
   const paymentRef = useRef<HTMLDivElement>(null);
   const prevPayment = useRef(sim.payment);
 
-  // Dragging the slider recalculates sim.payment on every tick (~90/sec) — far
-  // faster than a number can be read as information rather than flicker. Settle
-  // it before displaying, so the figure updates like a calculated result, not a
-  // live-ticking odometer.
-  const [displayPayment, setDisplayPayment] = useState(sim.payment);
   useEffect(() => {
-    const t = setTimeout(() => setDisplayPayment(sim.payment), 150);
-    return () => clearTimeout(t);
-  }, [sim.payment]);
-
-  useEffect(() => {
-    const changed = displayPayment !== prevPayment.current;
-    prevPayment.current = displayPayment;
+    const changed = sim.payment !== prevPayment.current;
+    prevPayment.current = sim.payment;
     if (!changed) return;
     const el = paymentRef.current;
     if (!el) return;
@@ -41,7 +31,7 @@ export function SimulationResults({ sim, frequency }: { sim: SimData; frequency:
     el.classList.add('flash');
     const t = setTimeout(() => el.classList.remove('flash'), 280);
     return () => clearTimeout(t);
-  }, [displayPayment]);
+  }, [sim.payment]);
 
   const rateLabel = frequency === 'biweekly' ? '% q.' : '% m. v.';
   const eaRateLabel = frequency === 'biweekly' ? 'q.' : 'm. v.';
@@ -52,7 +42,7 @@ export function SimulationResults({ sim, frequency }: { sim: SimData; frequency:
         <div className="flex-shrink-0">
           <p className="text-xs font-semibold text-muted-2 mb-1">Tu cuota estimada</p>
           <div ref={paymentRef} className="font-extrabold text-navy leading-none" style={{ letterSpacing: '-0.03em' }}>
-            <span className="text-2xl">$</span><span className="text-4xl sm:text-5xl">{fmtCOP(displayPayment)}</span> <span className="text-base font-semibold text-muted-2">{sim.unit}</span>
+            <span className="text-2xl">$</span><span className="text-4xl sm:text-5xl">{fmtCOP(sim.payment)}</span> <span className="text-base font-semibold text-muted-2">{sim.unit}</span>
           </div>
           <span className="inline-flex items-center gap-1.5 mt-3 text-green-ink font-bold text-sm">
             <LightningIcon size={13} className="text-green" />
