@@ -209,10 +209,6 @@ a:focus-visible {
 @keyframes btnspin {
   to { transform: rotate(360deg); }
 }
-@keyframes phone-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
 .hero-atmosphere {
   background:
     radial-gradient(ellipse 60% 70% at 20% 50%, rgba(13,42,94,0.04), transparent),
