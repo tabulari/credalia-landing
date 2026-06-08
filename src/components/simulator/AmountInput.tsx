@@ -100,7 +100,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           Ingresar monto exacto
         </button>
       </div>
-      <p className={hint ? 'text-xs font-medium transition-all text-orange mt-1.5' : 'text-xs font-medium transition-all h-0 overflow-hidden'} id="amountHint" role="status" aria-live="polite">
+      <p className={hint ? 'text-xs font-medium transition-all text-orange-ink mt-1.5' : 'text-xs font-medium transition-all h-0 overflow-hidden'} id="amountHint" role="status" aria-live="polite">
         {hint}
       </p>
 

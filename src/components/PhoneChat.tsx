@@ -23,10 +23,14 @@ function startMouseTilt(
   const isDesktop = window.matchMedia('(min-width: 980px)').matches;
   if (reduceMotion || !isDesktop) return () => {};
 
-  // Establish a clean, explicit 3D transform baseline so GSAP tracks all
-  // transform components from a known-zero state (avoids the "not eligible for
-  // reset" issue that left the parallax tilt silently never rendering).
   gsap.set(shell, { x: 0, y: 0, rotateX: 0, rotateY: 0, transformPerspective: 1000, transformOrigin: 'center center' });
+
+  const PROXIMITY = 120;
+  const MAX_ROT_Y = 3;
+  const MAX_ROT_X = 2;
+  const clampY = gsap.utils.clamp(-MAX_ROT_Y, MAX_ROT_Y);
+  const clampX = gsap.utils.clamp(-MAX_ROT_X, MAX_ROT_X);
+  let wasInZone = false;
 
   const applyTilt = (rotY: number, rotX: number) => {
     gsap.to(shell, { rotateY: rotY, rotateX: rotX, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
@@ -34,13 +38,30 @@ function startMouseTilt(
 
   const onMove = (e: MouseEvent) => {
     const rect = wrapper.getBoundingClientRect();
+    const inZone =
+      e.clientX >= rect.left - PROXIMITY &&
+      e.clientX <= rect.right + PROXIMITY &&
+      e.clientY >= rect.top - PROXIMITY &&
+      e.clientY <= rect.bottom + PROXIMITY;
+
+    if (!inZone) {
+      if (wasInZone) {
+        applyTilt(0, 0);
+        wasInZone = false;
+      }
+      return;
+    }
+
+    wasInZone = true;
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-    applyTilt(x * 3, -y * 2);
+    applyTilt(clampY(x * 3), clampX(-y * 2));
   };
 
-  // Ease back to a perfectly level resting state when the cursor leaves the page.
-  const onLeave = () => applyTilt(0, 0);
+  const onLeave = () => {
+    applyTilt(0, 0);
+    wasInZone = false;
+  };
 
   let rafId: number;
   const onRafMove = (e: MouseEvent) => {

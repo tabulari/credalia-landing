@@ -6,8 +6,6 @@
 .phone-wrapper {
   display: flex;
   justify-content: center;
-  perspective: 1000px;
-  perspective-origin: 50% 50%;
 }
 
 .phone {

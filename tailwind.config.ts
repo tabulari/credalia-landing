@@ -31,7 +31,7 @@ const config: Config = {
         "muted-2": "#677085",
         "bg-soft": "#f7f9fa",
         "border-2": "#eef1f4",
-        error: "#d4483b",
+        error: "#c5392c",
         "hint-ink": "#9a4a16",
         "hint-bg": "#fff4ed",
       },
