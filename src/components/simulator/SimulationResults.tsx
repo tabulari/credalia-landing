@@ -17,6 +17,7 @@ interface SimData {
 export function SimulationResults({ sim, frequency }: { sim: SimData; frequency: Frequency }) {
   const paymentRef = useRef<HTMLDivElement>(null);
   const prevPayment = useRef(sim.payment);
+  const flashTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const changed = sim.payment !== prevPayment.current;
@@ -26,11 +27,16 @@ export function SimulationResults({ sim, frequency }: { sim: SimData; frequency:
     if (!el) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced || document.hidden) return;
+    // Dragging the slider fires many payment changes per second — debounce so the
+    // highlight pulses once on settle instead of strobing on every micro-update.
+    if (flashTimer.current) clearTimeout(flashTimer.current);
     el.classList.remove('flash');
-    void el.offsetWidth;
-    el.classList.add('flash');
-    const t = setTimeout(() => el.classList.remove('flash'), 280);
-    return () => clearTimeout(t);
+    flashTimer.current = setTimeout(() => {
+      void el.offsetWidth;
+      el.classList.add('flash');
+      flashTimer.current = setTimeout(() => el.classList.remove('flash'), 280);
+    }, 150);
+    return () => { if (flashTimer.current) clearTimeout(flashTimer.current); };
   }, [sim.payment]);
 
   const rateLabel = frequency === 'biweekly' ? '% q.' : '% m. v.';
