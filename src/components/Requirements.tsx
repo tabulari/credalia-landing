@@ -31,11 +31,12 @@ function AnimatedCheck() {
 }
 
 export function Requirements() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
   const [countDone, setCountDone] = useState(false);
 
   useGSAP(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
 
     const heading = containerRef.current?.querySelector('[data-req="heading"]');
     const items = containerRef.current?.querySelectorAll('[data-req="item"]');
@@ -63,8 +64,8 @@ export function Requirements() {
       checkmarks.forEach((cm, i) => {
         gsap.to(cm, {
           strokeDashoffset: 0,
-          duration: reduceMotion ? 0 : 0.4,
-          delay: reduceMotion ? 0 : 0.2 + i * 0.12,
+          duration: 0.4,
+          delay: 0.2 + i * 0.12,
           ease: 'power2.out',
           scrollTrigger: { trigger: containerRef.current, start: 'top 80%' },
         });
@@ -90,17 +91,17 @@ export function Requirements() {
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="w-full">
+    <section ref={containerRef} aria-labelledby="req-heading" className="w-full">
       <div data-req="heading" className="mb-6 text-left">
-        <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Requisitos</p>
-        <h2 id="req-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
-          Solo necesitas 4 cosas
-        </h2>
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Requisitos</p>
+          <h2 id="req-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
+            Solo necesitas 4 cosas
+          </h2>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <ul role="list" className="flex flex-col gap-2">
         {REQS.map((r) => (
-          <div
+          <li
             key={r.label}
             data-req="item"
             className="flex items-center gap-3 px-4 py-3 rounded-lg border border-border bg-card hover:-translate-y-0.5 hover:shadow-sm transition-all duration-300"
@@ -110,9 +111,9 @@ export function Requirements() {
             </span>
             <span className="flex-1 text-sm font-medium text-foreground">{r.label}</span>
             <AnimatedCheck />
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
       <div className="mt-5 text-left">
         <span data-req="counter" className={cn(
@@ -123,6 +124,6 @@ export function Requirements() {
           {countDone ? '4 requisitos simples' : ''}
         </span>
       </div>
-    </div>
+    </section>
   );
 }

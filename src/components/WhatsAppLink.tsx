@@ -30,6 +30,7 @@ export function WhatsAppLink({
       onClick={() => track("whatsapp_click", { ctx })}
     >
       {children}
+      <span className="sr-only">(se abre en ventana nueva)</span>
     </a>
   );
 }

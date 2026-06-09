@@ -75,7 +75,7 @@ export function Footer() {
           <p className="text-xs text-white/55 leading-relaxed">
             © {new Date().getFullYear()} {config.company.legalName} Todos los derechos reservados.
             {config.regulatorVerified && <> · Vigilado por la {config.regulatorName}</>}
-            {' · '}Tratamos tus datos conforme a la Ley 1581 de 2012 (Habeas Data).
+            {' · '}<Link href="/legal/habeas-data" className="underline hover:text-white transition-colors inline-flex items-center min-h-[44px]">Tratamos tus datos conforme a la Ley 1581 de 2012 (Habeas Data)</Link>.
           </p>
         </div>
       </div>

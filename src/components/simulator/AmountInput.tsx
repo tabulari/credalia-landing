@@ -75,6 +75,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
             inputMode="numeric"
             value={inputText}
             aria-label="Monto solicitado"
+            aria-invalid={hint ? 'true' : undefined}
             aria-describedby="amountHint"
             onChange={handleInputChange}
             onBlur={handleInputBlur}
