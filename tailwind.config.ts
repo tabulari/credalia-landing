@@ -6,7 +6,7 @@ const config: Config = {
     container: {
       center: true,
       padding: "24px",
-      screens: { DEFAULT: "1120px" },
+      screens: { DEFAULT: "1280px" },
     },
     extend: {
       colors: {
@@ -63,7 +63,7 @@ const config: Config = {
         lg: "0 24px 60px rgba(13,42,94,.14), 0 8px 24px rgba(13,42,94,.08)",
       },
       maxWidth: {
-        container: "1120px",
+        container: "1280px",
       },
       screens: {
         sm: "600px",

@@ -123,7 +123,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-4 shadow-sm mt-2 relative z-10">
+        <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-4 shadow-sm mt-10 relative z-10">
           <div className="flex items-center gap-2.5 mb-3">
             <CredaliaLogo size={28} />
             <div>

@@ -206,8 +206,8 @@ export function Nav() {
           ref={mobilePanelRef}
           inert={!open || undefined}
           className={cn(
-            'md:hidden bg-white overflow-hidden transition-[max-height,border-color] duration-200',
-            open ? 'max-h-[600px] border-t border-border' : 'max-h-0 border-t border-transparent',
+            'absolute left-0 right-0 top-[68px] z-50 bg-white overflow-hidden transition-[max-height,border-color] duration-200 shadow-lg',
+            open ? 'max-h-[600px] border-t border-border border-b border-border' : 'max-h-0 border-t border-transparent border-b border-transparent',
           )}
           onClick={(e) => {
             if ((e.target as HTMLElement).closest('a, button'))
