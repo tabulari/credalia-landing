@@ -5,7 +5,7 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
   return (
     <section id="simula" tabIndex={-1} aria-labelledby="simula-heading" className="py-16 lg:py-24 stack:py-0 bg-bg-soft stack:min-h-[calc(100vh-68px)] stack:flex stack:items-center">
       <div className="w-full mx-auto max-w-container px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[0.75fr_1.25fr] gap-12 lg:gap-16 items-start max-w-[1024px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.75fr_1.25fr] gap-12 lg:gap-16 items-start w-full">
           {/* Left Column: Requirements */}
           <div className="w-full order-2 lg:order-1">
             <Requirements />

@@ -498,7 +498,7 @@
 
 @media (min-width: 980px) {
   .phone-wrapper {
-    transform: scale(1.08);
+    transform: scale(1.12);
     transform-origin: center center;
   }
 }
