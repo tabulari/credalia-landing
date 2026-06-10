@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { ApplyButton } from './ApplyButton';
 import { cn } from '@/lib/utils';
 import { config } from '@/lib/config';
-import { CredaliaLogo, HamburgerIcon } from './icons';
+import { CredaliaLogo, HamburgerIcon, CloseIcon } from './icons';
 
 const LINKS = [
   { href: '#simula', label: 'Simula tu crédito' },
@@ -136,9 +136,12 @@ export function Nav() {
       id="top"
       className={cn(
         'sticky top-0 z-50 backdrop-blur-lg transition-colors duration-200',
+        // Mobile (default): siempre fondo blanco con una sutil sombra de distinción
+        'bg-white shadow-[0_1px_0_rgba(13,42,94,0.05)]',
+        // Desktop/Tablet (md:): dinámico según scroll
         scrolled
-          ? 'bg-white/80 shadow-[0_1px_0_rgba(13,42,94,0.05)]'
-          : 'bg-white/0 shadow-none',
+          ? 'md:bg-white/80 md:shadow-[0_1px_0_rgba(13,42,94,0.05)]'
+          : 'md:bg-white/0 md:shadow-none',
       )}
     >
       <div className="mx-auto max-w-container px-6 flex items-center justify-between h-[68px]">
@@ -192,7 +195,7 @@ export function Nav() {
             onClick={() => setOpen((o) => !o)}
             className="md:hidden flex items-center justify-center w-11 h-11 rounded-lg text-navy hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            <HamburgerIcon size={26} />
+            {open ? <CloseIcon size={26} /> : <HamburgerIcon size={26} />}
           </button>
         </div>
       </div>
@@ -203,7 +206,7 @@ export function Nav() {
           ref={mobilePanelRef}
           inert={!open || undefined}
           className={cn(
-            'md:hidden overflow-hidden transition-[max-height,border-color] duration-200',
+            'md:hidden bg-white overflow-hidden transition-[max-height,border-color] duration-200',
             open ? 'max-h-[600px] border-t border-border' : 'max-h-0 border-t border-transparent',
           )}
           onClick={(e) => {

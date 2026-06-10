@@ -65,10 +65,10 @@ export function Hero() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} aria-labelledby="hero-heading" className="pt-12 pb-8 lg:pt-16 lg:pb-12 overflow-hidden hero-atmosphere">
-      <div className="mx-auto max-w-container px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
+    <section ref={containerRef} aria-labelledby="hero-heading" className="pt-12 pb-8 lg:pt-16 lg:pb-12 stack:py-0 overflow-hidden hero-atmosphere stack:min-h-[calc(100vh-68px)] stack:flex stack:items-center">
+      <div className="w-full mx-auto max-w-container px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
         <div className="flex flex-col gap-3 lg:gap-4 relative z-10">
-          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-1">Crédito digital</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-1">Credalia Digital</p>
           <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
             <ShieldCheckIcon size={20} className="text-green-ink" />
             {config.disbursementTime
@@ -76,9 +76,9 @@ export function Hero() {
               : '100% en línea'}
           </span>
           <h1 ref={h1Ref} id="hero-heading" className="text-5xl lg:text-7xl font-display tracking-tight text-navy leading-tight">
-            Crédito digital hasta{' '}
+            Préstamos rápidos hasta{' '}
           </h1>
-          <span data-hero="amount" className="block text-6xl lg:text-8xl tracking-tight font-extrabold text-orange leading-none">{`$${fmtCOP(config.simulator.amountMax).replace(',00','')}`}</span>
+          <span data-hero="amount" className="block text-4xl lg:text-6xl tracking-tight font-extrabold text-orange leading-none">{`$${fmtCOP(config.simulator.amountMax).replace(',00','')}`}</span>
           <p data-hero="subhead" className="text-lg font-normal text-muted-foreground">
             Respuesta en minutos. Tasa clara. Sin papeles.
           </p>
@@ -117,7 +117,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div data-hero="phone" className="relative hidden stack:flex items-center justify-center" style={{ perspective: '1200px' }}>
+        <div data-hero="phone" className="relative z-10 flex items-center justify-center mt-8 stack:mt-0" style={{ perspective: '1200px' }}>
           <div style={{ transformStyle: 'preserve-3d' }}>
             <PhoneChat />
           </div>

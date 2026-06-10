@@ -57,32 +57,28 @@ export function HowItWorks() {
       gsap.fromTo(eyebrow,
         { y: 15, autoAlpha: 0 },
         { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power2.out',
-          scrollTrigger: { trigger: eyebrow, start: 'top 85%' } });
+          scrollTrigger: { trigger: eyebrow, start: 'top 85%', once: true } });
     }
     if (heading) {
       gsap.fromTo(heading,
         { y: 20, autoAlpha: 0 },
         { y: 0, autoAlpha: 1, duration: 0.6, ease: 'power2.out',
-          scrollTrigger: { trigger: heading, start: 'top 85%' } });
+          scrollTrigger: { trigger: heading, start: 'top 85%', once: true } });
     }
 
     if (cards && cards.length) {
-      const isDesktop = window.innerWidth >= 1280;
 
       const tl = gsap.timeline({
-        scrollTrigger: isDesktop
-          ? {
-              trigger: containerRef.current,
-              start: 'top 75%',
-              end: 'center 40%',
-              scrub: 0.8,
-            }
-          : { trigger: containerRef.current, start: 'top 78%' },
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 75%',
+          once: true,
+        },
       });
 
-      const stepGap = isDesktop ? 0.18 : 0.14;
-      const cardDur = isDesktop ? 0.35 : 0.5;
-      const cardEase = isDesktop ? 'power2.out' : 'power3.out';
+      const stepGap = 0.14;
+      const cardDur = 0.45;
+      const cardEase = 'power2.out';
 
       cards.forEach((card, i) => {
         const isLast = i === cards.length - 1;
@@ -94,13 +90,13 @@ export function HowItWorks() {
         if (accent) {
           tl.fromTo(accent,
             { scaleY: 0 },
-            { scaleY: 1, duration: isDesktop ? 0.25 : 0.35, ease: 'power2.out', transformOrigin: 'top' },
+            { scaleY: 1, duration: 0.25, ease: 'power2.out', transformOrigin: 'top' },
             pos
           );
         }
 
         tl.fromTo(card,
-          { y: isDesktop ? 20 : 25, autoAlpha: 0 },
+          { y: 20, autoAlpha: 0 },
           { y: 0, autoAlpha: 1, duration: cardDur, ease: cardEase },
           pos
         );
@@ -108,16 +104,16 @@ export function HowItWorks() {
         if (badge) {
           tl.fromTo(badge,
             { scale: 0.5, autoAlpha: 0 },
-            { scale: 1, autoAlpha: 1, duration: isDesktop ? 0.25 : 0.35, ease: 'back.out(2.5)' },
-            pos + (isDesktop ? 0.1 : 0.08)
+            { scale: 1, autoAlpha: 1, duration: 0.3, ease: 'back.out(2.5)' },
+            pos + 0.08
           );
         }
 
         if (isLast && glow) {
           tl.fromTo(glow,
             { autoAlpha: 0, scale: 0.7 },
-            { autoAlpha: 1, scale: 1, duration: isDesktop ? 0.3 : 0.5, ease: 'power2.out' },
-            pos + (isDesktop ? 0.2 : 0.2)
+            { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'power2.out' },
+            pos + 0.15
           );
         }
       });
@@ -127,7 +123,7 @@ export function HowItWorks() {
         tl.fromTo(cta,
           { y: 15, autoAlpha: 0 },
           { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power2.out' },
-          lastPos + 0.3
+          lastPos + 0.25
         );
       }
     }
@@ -137,12 +133,12 @@ export function HowItWorks() {
         { scaleX: 0 },
         {
           scaleX: 1,
-          ease: 'none',
+          duration: 0.6,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: containerRef.current,
             start: 'top 70%',
-            end: 'center 50%',
-            scrub: 1,
+            once: true,
           },
         },
       );
@@ -150,7 +146,7 @@ export function HowItWorks() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} id="como-funciona" aria-labelledby="hiw-heading" className="py-16 lg:py-24 bg-green-soft">
+    <section ref={containerRef} id="como-funciona" aria-labelledby="hiw-heading" className="py-16 lg:py-24 bg-green-soft overflow-hidden">
       <div className="mx-auto max-w-container px-6">
         <div className="mb-12 lg:mb-14">
           <p data-hiw="eyebrow" className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Cómo funciona</p>

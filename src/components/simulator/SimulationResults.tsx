@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { fmtCOP, fmtPct, type Frequency } from '@/lib/credit';
-import { CalendarIcon, LightningIcon, HomeIcon, ClockIcon } from '../icons';
+import { CalendarIcon, LightningIcon, HomeIcon, ClockIcon, HelpIcon } from '../icons';
 
 interface SimData {
   payment: number;
@@ -68,29 +68,31 @@ export function SimulationResults({ sim, frequency }: { sim: SimData; frequency:
             <div>
               <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-2 mb-0.5">
                 <HomeIcon size={14} className="text-muted-2" />
-                Tasa estimada
+                <span>Tasa estimada</span>
+                <span className="group relative inline-flex items-center cursor-help">
+                  <HelpIcon size={14} className="text-muted-2 hover:text-navy transition-colors ml-0.5 -mt-0.5" />
+                  <span className="pointer-events-none absolute bottom-full left-0 sm:left-1/2 sm:-translate-x-1/2 mb-2 w-48 sm:w-64 scale-95 opacity-0 rounded-lg bg-navy-ink p-2.5 text-center text-[11px] font-normal leading-normal text-white shadow-lg transition-all duration-150 group-hover:scale-100 group-hover:opacity-100 z-50 normal-case">
+                    Tasa estimada {fmtPct(sim.periodRate, 1)}% {eaRateLabel} ⇄ equivalente a {fmtPct(sim.ea, 2)}% E.A.
+                    <span className="absolute top-full left-1.5 sm:left-1/2 sm:-translate-x-1/2 border-4 border-transparent border-t-navy-ink" />
+                  </span>
+                </span>
               </div>
               <div className="text-base font-bold text-navy-ink">{fmtPct(sim.periodRate, 1) + rateLabel}</div>
             </div>
             <div>
               <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-2 mb-0.5">
                 <ClockIcon size={14} className="text-muted-2" />
-                Costo total estimado
+                <span>Costo total estimado</span>
+                <span className="group relative inline-flex items-center cursor-help">
+                  <HelpIcon size={14} className="text-muted-2 hover:text-navy transition-colors ml-0.5 -mt-0.5" />
+                  <span className="pointer-events-none absolute bottom-full right-0 sm:right-auto sm:left-1/2 sm:-translate-x-1/2 mb-2 w-48 sm:w-64 scale-95 opacity-0 rounded-lg bg-navy-ink p-2.5 text-center text-[11px] font-normal leading-normal text-white shadow-lg transition-all duration-150 group-hover:scale-100 group-hover:opacity-100 z-50 normal-case">
+                    Esta simulación es aproximada y no representa aprobación ni oferta definitiva. Las condiciones finales dependen de la validación de tu solicitud.
+                    <span className="absolute top-full right-1.5 sm:right-auto sm:left-1/2 sm:-translate-x-1/2 border-4 border-transparent border-t-navy-ink" />
+                  </span>
+                </span>
               </div>
               <div className="text-base font-bold text-navy-ink">{`$${fmtCOP(sim.totalCost)}`}</div>
             </div>
-
-          <p className="col-span-2 text-sm text-muted-2 leading-snug">
-            Tasa estimada{' '}
-            <span className="font-semibold text-navy-ink">{`${fmtPct(sim.periodRate, 1)}% ${eaRateLabel}`}</span>{' '}
-            ⇄ equivalente a{' '}
-            <span className="font-semibold text-navy-ink">{fmtPct(sim.ea, 2) + '%'}</span>{' '}
-            E.A.
-          </p>
-
-          <p className="col-span-2 text-xs leading-relaxed text-muted-2 italic">
-            Esta simulación es aproximada y no representa aprobación ni oferta definitiva. Las condiciones finales dependen de la validación de tu solicitud.
-          </p>
         </div>
       </div>
     </div>

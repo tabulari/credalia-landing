@@ -64,7 +64,7 @@ export function Simulator() {
   }, [srText]);
 
   return (
-    <form ref={simRef} id="simulator" aria-label="Simulador de crédito" onSubmit={(e) => e.preventDefault()} className="bg-card border border-green/20 border-t-[3px] border-t-green/40 rounded-xl p-5 sm:p-8 shadow-[0_0_0_1px_rgba(30,158,85,0.08),0_6px_24px_rgba(13,42,94,0.07)]">
+    <form ref={simRef} id="simulator" aria-label="Simulador de crédito" onSubmit={(e) => e.preventDefault()} className="bg-card border border-green/20 border-t-[3px] border-t-green/40 rounded-xl p-5 sm:p-8 lg:p-10 shadow-[0_0_0_1px_rgba(30,158,85,0.08),0_6px_24px_rgba(13,42,94,0.07)]">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-2.5">
         <h3 className="text-xl font-bold text-navy">Simulador de crédito</h3>
         <span className="border-l-2 border-green pl-3 text-xs font-semibold text-green-ink">

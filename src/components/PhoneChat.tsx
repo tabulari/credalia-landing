@@ -1,10 +1,14 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { config } from '@/lib/config';
 import { calculatePayment, fmtCOP } from '@/lib/credit';
+import { useSiteUi } from './site-ui';
+import { useSimulator } from './simulator-store';
+import { buildWhatsAppUrl } from '@/lib/whatsapp';
+import { track } from '@/lib/analytics';
 import './phone-chat.css';
 
 const phoneSim = calculatePayment(
@@ -15,15 +19,14 @@ const phoneSim = calculatePayment(
 
 const SCROLL_AFTER = [0, 0, 60, 120, 170, 240, 300, 360, 420, 480, 540];
 
-function startMouseTilt(
+function startInteractiveTilt(
   shell: HTMLElement,
   wrapper: HTMLElement,
 ): () => void {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isDesktop = window.matchMedia('(min-width: 980px)').matches;
-  if (reduceMotion || !isDesktop) return () => {};
+  if (reduceMotion) return () => {};
 
-  gsap.set(shell, { x: 0, y: 0, rotateX: 0, rotateY: 0, transformPerspective: 1000, transformOrigin: 'center center' });
+  gsap.set(shell, { rotateX: 0, rotateY: 0, transformPerspective: 1000, transformOrigin: 'center center' });
 
   const PROXIMITY = 120;
   const MAX_ROT_Y = 3;
@@ -36,13 +39,29 @@ function startMouseTilt(
     gsap.to(shell, { rotateY: rotY, rotateX: rotX, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
   };
 
-  const onMove = (e: MouseEvent) => {
+  const handlePointer = (clientX: number, clientY: number) => {
     const rect = wrapper.getBoundingClientRect();
+    const shellRect = shell.getBoundingClientRect();
+
+    const insideShell =
+      clientX >= shellRect.left &&
+      clientX <= shellRect.right &&
+      clientY >= shellRect.top &&
+      clientY <= shellRect.bottom;
+
+    if (insideShell) {
+      if (wasInZone) {
+        applyTilt(0, 0);
+        wasInZone = false;
+      }
+      return;
+    }
+
     const inZone =
-      e.clientX >= rect.left - PROXIMITY &&
-      e.clientX <= rect.right + PROXIMITY &&
-      e.clientY >= rect.top - PROXIMITY &&
-      e.clientY <= rect.bottom + PROXIMITY;
+      clientX >= rect.left - PROXIMITY &&
+      clientX <= rect.right + PROXIMITY &&
+      clientY >= rect.top - PROXIMITY &&
+      clientY <= rect.bottom + PROXIMITY;
 
     if (!inZone) {
       if (wasInZone) {
@@ -53,27 +72,45 @@ function startMouseTilt(
     }
 
     wasInZone = true;
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    const x = ((clientX - rect.left) / rect.width - 0.5) * 2;
+    const y = ((clientY - rect.top) / rect.height - 0.5) * 2;
     applyTilt(clampY(x * 3), clampX(-y * 2));
   };
 
-  const onLeave = () => {
+  let rafId: number;
+  const onMouseMove = (e: MouseEvent) => {
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => handlePointer(e.clientX, e.clientY));
+  };
+
+  const onTouchMove = (e: TouchEvent) => {
+    if (e.touches.length > 0) {
+      const touch = e.touches[0];
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => handlePointer(touch.clientX, touch.clientY));
+    }
+  };
+
+  const onReset = () => {
+    cancelAnimationFrame(rafId);
     applyTilt(0, 0);
     wasInZone = false;
   };
 
-  let rafId: number;
-  const onRafMove = (e: MouseEvent) => {
-    cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(() => onMove(e));
-  };
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('touchmove', onTouchMove, { passive: true });
+  window.addEventListener('touchstart', onTouchMove, { passive: true });
+  window.addEventListener('touchend', onReset, { passive: true });
+  window.addEventListener('touchcancel', onReset, { passive: true });
+  document.documentElement.addEventListener('mouseleave', onReset);
 
-  window.addEventListener('mousemove', onRafMove);
-  document.documentElement.addEventListener('mouseleave', onLeave);
   return () => {
-    window.removeEventListener('mousemove', onRafMove);
-    document.documentElement.removeEventListener('mouseleave', onLeave);
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('touchmove', onTouchMove);
+    window.removeEventListener('touchstart', onTouchMove);
+    window.removeEventListener('touchend', onReset);
+    window.removeEventListener('touchcancel', onReset);
+    document.documentElement.removeEventListener('mouseleave', onReset);
     cancelAnimationFrame(rafId);
   };
 }
@@ -82,17 +119,68 @@ export function PhoneChat() {
   const containerRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const chatBodyRef = useRef<HTMLDivElement>(null);
-
   const mouseCleanupRef = useRef<(() => void) | null>(null);
+
+  const { openApply } = useSiteUi();
+  const { sim } = useSimulator();
+
+  const [mounted, setMounted] = useState(false);
+  const [currentTime, setCurrentTime] = useState('');
+  const [messageTime, setMessageTime] = useState('');
+  const [messageTimePlus1, setMessageTimePlus1] = useState('');
+  const [messageTimePlus2, setMessageTimePlus2] = useState('');
+
+  useEffect(() => {
+    setMounted(true);
+    const getColTime = (diffMinutes = 0) => {
+      const d = new Date();
+      const colDate = new Date(d.toLocaleString('en-US', { timeZone: 'America/Bogota' }));
+      if (diffMinutes !== 0) {
+        colDate.setMinutes(colDate.getMinutes() + diffMinutes);
+      }
+      const hrs = String(colDate.getHours()).padStart(2, '0');
+      const mins = String(colDate.getMinutes()).padStart(2, '0');
+      return `${hrs}:${mins}`;
+    };
+
+    setCurrentTime(getColTime(0));
+    setMessageTime(getColTime(-3));
+    setMessageTimePlus1(getColTime(-2));
+    setMessageTimePlus2(getColTime(-1));
+
+    const interval = setInterval(() => {
+      setCurrentTime(getColTime(0));
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useGSAP(() => {
     if (typeof window === 'undefined') return;
+    if (!mounted) return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isDesktop = window.matchMedia('(min-width: 980px)').matches;
     const shell = shellRef.current;
     const chatBody = chatBodyRef.current;
     if (!shell || !chatBody) return;
+
+    const mm = gsap.matchMedia();
+
+    const heroSection = containerRef.current?.closest('section[aria-labelledby="hero-heading"]');
+    if (heroSection) {
+      mm.add('(min-width: 768px)', () => {
+        gsap.to(shell, {
+          y: -30,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroSection,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+      });
+    }
 
     const bubbles = Array.from(chatBody.querySelectorAll('[data-phone^="b"]'));
     const typing = chatBody.querySelector('[data-phone="typing"]');
@@ -113,102 +201,102 @@ export function PhoneChat() {
     if (typing) gsap.set(typing, { autoAlpha: 0 });
     if (waBtns) gsap.set(waBtns, { autoAlpha: 0, y: 10 });
 
-    const tl = gsap.timeline({ delay: 1.0 });
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: shell,
+        start: 'top 85%',
+        toggleActions: 'play none none none',
+      },
+      delay: 0.1,
+    });
 
     const showTyping = (pos: string) => {
       if (!typing) return;
-      tl.to(typing, { autoAlpha: 1, duration: 0.15 }, pos);
+      tl.to(typing, { autoAlpha: 1, duration: 0.1 }, pos);
     };
     const hideTyping = () => {
-      if (!typing) tl.to(typing, { autoAlpha: 0, duration: 0.15 });
+      if (typing) tl.to(typing, { autoAlpha: 0, duration: 0.1 });
     };
     const scrollTo = (idx: number) => {
+      const enableScroll = window.matchMedia('(min-width: 768px)').matches;
+      if (!enableScroll) return;
       const target = SCROLL_AFTER[Math.min(idx, SCROLL_AFTER.length - 1)];
-      if (chatBody) tl.to(chatBody, { scrollTop: target, duration: 0.3, ease: 'power2.out' }, '-=0.15');
+      if (chatBody) tl.to(chatBody, { scrollTop: target, duration: 0.2, ease: 'power2.out' }, '-=0.1');
     };
 
     const b = (idx: number) => bubbles[idx];
     if (!b(0)) return;
 
-    tl.to(b(0), { x: 0, autoAlpha: 1, duration: 0.4, ease: 'power2.out' }, 0);
+    // Snappy, highly responsive sequential bubble loading
+    tl.to(b(0), { x: 0, autoAlpha: 1, duration: 0.3, ease: 'power2.out' }, 0);
 
-    showTyping('+=0.3');
-    tl.to({}, { duration: 0.6 });
+    showTyping('+=0.15');
+    tl.to({}, { duration: 0.35 });
     hideTyping();
-    tl.to(b(1), { x: 0, autoAlpha: 1, duration: 0.4, ease: 'power2.out' });
+    tl.to(b(1), { x: 0, autoAlpha: 1, duration: 0.3, ease: 'power2.out' });
     scrollTo(2);
 
-    tl.to(b(2), { x: 0, autoAlpha: 1, duration: 0.35, ease: 'power2.out' }, '+=0.15');
+    tl.to(b(2), { x: 0, autoAlpha: 1, duration: 0.25, ease: 'power2.out' }, '+=0.08');
     scrollTo(3);
 
-    showTyping('+=0.2');
-    tl.to({}, { duration: 0.5 });
-    hideTyping();
-    tl.to(b(3), { x: 0, autoAlpha: 1, duration: 0.4, ease: 'power2.out' });
-    scrollTo(4);
-
-    showTyping('+=0.15');
-    tl.to({}, { duration: 0.4 });
-    hideTyping();
-    tl.to(b(4), { scale: 1, autoAlpha: 1, duration: 0.5, ease: 'back.out(1.4)' });
-    scrollTo(5);
-
-    tl.to(b(5), { autoAlpha: 1, duration: 0.3 }, '+=0.08');
-    scrollTo(6);
-
-    tl.to(b(6), { x: 0, autoAlpha: 1, duration: 0.35, ease: 'power2.out' }, '+=0.2');
-    scrollTo(7);
-
-    showTyping('+=0.15');
+    showTyping('+=0.1');
     tl.to({}, { duration: 0.3 });
     hideTyping();
-    tl.to(b(7), { x: 0, autoAlpha: 1, duration: 0.35, ease: 'power2.out' });
+    tl.to(b(3), { x: 0, autoAlpha: 1, duration: 0.3, ease: 'power2.out' });
+    scrollTo(4);
+
+    showTyping('+=0.1');
+    tl.to({}, { duration: 0.25 });
+    hideTyping();
+    tl.to(b(4), { scale: 1, autoAlpha: 1, duration: 0.35, ease: 'back.out(1.2)' });
+    scrollTo(5);
+
+    tl.to(b(5), { autoAlpha: 1, duration: 0.25 }, '+=0.05');
+    scrollTo(6);
+
+    tl.to(b(6), { x: 0, autoAlpha: 1, duration: 0.3, ease: 'power2.out' }, '+=0.1');
+    scrollTo(7);
+
+    showTyping('+=0.08');
+    tl.to({}, { duration: 0.2 });
+    hideTyping();
+    tl.to(b(7), { x: 0, autoAlpha: 1, duration: 0.3, ease: 'power2.out' });
     scrollTo(8);
 
-    if (typing) tl.set(typing, { autoAlpha: 0 }, '+=0.2');
+    if (typing) tl.set(typing, { autoAlpha: 0 }, '+=0.08');
 
     if (waBtns) {
       const btns = waBtns.querySelectorAll('.wa-btn');
-      tl.to(waBtns, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, '+=0.15');
-      tl.from(btns, { y: 6, stagger: 0.1, duration: 0.3, ease: 'power2.out' }, '<');
-      tl.to(chatBody, { scrollTop: chatBody.scrollHeight, duration: 0.5, ease: 'power2.out' }, '-=0.2');
+      tl.to(waBtns, { autoAlpha: 1, y: 0, duration: 0.3, ease: 'power2.out' }, '+=0.08');
+      tl.from(btns, { y: 4, stagger: 0.05, duration: 0.2, ease: 'power2.out' }, '<');
+      
+      const enableScroll = window.matchMedia('(min-width: 768px)').matches;
+      if (enableScroll) {
+        tl.to(chatBody, { scrollTop: chatBody.scrollHeight, duration: 0.35, ease: 'power2.out' }, '-=0.15');
+      }
     }
 
     tl.call(() => {
-      gsap.set(shell, { clearProps: 'transform' });
+      gsap.set(shell, { rotateX: 0, rotateY: 0, scale: 1 });
       if (containerRef.current) {
-        mouseCleanupRef.current = startMouseTilt(shell, containerRef.current);
-
-        const heroSection = containerRef.current.closest('section[aria-labelledby="hero-heading"]');
-        if (heroSection && isDesktop) {
-          gsap.to(shell, {
-            y: -30,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: heroSection,
-              start: 'top top',
-              end: 'bottom top',
-              scrub: true,
-            },
-          });
-        }
+        mouseCleanupRef.current = startInteractiveTilt(shell, containerRef.current);
       }
     }, undefined, '+=0.5');
 
     return () => {
       mouseCleanupRef.current?.();
+      mm.revert();
     };
-  }, { scope: containerRef });
+  }, { dependencies: [mounted], scope: containerRef });
 
   return (
-    <div ref={containerRef} className="phone-wrapper" aria-hidden="true">
+    <div ref={containerRef} className={`phone-wrapper ${mounted ? 'is-mounted' : ''}`} aria-hidden="true">
       <div ref={shellRef} className="phone" data-phone="shell">
         <div className="phone-body">
-          <div className="phone-shine" aria-hidden="true" />
           <div className="phone-screen">
             <div className="phone-island" aria-hidden="true" />
             <div className="status-bar">
-              <span>10:33</span>
+              <span>{currentTime}</span>
               <span className="status-icons">
                 <svg width="17" height="11" viewBox="0 0 17 11" fill="#fff">
                   <rect x="0" y="7" width="3" height="4" rx="1" />
@@ -259,26 +347,26 @@ export function PhoneChat() {
                 </div>
                 <div data-phone="b0" className="bubble them">
                   ¡Hola! Soy Laura, necesito {fmtCOP(phoneSim.amount).replace('$', '$')} para una emergencia. ¿En qué me pueden ayudar?
-                  <div className="t">10:30</div>
+                  <div className="t">{messageTime}</div>
                 </div>
                 <div data-phone="b1" className="bubble me">
                   ¡Hola Laura! 👋 Con gusto te ayudamos. ¿Cuál monto necesitas?
-                  <div className="t">10:30 <span className="checks">✓✓</span></div>
+                  <div className="t">{messageTime} <span className="checks">✓✓</span></div>
                 </div>
                 <div data-phone="b2" className="bubble them">
                   Necesito {fmtCOP(phoneSim.amount)}
-                  <div className="t">10:30</div>
+                  <div className="t">{messageTime}</div>
                 </div>
                 <div data-phone="b3" className="bubble me">
                   Perfecto Laura. Te comparto tu simulación personalizada…
-                  <div className="t">10:31 <span className="checks">✓✓</span></div>
+                  <div className="t">{messageTimePlus1} <span className="checks">✓✓</span></div>
                 </div>
                 <div data-phone="b4" className="bubble me" style={{ maxWidth: '88%' }}>
                   <div className="sim-title">Tu simulación</div>
                   <div className="sim-row">💲 Monto: {fmtCOP(phoneSim.amount)}</div>
                   <div className="sim-row">📅 Plazo: {phoneSim.term} meses</div>
                   <div className="sim-row">💳 Cuota: {fmtCOP(phoneSim.payment)}{phoneSim.unit}</div>
-                  <div className="t">10:31 <span className="checks">✓✓</span></div>
+                  <div className="t">{messageTimePlus1} <span className="checks">✓✓</span></div>
                 </div>
                 <div data-phone="b5" className="bubble note" style={{ maxWidth: '88%' }}>
                   <div className="ph">
@@ -289,19 +377,33 @@ export function PhoneChat() {
                     Simulación, no aprobación
                   </div>
                   La decisión final depende de la validación. Simular no afecta tu historial.
-                  <div className="t">10:31 <span className="checks">✓✓</span></div>
+                  <div className="t">{messageTimePlus1} <span className="checks">✓✓</span></div>
                 </div>
                 <div data-phone="b6" className="bubble them">
                   ¿Cómo inicio mi solicitud?
-                  <div className="t">10:32</div>
+                  <div className="t">{messageTimePlus2}</div>
                 </div>
                 <div data-phone="b7" className="bubble me">
                   Te guío paso a paso desde aquí 👇
-                  <div className="t">10:32 <span className="checks">✓✓</span></div>
+                  <div className="t">{messageTimePlus2} <span className="checks">✓✓</span></div>
                 </div>
                 <div data-phone="wa-btns" className="wa-buttons">
-                  <span className="wa-btn">Iniciar solicitud</span>
-                  <span className="wa-btn wa-btn--secondary">Chatear por WhatsApp</span>
+                  <button
+                    type="button"
+                    onClick={() => openApply('direct')}
+                    className="wa-btn"
+                  >
+                    Iniciar solicitud
+                  </button>
+                  <a
+                    href={buildWhatsAppUrl('hero', sim)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => track('whatsapp_click', { ctx: 'hero' })}
+                    className="wa-btn wa-btn--secondary"
+                  >
+                    Chatear por WhatsApp
+                  </a>
                 </div>
               </div>
             </div>
@@ -320,6 +422,7 @@ export function PhoneChat() {
               </span>
             </div>
             <div className="phone-home" />
+            <div className="phone-shine" aria-hidden="true" />
           </div>
         </div>
         <div className="phone-glow" aria-hidden="true" />

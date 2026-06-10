@@ -2,7 +2,6 @@ import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { SimulateSection } from "@/components/SimulateSection";
 import { Simulator } from "@/components/Simulator";
-import { Requirements } from "@/components/Requirements";
 import { HowItWorks } from "@/components/HowItWorks";
 import { Faq } from "@/components/Faq";
 import { CtaBanner } from "@/components/CtaBanner";
@@ -16,12 +15,10 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <SectionDivider amplitude="soft" to="#f7f9fa" />
+        <SectionDivider amplitude="bold" to="#f7f9fa" />
         <SimulateSection>
           <Simulator />
         </SimulateSection>
-        <SectionDivider amplitude="soft" to="#ffffff" />
-        <Requirements />
         <SectionDivider amplitude="medium" to="#e8f2dd" />
         <HowItWorks />
         <SectionDivider amplitude="medium" flip to="#ffffff" />
