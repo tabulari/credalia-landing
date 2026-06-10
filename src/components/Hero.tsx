@@ -66,7 +66,7 @@ export function Hero() {
 
   return (
     <section ref={containerRef} aria-labelledby="hero-heading" className="pt-12 pb-8 lg:pt-16 lg:pb-12 stack:py-0 overflow-hidden hero-atmosphere stack:min-h-[calc(100vh-68px)] stack:flex stack:items-center">
-      <div className="w-full mx-auto max-w-container px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
+      <div className="w-full mx-auto max-w-[1120px] px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
         <div className="flex flex-col gap-3 lg:gap-4 relative z-10">
           <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-1">Credalia Digital</p>
           <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
