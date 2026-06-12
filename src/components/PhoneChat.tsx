@@ -9,6 +9,7 @@ import { useSiteUi } from './site-ui';
 import { useSimulator } from './simulator-store';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import { track } from '@/lib/analytics';
+import { CredaliaLogo } from './icons';
 import './phone-chat.css';
 
 const phoneSim = calculatePayment(
@@ -318,9 +319,7 @@ export function PhoneChat() {
             <div className="chat-header">
               <span className="back">‹</span>
               <div className="avatar">
-                <svg viewBox="0 0 24 24" fill="#fff">
-                  <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/>
-                </svg>
+                <CredaliaLogo size={20} />
               </div>
               <div className="header-info">
                 <div className="who">

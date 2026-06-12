@@ -1,18 +1,15 @@
 import Link from 'next/link';
 import { config } from '@/lib/config';
 import { WhatsAppLink } from './WhatsAppLink';
-import { CredaliaLogo } from './icons';
+import { BrandLogo } from './icons';
 
 export function Footer() {
   return (
     <footer data-slot="footer" className="bg-gradient-to-b from-navy-deep to-[#071940] text-white border-t border-white/10">
       <div className="mx-auto max-w-container px-6 pt-14 pb-12 lg:pt-16 lg:pb-14 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-x-8 gap-y-10 overflow-hidden">
         <div className="col-span-2 md:col-span-4 lg:col-span-1">
-          <a href="#top" className="flex items-center gap-2 mb-3 min-h-[44px] py-1.5">
-            <span aria-hidden="true">
-              <CredaliaLogo size={44} />
-            </span>
-            <span className="text-lg font-extrabold tracking-[0.08em]"> {config.brandName.toUpperCase()}</span>
+          <a href="#top" className="flex items-center gap-2 mb-3 min-h-[44px] py-1.5 text-white">
+            <BrandLogo height={44} variant="footer" />
           </a>
           <p className="text-sm text-white/65 mb-4 max-w-[32ch]">
             Crédito digital simple, ágil y seguro. Tasa clara, 100% en línea y sin papeles.

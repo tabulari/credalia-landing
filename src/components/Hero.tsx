@@ -125,7 +125,7 @@ export function Hero() {
 
         <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-4 shadow-sm mt-10 relative z-10">
           <div className="flex items-center gap-2.5 mb-3">
-            <CredaliaLogo size={28} />
+            <CredaliaLogo size={22} />
             <div>
               <p className="text-sm font-extrabold text-navy">{config.brandName}</p>
               <p className="text-xs text-muted-2">Crédito digital 100% en línea</p>

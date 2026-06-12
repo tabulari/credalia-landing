@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { ApplyButton } from './ApplyButton';
 import { cn } from '@/lib/utils';
 import { config } from '@/lib/config';
-import { CredaliaLogo, HamburgerIcon, CloseIcon } from './icons';
+import { BrandLogo, HamburgerIcon, CloseIcon } from './icons';
 
 const LINKS = [
   { href: '#simula', label: 'Simula tu crédito' },
@@ -148,14 +148,9 @@ export function Nav() {
         <a
           href="#top"
           aria-label={`${config.brandName} — inicio`}
-          className="flex items-center gap-2.5 py-2"
+          className="flex items-center gap-2.5 py-2 text-navy"
         >
-          <span aria-hidden="true">
-            <CredaliaLogo size={48} />
-          </span>
-          <span className="text-lg font-extrabold tracking-[0.08em] text-navy">
-            {config.brandName.toUpperCase()}
-          </span>
+          <BrandLogo height={48} />
         </a>
 
         <nav aria-label="Navegación principal" className="hidden md:flex items-center gap-6">

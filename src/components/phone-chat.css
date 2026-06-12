@@ -155,13 +155,13 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #128c7e;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
-.chat-header .avatar svg { width: 18px; height: 18px; }
+.chat-header .avatar svg { width: 20px; height: auto; }
 .chat-header .header-info { flex: 1; min-width: 0; }
 .chat-header .who {
   display: flex;
