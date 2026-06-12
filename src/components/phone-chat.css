@@ -7,15 +7,6 @@
   display: flex;
   justify-content: center;
 }
-.phone-wrapper .status-bar span:first-child,
-.phone-wrapper .bubble .t {
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-.phone-wrapper.is-mounted .status-bar span:first-child,
-.phone-wrapper.is-mounted .bubble .t {
-  opacity: 1;
-}
 
 .phone {
   position: relative;
@@ -29,7 +20,6 @@
     drop-shadow(0 24px 48px rgba(13,42,94,0.14))
     drop-shadow(0 48px 80px rgba(13,42,94,0.06));
   z-index: 1;
-  transform-style: preserve-3d;
 }
 
 .phone-body {
@@ -56,7 +46,6 @@
     inset 0 -1px 0 rgba(255,255,255,0.08),
     0 1px 0 0 #626266,
     0 0 0 0.5px rgba(0,0,0,0.70);
-  transform-style: preserve-3d;
 }
 
 .phone-body::before {
@@ -96,7 +85,6 @@
   display: flex;
   flex-direction: column;
   background: #f5f7fa;
-  transform: translateZ(1px);
 }
 
 /* ===== Dynamic Island ===== */
@@ -184,19 +172,17 @@
 /* ===== chat wallpaper ===== */
 .chat-wallpaper {
   flex: 1;
-  display: flex;
-  flex-direction: column;
+  overflow: hidden;
   background-color: #efeae2;
   background-image:
     radial-gradient(circle, #d4cfc6 0.8px, transparent 0.8px);
   background-size: 24px 24px;
   position: relative;
-  overflow: hidden;
-  min-height: 0;
 }
 
 .chat-body {
-  flex: 1;
+  position: absolute;
+  inset: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
@@ -212,20 +198,7 @@
   display: none;
 }
 
-@media (max-width: 767px) {
-  .chat-body {
-    overflow-y: hidden;
-  }
-}
-
 /* ===== bubbles ===== */
-.bubble,
-.wa-buttons,
-.typing-indicator {
-  opacity: 0;
-  visibility: hidden;
-}
-
 .bubble {
   padding: 5px 7px;
   border-radius: 7px;
@@ -315,8 +288,6 @@
   margin-right: 6px;
   max-width: 82%;
   flex-shrink: 0;
-  position: relative;
-  z-index: 20;
 }
 .wa-btn {
   display: block;
@@ -335,9 +306,6 @@
   transition: background 0.15s, color 0.15s;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  position: relative;
-  z-index: 25;
-  pointer-events: auto;
 }
 .wa-btn:hover,
 .wa-btn:focus-visible {
@@ -415,9 +383,9 @@
 .phone-shine {
   position: absolute;
   inset: 0;
-  border-radius: 47px;
+  border-radius: 55px;
   pointer-events: none;
-  z-index: 20;
+  z-index: 2;
   background: linear-gradient(
     135deg,
     rgba(255,255,255,0.14) 0%,
@@ -485,20 +453,4 @@
 @media (prefers-reduced-motion: reduce) {
   .typing-indicator span { animation: none; }
   .phone-shine { display: none; }
-}
-
-/* ===== mobile responsive scaling ===== */
-@media (max-width: 480px) {
-  .phone-wrapper {
-    transform: scale(0.9);
-    transform-origin: center top;
-    margin-bottom: -50px;
-  }
-}
-
-@media (min-width: 980px) {
-  .phone-wrapper {
-    transform: scale(1.12);
-    transform-origin: center center;
-  }
 }
