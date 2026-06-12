@@ -136,12 +136,9 @@ export function Nav() {
       id="top"
       className={cn(
         'sticky top-0 z-50 backdrop-blur-lg transition-colors duration-200',
-        // Mobile (default): siempre fondo blanco con una sutil sombra de distinción
-        'bg-white shadow-[0_1px_0_rgba(13,42,94,0.05)]',
-        // Desktop/Tablet (md:): dinámico según scroll
         scrolled
-          ? 'md:bg-white/80 md:shadow-[0_1px_0_rgba(13,42,94,0.05)]'
-          : 'md:bg-white/0 md:shadow-none',
+          ? 'bg-white/80 shadow-[0_1px_0_rgba(13,42,94,0.05)]'
+          : 'bg-white/0 shadow-none',
       )}
     >
       <div className="mx-auto max-w-container px-6 flex items-center justify-between h-[68px]">
@@ -206,8 +203,8 @@ export function Nav() {
           ref={mobilePanelRef}
           inert={!open || undefined}
           className={cn(
-            'absolute left-0 right-0 top-[68px] z-50 bg-white overflow-hidden transition-[max-height,border-color] duration-200 shadow-lg',
-            open ? 'max-h-[600px] border-t border-border border-b border-border' : 'max-h-0 border-t border-transparent border-b border-transparent',
+            'md:hidden overflow-hidden transition-[max-height,border-color] duration-200',
+            open ? 'max-h-[600px] border-t border-border' : 'max-h-0 border-t border-transparent',
           )}
           onClick={(e) => {
             if ((e.target as HTMLElement).closest('a, button'))
