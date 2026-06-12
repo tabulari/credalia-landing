@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { ApplyButton } from './ApplyButton';
 import { cn } from '@/lib/utils';
 import { config } from '@/lib/config';
-import { BrandLogo, HamburgerIcon, CloseIcon } from './icons';
+import { CloseIcon, HamburgerIcon } from './icons';
 
 const LINKS = [
   { href: '#simula', label: 'Simula tu crédito' },
@@ -148,9 +148,14 @@ export function Nav() {
         <a
           href="#top"
           aria-label={`${config.brandName} — inicio`}
-          className="flex items-center gap-2.5 py-2 text-navy"
+          className="flex items-center py-2 text-navy"
         >
-          <BrandLogo height={48} />
+          <img
+            src="/brand_Logo.svg"
+            alt=""
+            aria-hidden="true"
+            className="h-auto w-[183px]"
+          />
         </a>
 
         <nav aria-label="Navegación principal" className="hidden md:flex items-center gap-6">

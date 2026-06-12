@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { config } from '@/lib/config';
 import { WhatsAppLink } from './WhatsAppLink';
-import { BrandLogo } from './icons';
 
 export function Footer() {
   return (
@@ -9,7 +8,12 @@ export function Footer() {
       <div className="mx-auto max-w-container px-6 pt-14 pb-12 lg:pt-16 lg:pb-14 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-x-8 gap-y-10 overflow-hidden">
         <div className="col-span-2 md:col-span-4 lg:col-span-1">
           <a href="#top" className="flex items-center gap-2 mb-3 min-h-[44px] py-1.5 text-white">
-            <BrandLogo height={44} variant="footer" />
+            <img
+              src="/brand_Logo.svg"
+              alt=""
+              aria-hidden="true"
+              className="h-auto w-[168px] brightness-0 invert"
+            />
           </a>
           <p className="text-sm text-white/65 mb-4 max-w-[32ch]">
             Crédito digital simple, ágil y seguro. Tasa clara, 100% en línea y sin papeles.

@@ -10,7 +10,7 @@ import { ApplyButton } from './ApplyButton';
 import { ScrollButton } from './ScrollButton';
 import { PhoneChat } from './PhoneChat';
 import { WhatsAppLink } from './WhatsAppLink';
-import { ShieldCheckIcon, LockIcon, ClockIcon, CredaliaLogo } from './icons';
+import { ShieldCheckIcon, LockIcon, ClockIcon } from './icons';
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -125,7 +125,12 @@ export function Hero() {
 
         <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-4 shadow-sm mt-10 relative z-10">
           <div className="flex items-center gap-2.5 mb-3">
-            <CredaliaLogo size={22} />
+            <img
+              src="/credalia-logo.svg"
+              alt=""
+              aria-hidden="true"
+              className="h-7 w-7 shrink-0"
+            />
             <div>
               <p className="text-sm font-extrabold text-navy">{config.brandName}</p>
               <p className="text-xs text-muted-2">Crédito digital 100% en línea</p>

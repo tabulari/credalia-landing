@@ -28,6 +28,7 @@ const MAX_AMOUNT_DISPLAY = `$${fmtCOP(config.simulator.amountMax).replace(',00',
 const DESCRIPTION =
   `Crédito digital en Colombia hasta ${MAX_AMOUNT_DISPLAY}. Respuesta en minutos, tasa clara y sin papeles. Simula tu crédito sin afectar tu historial y solicita 100% en línea.`;
 const OG_TITLE = `${config.brandName} — Crédito digital hasta ${MAX_AMOUNT_DISPLAY}`;
+const BRAND_ASSET_VERSION = '3ef966e';
 
 // metadataBase makes OG/canonical URLs absolute (⚠️ NEXT_PUBLIC_SITE_URL must be
 // the real domain or WhatsApp/social previews break).
@@ -60,10 +61,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { url: `/favicon.svg?v=${BRAND_ASSET_VERSION}`, type: "image/svg+xml" },
+      { url: `/favicon-32.png?v=${BRAND_ASSET_VERSION}`, type: "image/png", sizes: "32x32" },
     ],
-    apple: "/apple-touch-icon.png",
+    apple: `/apple-touch-icon.png?v=${BRAND_ASSET_VERSION}`,
   },
 };
 
