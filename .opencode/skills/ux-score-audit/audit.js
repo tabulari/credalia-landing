@@ -795,9 +795,9 @@ function scoreNarrativeFlow(d) {
   }
   criteria.push({ id: 2, desc: 'Section backgrounds alternate', precision: 'fuzzy⚠️', expected: 'white→soft→white→green-soft→white→navy-deep', measured: bgs.map(b => b.substring(0, 20)).join(' | '), pass: alternates, pts: alternates ? 2 : 1, max: 2 });
 
-  // C10.3 (1pt): Wave dividers (4 total)
+  // C10.3 (1pt): Wave dividers (5 total)
   const dividerCount = d.dividers.count;
-  criteria.push({ id: 3, desc: 'Wave dividers present', precision: 'fuzzy⚠️', expected: '4 total (soft/soft/medium/medium/bold)', measured: `count=${dividerCount} viewBoxes=${JSON.stringify(d.dividers.viewBoxes)}`, pass: dividerCount >= 4, pts: dividerCount >= 4 ? 1 : 0, max: 1 });
+  criteria.push({ id: 3, desc: 'Wave dividers present', precision: 'fuzzy⚠️', expected: '5 total (soft/soft/medium/medium/bold)', measured: `count=${dividerCount} viewBoxes=${JSON.stringify(d.dividers.viewBoxes)}`, pass: dividerCount >= 5, pts: dividerCount >= 5 ? 1 : 0, max: 1 });
 
   // C10.4 (1pt): Every section has eyebrow + h2
   const allHaveHeaders = secs.length > 0 && secs.every(s => s.eyebrowText.length > 0 && s.h2Text.length > 0);

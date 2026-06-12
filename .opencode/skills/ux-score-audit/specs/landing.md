@@ -120,4 +120,4 @@ back to the browser default `1px auto` ring.
 | CtaBanner | dot-grid bg, contained action panel (bg-white/[0.04] ring-1 ring-white/10 rounded-2xl), CheckCircleIcon bullets, urgency subtext, conditional disbursement. **Eyebrow uses `text-green-bright` (#2bbd6a)** — the standard `--green` fails AA (4.06:1) on the lightened panel bg; green-bright = 5.73:1 |
 | Footer | 3-tier structure: (1) 4-col grid `1.5fr_1fr_1fr_1fr` (brand+WhatsApp / Empresa / Ayuda / Síguenos), (2) legal+contact strip (Razón social · NIT · Contacto mailto, all ≥44px), (3) slim copyright bar (© + regulator note + Habeas Data); each tier `border-t border-white/10`, top border separates from CtaBanner. WhatsApp link uses `text-green` (#1e9e55 = 4.97:1 on footer gradient, AA pass); social icon SVGs `aria-hidden` inside `aria-label`ed anchors |
 | StickyBar | bg-white/95, safe-area-inset-bottom padding, shows past hero/simulator hidden |
-| SectionDividers | 4 total: soft/soft/medium/bold amplitudes |
+| SectionDividers | 5 total: soft/soft/medium/medium/bold amplitudes |
