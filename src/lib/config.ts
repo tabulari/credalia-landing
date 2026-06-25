@@ -30,7 +30,7 @@ export type PlaceholderKey = (typeof PLACEHOLDER_KEYS)[number];
 
 /** Prototype stand-ins — dev fallbacks AND production-guard sentinels. */
 export const PLACEHOLDERS: Record<PlaceholderKey, string> = {
-  NEXT_PUBLIC_WHATSAPP_PHONE: "573001234567",
+  NEXT_PUBLIC_WHATSAPP_PHONE: "15556589627",
   NEXT_PUBLIC_SITE_URL: "https://www.credalia.co",
   NEXT_PUBLIC_COMPANY_LEGAL_NAME: "Credalia S.A.S.",
   NEXT_PUBLIC_COMPANY_NIT: "XXX.XXX.XXX-X",
