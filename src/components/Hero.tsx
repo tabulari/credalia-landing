@@ -90,16 +90,9 @@ export function Hero() {
               Solicitar crédito <span aria-hidden="true">→</span>
             </ApplyButton>
           </div>
-          <div data-hero="whatsapp" className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-1">
-            <WhatsAppLink
-              ctx="hero"
-              className="inline-flex items-center gap-2 text-sm text-green-ink hover:text-green-ink/80 transition-colors py-3"
-            >
-              <span className="wa-ico" aria-hidden="true" />
-              <span>
-                ¿Dudas? Escríbenos por <b>WhatsApp</b>
-              </span>
-            </WhatsAppLink>
+           <div data-hero="whatsapp" className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-1">
+             {/* WhatsApp link removed */}
+
             {config.regulatorVerified && (
               <>
                 <span className="hidden sm:inline text-border" aria-hidden="true">·</span>

@@ -6,6 +6,7 @@ import { capFreq } from './use-application-form';
 import { cn } from '@/lib/utils';
 import type { Values } from './use-application-form';
 import { CheckIcon } from '../icons';
+import { WhatsAppLink } from '../WhatsAppLink';
 
 type FieldHandlers = {
   onFieldChange: (name: FieldName, raw: string) => void;
@@ -68,8 +69,14 @@ export function Step1({ values, applyOrigin, handlers, frozen }: {
         {fieldEl('idNumber', 'Número de cédula', handlers, { type: 'text', inputMode: 'numeric', placeholder: 'Ej. 1.024.567.890', value: values.idNumber })}
         {fieldEl('phone', 'Celular', handlers, { type: 'tel', inputMode: 'numeric', placeholder: 'Ej. 300 123 4567', value: values.phone })}
       </div>
-      <div>{fieldEl('email', 'Correo electrónico', handlers, { type: 'email', autoComplete: 'email', placeholder: 'tucorreo@ejemplo.com', value: values.email })}</div>
-    </section>
+       <div>{fieldEl('email', 'Correo electrónico', handlers, { type: 'email', autoComplete: 'email', placeholder: 'tucorreo@ejemplo.com', value: values.email })}</div>
+       <div className="mt-3 text-center">
+         <WhatsAppLink ctx="contact" className="text-xs text-muted-foreground hover:text-navy transition-colors underline underline-offset-2">
+           ¿Preferís escribirnos por WhatsApp?
+         </WhatsAppLink>
+       </div>
+     </section>
+
   );
 }
 

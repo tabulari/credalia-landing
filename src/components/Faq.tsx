@@ -74,15 +74,10 @@ export function Faq() {
             ))}
           </Accordion>
         </div>
-        <div data-faq="cta" className="mt-8 text-center">
-          <WhatsAppLink
-            ctx="faq"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink hover:text-green-ink/80 transition-colors py-3"
-          >
-            <span className="wa-ico" aria-hidden="true" />
-            ¿Tienes otra duda? Escríbenos por <b>WhatsApp</b>
-          </WhatsAppLink>
-        </div>
+         <div data-faq="cta" className="mt-8 text-center">
+           {/* WhatsApp link removed */}
+         </div>
+
         <noscript>
           <div className="max-w-3xl mx-auto flex flex-col gap-3 mt-8">
             {FAQS.map(({ q, a }, i) => (

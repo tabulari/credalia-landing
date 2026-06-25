@@ -11,16 +11,11 @@ export function Footer() {
           <a href="#top" className="flex items-center gap-2 mb-3 min-h-[44px] py-1.5 text-white">
             <BrandLogo height={44} variant="footer" />
           </a>
-          <p className="text-sm text-white/65 mb-4 max-w-[32ch]">
-            Crédito digital simple, ágil y seguro. Tasa clara, 100% en línea y sin papeles.
-          </p>
-          <WhatsAppLink
-            ctx="footer"
-            className="inline-flex items-center gap-2 text-sm font-medium text-green hover:text-green/80 transition-colors min-h-[44px]"
-          >
-            <span className="wa-ico" aria-hidden="true" /> Escríbenos por WhatsApp
-          </WhatsAppLink>
-        </div>
+           <p className="text-sm text-white/65 mb-4 max-w-[32ch]">
+             Crédito digital simple, ágil y seguro. Tasa clara, 100% en línea y sin papeles.
+           </p>
+         </div>
+
 
         <nav aria-label="Empresa" className="flex flex-col gap-0.5">
           <h3 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-1">Empresa</h3>

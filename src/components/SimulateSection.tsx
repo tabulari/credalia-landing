@@ -19,15 +19,9 @@ export function SimulateSection({ children }: { children: React.ReactNode }) {
                 Simula tu crédito
               </h2>
             </div>
-            {children}
-            <WhatsAppLink
-              ctx="hero"
-              className="flex items-center justify-center gap-2.5 text-sm font-semibold text-green-ink hover:text-green-ink/80 transition-colors py-3"
-            >
-              <span className="wa-ico" aria-hidden="true" />
-              Hablar por WhatsApp
-            </WhatsAppLink>
-          </div>
+             {children}
+           </div>
+
         </div>
       </div>
     </section>
