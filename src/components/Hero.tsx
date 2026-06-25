@@ -9,7 +9,6 @@ import { fmtCOP } from '@/lib/credit';
 import { ApplyButton } from './ApplyButton';
 import { ScrollButton } from './ScrollButton';
 import { PhoneChat } from './PhoneChat';
-import { WhatsAppLink } from './WhatsAppLink';
 import { ShieldCheckIcon, LockIcon, ClockIcon, CredaliaLogo } from './icons';
 
 export function Hero() {

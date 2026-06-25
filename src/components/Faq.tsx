@@ -4,7 +4,6 @@ import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { FAQS } from '@/lib/faqs';
-import { WhatsAppLink } from './WhatsAppLink';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export function Faq() {

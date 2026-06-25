@@ -1,4 +1,3 @@
-import { WhatsAppLink } from './WhatsAppLink';
 import { Requirements } from './Requirements';
 
 export function SimulateSection({ children }: { children: React.ReactNode }) {
