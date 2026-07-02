@@ -35,19 +35,30 @@ export interface Validity {
   message: string;
 }
 
+/** Rate + eligibility params. Defaults to static config; overridable with a
+ * runtime fetch (e.g. Core's `GET /api/v1/sessions/rates-config`). */
+export interface RateConfig {
+  monthlyRate: number;
+  smallAmountThreshold: number;
+  smallAmountMaxTerm: number;
+  highAmountThreshold: number;
+  highAmountMinTerm: number;
+}
+
 /**
  * Eligibility / constraint rules. Returns { ok, message } — message is shown to
  * the user and the apply CTA is disabled while ok === false.
  *
- * Thresholds come from config (env-driven, interim until real rate engine).
+ * Thresholds default to config (env-driven, interim until real rate engine).
  */
 export function validateApplication(
   amount: number,
   termMonths: number,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _frequency: Frequency,
+  rates: RateConfig = config.credit,
 ): Validity {
-  const { smallAmountThreshold, smallAmountMaxTerm, highAmountThreshold, highAmountMinTerm } = config.credit;
+  const { smallAmountThreshold, smallAmountMaxTerm, highAmountThreshold, highAmountMinTerm } = rates;
 
   if (amount < smallAmountThreshold && termMonths >= smallAmountMaxTerm) {
     return {
@@ -70,8 +81,9 @@ export function calculatePayment(
   amount: number,
   termMonths: number,
   frequency: Frequency,
+  rates: RateConfig = config.credit,
 ): Simulation {
-  const MONTHLY_RATE = config.credit.monthlyRate;
+  const MONTHLY_RATE = rates.monthlyRate;
   const isBiweekly = frequency === "biweekly";
 
   const periodsPerMonth = isBiweekly ? 2 : 1;
@@ -84,7 +96,7 @@ export function calculatePayment(
 
   const totalCost = payment * nPeriods; // derived from the ROUNDED payment (display parity)
   const ea = Math.pow(1 + MONTHLY_RATE, 12) - 1; // annual equivalent
-  const validity = validateApplication(amount, termMonths, frequency);
+  const validity = validateApplication(amount, termMonths, frequency, rates);
 
   return {
     amount,

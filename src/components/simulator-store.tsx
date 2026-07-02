@@ -11,6 +11,7 @@ import {
 import {
   calculatePayment,
   type Frequency,
+  type RateConfig,
   type Simulation,
 } from "@/lib/credit";
 import { config } from "@/lib/config";
@@ -48,10 +49,50 @@ interface SimulatorStore {
 
 const SimulatorContext = createContext<SimulatorStore | null>(null);
 
+/**
+ * Shape of Core's `GET /api/v1/sessions/rates-config` (RatesConfigResponse).
+ * Only `monthly_interest_rate` is consumed here — the eligibility thresholds
+ * (small/high amount rules) have no Core counterpart and stay static from
+ * config.credit. Numeric fields arrive as strings (Python Decimal).
+ */
+interface RatesConfigResponse {
+  monthly_interest_rate: string;
+}
+
+function parseMonthlyRate(data: unknown): number | null {
+  if (typeof data !== "object" || data === null) return null;
+  const raw = (data as Partial<RatesConfigResponse>).monthly_interest_rate;
+  if (typeof raw !== "string") return null;
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
 export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   const [amount, setAmountState] = useState(config.simulator.defaultAmount);
   const [term, setTerm] = useState(config.simulator.defaultTerm);
   const [frequency, setFrequency] = useState<Frequency>("monthly");
+
+  // Live monthly rate from Core, falling back to config.credit (which also
+  // supplies the eligibility thresholds Core doesn't provide) if the fetch
+  // fails or returns a bad shape.
+  const [rates, setRates] = useState<RateConfig>(config.credit);
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${config.coreApiUrl}/api/v1/sessions/rates-config`)
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("bad status"))))
+      .then((data: unknown) => {
+        const monthlyRate = parseMonthlyRate(data);
+        if (!cancelled && monthlyRate !== null) {
+          setRates((prev) => ({ ...prev, monthlyRate }));
+        }
+      })
+      .catch(() => {
+        // Silent — static config.credit fallback (already set) stays in effect.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const setAmount = useCallback((value: number, round = true) => {
     setAmountState(round ? clampRoundAmount(value) : clampAmount(value));
@@ -69,8 +110,8 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   }, [amount]);
 
   const sim = useMemo(
-    () => calculatePayment(settledAmount, term, frequency),
-    [settledAmount, term, frequency],
+    () => calculatePayment(settledAmount, term, frequency, rates),
+    [settledAmount, term, frequency, rates],
   );
 
   const value = useMemo<SimulatorStore>(
