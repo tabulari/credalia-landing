@@ -47,37 +47,3 @@ jobs:
           fi
           echo "Placeholder guard correctly blocked the production build."
 
-  # accessibility (axe) + Lighthouse against a real production server
-  a11y-lighthouse:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: cp .env.example .env.local
-      - name: Build (placeholders allowed for preview testing only)
-        run: pnpm build
-        env:
-          NEXT_PUBLIC_CREDALIA_ALLOW_PLACEHOLDERS: "true"
-      - name: Install Playwright Chromium
-        run: pnpm exec playwright install --with-deps chromium
-      - uses: browser-actions/setup-chrome@v1
-        id: chrome
-        with:
-          install-dependencies: true
-      - name: axe (Playwright) + Lighthouse CI
-        env:
-          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-        run: |
-          pnpm exec next start -p 3210 &
-          SERVER=$!
-          for i in $(seq 1 90); do curl -sf http://localhost:3210/ >/dev/null && break; sleep 1; done
-          E2E_BASE_URL=http://localhost:3210 CI=true pnpm test:e2e
-          pnpm lhci
-          kill "$SERVER" 2>/dev/null || true

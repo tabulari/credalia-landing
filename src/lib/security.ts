@@ -6,7 +6,7 @@ const RATE_LIMIT_MAX = 5;
 
 const ipTimestamps = new Map<string, number[]>();
 
-function getClientIp(request: NextRequest): string {
+export function getClientIp(request: NextRequest): string {
   return (
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip") ||

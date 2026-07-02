@@ -67,8 +67,13 @@ export const applicationSchema = z.object({
   income: fieldSchemas.income,
   bank: fieldSchemas.bank,
   consent: z.boolean().refine((v) => v === true, { message: MSG.consent }),
-  // Frozen simulator snapshot — forwarded, not strictly validated here.
-  terms: z.unknown().optional(),
+  // Frozen simulator snapshot (full Simulation shape). The server route maps
+  // `term`/`monthlyRate` to Core's `termMonths`/`monthlyInterestRate` before
+  // forwarding — see app/api/application/route.ts.
+  terms: z
+    .object({ amount: z.number(), term: z.number(), monthlyRate: z.number() })
+    .passthrough()
+    .optional(),
 });
 
 export type ApplicationInput = z.infer<typeof applicationSchema>;

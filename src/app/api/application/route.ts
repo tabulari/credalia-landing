@@ -5,17 +5,20 @@ import {
   checkOrigin,
   checkCsrf,
   applySecurityHeaders,
+  getClientIp,
 } from "@/lib/security";
 import { config } from "@/lib/config";
+import { CONSENT_TEXT_SHA256 } from "@/lib/consent";
 
 /**
  * Application submit endpoint. Validates the payload with the SAME zod schema
- * the client uses, then issues a radicado. In production it forwards the
- * application to the real backend (APPLICATION_ENDPOINT); the prototype's fake
- * 1.4s Promise is replaced by this real round-trip.
+ * the client uses, then forwards it to Core's `POST /api/v1/intake/web-lead`
+ * (APPLICATION_ENDPOINT). Core is the source of truth for the radicado — this
+ * route no longer generates one locally.
  *
  * Security: rate-limited (5 req/min/IP), origin check, CSRF via Origin/Referer,
- * and security response headers.
+ * security response headers, and a shared `X-Landing-Api-Key` secret on the
+ * outbound call to Core.
  *
  * Test hook: POST with `?forceError=1` returns 500 so the modal's error panel
  * (and draft-preservation) can be exercised.
@@ -59,18 +62,51 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const radicado = `${config.radicadoPrefix}-${Math.floor(10000 + Math.random() * 89999)}`;
+  // Core's WebLeadIntakeRequest expects `terms: { amount, termMonths,
+  // monthlyInterestRate }` — map from the frozen Simulation snapshot's
+  // `term`/`monthlyRate` (and stringify the rate; Core stores it as Decimal).
+  const terms = parsed.data.terms
+    ? {
+        amount: parsed.data.terms.amount,
+        termMonths: parsed.data.terms.term,
+        monthlyInterestRate: String(parsed.data.terms.monthlyRate),
+      }
+    : undefined;
 
-  // ⚠️ Wire the real backend here once APPLICATION_ENDPOINT is configured. The
-  // prod-config guard (lib/config.ts) blocks a production build until the
-  // placeholder endpoint is replaced. Until then we just return the radicado.
-  //
-  //   const res = await fetch(config.applicationEndpoint, { method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(parsed.data) });
-  //   const data = await res.json(); return NextResponse.json({ radicado: data.id });
+  let coreResponse: Response;
+  try {
+    coreResponse = await fetch(config.applicationEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Landing-Api-Key": config.landingApiKey,
+      },
+      body: JSON.stringify({
+        ...parsed.data,
+        // Core requires exactly 10 digits, no spaces — the UI's phone input
+        // allows spaces while typing (e.g. "300 123 4567").
+        phone: parsed.data.phone.replace(/\D/g, ""),
+        terms,
+        clientIp: getClientIp(request),
+        userAgent: request.headers.get("user-agent") ?? null,
+        consentTextHash: CONSENT_TEXT_SHA256,
+      }),
+    });
+  } catch {
+    return applySecurityHeaders(
+      NextResponse.json({ error: "Error al registrar la solicitud." }, { status: 502 }),
+    );
+  }
+
+  if (!coreResponse.ok) {
+    return applySecurityHeaders(
+      NextResponse.json({ error: "Error al registrar la solicitud." }, { status: 502 }),
+    );
+  }
+
+  const data: { radicado: string } = await coreResponse.json();
 
   return applySecurityHeaders(
-    NextResponse.json({ radicado }, { status: 200 }),
+    NextResponse.json({ radicado: data.radicado }, { status: 200 }),
   );
 }

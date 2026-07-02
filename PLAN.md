@@ -33,7 +33,7 @@ Phases are ordered by priority; items within each phase are roughly ordered by e
 - [x] 1.13 Brand display name configurable via `NEXT_PUBLIC_BRAND_NAME` — replaced all hardcoded "Credalia" strings in Nav, Footer, PhoneChat, WhatsApp messages, legal pages, layout metadata, manifest, JSON-LD
 - [x] 1.14 Contact email + hours configurable via `NEXT_PUBLIC_CONTACT_EMAIL` / `NEXT_PUBLIC_CONTACT_HOURS` — Footer uses `config.contactEmail` / `config.contactHours`
 - [x] 1.15 Regulator name configurable via `NEXT_PUBLIC_REGULATOR_NAME` / `NEXT_PUBLIC_REGULATOR_SHORT_NAME` — Hero, Security, Footer use config
-- [x] 1.16 Radicado prefix configurable via `NEXT_PUBLIC_RADICADO_PREFIX` — API route uses `config.radicadoPrefix`
+- [x] ~~1.16 Radicado prefix configurable via `NEXT_PUBLIC_RADICADO_PREFIX`~~ — **superseded by T10** (see Phase 1++ below): Core now generates the radicado, so this env var/config field was removed as dead code (nothing consumed it after the API route stopped building radicados locally).
 - [x] 1.17 Simulator parameters configurable via env vars:
   - [x] `NEXT_PUBLIC_SIM_AMOUNT_MIN`, `NEXT_PUBLIC_SIM_AMOUNT_MAX`, `NEXT_PUBLIC_SIM_AMOUNT_STEP`, `NEXT_PUBLIC_SIM_AMOUNT_STEP_BIG`
   - [x] `NEXT_PUBLIC_SIM_DEFAULT_AMOUNT`, `NEXT_PUBLIC_SIM_DEFAULT_TERM`
@@ -44,6 +44,25 @@ Phases are ordered by priority; items within each phase are roughly ordered by e
 - [x] 1.19 Employment types configurable via `NEXT_PUBLIC_APPLICATION_EMPLOYMENT_TYPES` (comma-separated)
 - [x] 1.20 Brand colors configurable via `NEXT_PUBLIC_COLOR_NAVY`, `NEXT_PUBLIC_COLOR_ORANGE`, `NEXT_PUBLIC_COLOR_GREEN` — used in manifest theme-color, layout viewport, not-found page, JSON-LD
 - [x] 1.21 GTM/GA4 container ID configurable via `NEXT_PUBLIC_GTM_ID` — layout loads GTM script when set
+
+### Phase 1++ — Core Integration (IP-028, cross-repo with credalia-core)
+
+> credalia-landing consumes two credalia-core contracts. This repo can't govern
+> or force the merge of the Core-side work (T1/T4 there) — only implement and
+> describe its own side.
+
+- [x] T10 — Wire lead submission to Core's `POST /api/v1/intake/web-lead`
+  - [x] `app/api/application/route.ts` forwards the validated lead server-side (never from the browser), auth'd via `X-Landing-Api-Key` (`LANDING_API_KEY` env var)
+  - [x] Local radicado generation removed — the route returns Core's `radicado` (see 1.16 above)
+  - [x] `clientIp`, `userAgent`, `consentTextHash` (new `src/lib/consent.ts`) sent for Habeas Data audit traceability
+  - [x] Fixed `terms` shape mismatch — client sends the internal `Simulation` object (`term`/`monthlyRate`); route now maps to Core's expected `{ amount, termMonths, monthlyInterestRate }` before forwarding
+  - [x] Fixed `phone` — UI allows spaces while typing (e.g. "300 123 4567"); route now strips to exactly 10 digits before forwarding (Core requires exact length)
+  - [x] Verified end-to-end against a real local Core instance (`:8000`) — got back a real radicado (`CR-2026-XXXXXXXX`)
+- [x] T11 — Live rates from Core's `GET /api/v1/sessions/rates-config`
+  - [x] `simulator-store.tsx` fetches on mount, falls back silently to static `config.credit`/`config.simulator` defaults on failure (acceptance criterion — verified the page doesn't break with Core down)
+  - [x] Only `monthlyRate` is overridden from Core's response (`monthly_interest_rate`, arrives as a string). Core's `min_amount`/`max_amount`/`term_options_months` and this repo's 4 local eligibility thresholds (small/high amount rules) are NOT wired dynamic — out of scope for now, would require `AMOUNT_MIN`/`AMOUNT_MAX`/`termOptions` to stop being module-level constants and become reactive (bigger refactor touching `Simulator.tsx`/`AmountInput.tsx`)
+  - [x] CORS on Core's `rates-config` — was blocking the browser fetch (confirmed via curl: missing `Access-Control-Allow-Origin`); fixed on the credalia-core side, re-verified `access-control-allow-origin: http://localhost:3027` present and the client bundle now inlines the real `NEXT_PUBLIC_CORE_API_URL` instead of the placeholder
+- [x] Fixed a latent bug found while implementing T11: `config.ts`'s `read*()` helpers used dynamic `process.env[key]` lookups, which Next.js's client-bundle compiler can't statically inline (`NEXT_PUBLIC_*` inlining only works on literal `process.env.NEXT_PUBLIC_X` expressions). Every `NEXT_PUBLIC_*` value read inside client-only code (event handlers, `useEffect`, post-hydration state) was silently falling back to its default instead of the real env value — invisible until now because defaults matched `.env.example` by convention. Rewrote the helpers to take the pre-resolved value so every call site does the literal access.
 
 ---
 
