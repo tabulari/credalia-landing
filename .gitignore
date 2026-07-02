@@ -42,6 +42,9 @@ pnpm-debug.log*
 !.vscode/extensions.json
 .idea
 
+# local-only CI tooling (keep local, don't version)
+lighthouserc.json
+
 # ai tool generated
 .agents/
 .kiro/
