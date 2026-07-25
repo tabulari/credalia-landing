@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   PLACEHOLDER_KEYS,
   PLACEHOLDERS,
@@ -48,5 +48,20 @@ describe("production placeholder guard", () => {
       /NEXT_PUBLIC_WHATSAPP_PHONE/,
     );
     expect(() => assertProductionConfig(env)).toThrow(/APPLICATION_ENDPOINT/);
+  });
+
+  it("uses the deployment-provided public Core rates endpoint", async () => {
+    vi.stubEnv(
+      "NEXT_PUBLIC_RATES_CONFIG_ENDPOINT",
+      "https://core.example.com/api/v1/sessions/rates-config",
+    );
+    vi.resetModules();
+
+    const { config: deployedConfig } = await import("@/lib/config");
+
+    expect(deployedConfig.ratesConfigEndpoint).toBe(
+      "https://core.example.com/api/v1/sessions/rates-config",
+    );
+    vi.unstubAllEnvs();
   });
 });
