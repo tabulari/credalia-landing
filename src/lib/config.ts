@@ -23,7 +23,9 @@ export const PLACEHOLDER_KEYS = [
   "NEXT_PUBLIC_SOCIAL_INSTAGRAM",
   "NEXT_PUBLIC_SOCIAL_LINKEDIN",
   "NEXT_PUBLIC_SOCIAL_YOUTUBE",
+  "NEXT_PUBLIC_RATES_CONFIG_ENDPOINT",
   "APPLICATION_ENDPOINT",
+  "LANDING_API_KEY",
 ] as const;
 
 export type PlaceholderKey = (typeof PLACEHOLDER_KEYS)[number];
@@ -40,7 +42,10 @@ export const PLACEHOLDERS: Record<PlaceholderKey, string> = {
   NEXT_PUBLIC_SOCIAL_INSTAGRAM: "https://instagram.com/credalia",
   NEXT_PUBLIC_SOCIAL_LINKEDIN: "https://www.linkedin.com/company/credalia",
   NEXT_PUBLIC_SOCIAL_YOUTUBE: "https://www.youtube.com/@credalia",
-  APPLICATION_ENDPOINT: "https://example.invalid/applications",
+  NEXT_PUBLIC_RATES_CONFIG_ENDPOINT:
+    "http://localhost:8000/api/v1/sessions/rates-config",
+  APPLICATION_ENDPOINT: "http://localhost:8000/api/v1/intake/web-lead",
+  LANDING_API_KEY: "dev-landing-api-key-change-in-production",
 };
 
 type Env = Record<string, string | undefined>;
@@ -127,9 +132,6 @@ export const config = {
   /** Short regulator name (e.g. "Superfinanciera"). */
   regulatorShortName: readStr("NEXT_PUBLIC_REGULATOR_SHORT_NAME", "Superfinanciera"),
 
-  /** Radicado prefix for application tracking codes. */
-  radicadoPrefix: readStr("NEXT_PUBLIC_RADICADO_PREFIX", "CR-2026"),
-
   social: {
     facebook: read("NEXT_PUBLIC_SOCIAL_FACEBOOK"),
     instagram: read("NEXT_PUBLIC_SOCIAL_INSTAGRAM"),
@@ -138,6 +140,10 @@ export const config = {
   },
   /** Server-only: where app/api/application forwards the submitted application. */
   applicationEndpoint: read("APPLICATION_ENDPOINT"),
+  /** Public Core endpoint read once by the simulator provider, with static fallback on failure. */
+  ratesConfigEndpoint:
+    process.env.NEXT_PUBLIC_RATES_CONFIG_ENDPOINT ||
+    PLACEHOLDERS.NEXT_PUBLIC_RATES_CONFIG_ENDPOINT,
   /**
    * Gates the "Vigilados por Superfinanciera" / "Entidad vigilada" claims.
    * Compliance-sensitive: the seal and regulator copy render ONLY when this is
