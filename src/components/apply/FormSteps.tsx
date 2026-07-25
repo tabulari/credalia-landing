@@ -1,7 +1,12 @@
 'use client';
 
 import { fmtCOP } from '@/lib/credit';
-import { BANKS, EMPLOYMENT_TYPES, type FieldName } from '@/lib/application-schema';
+import {
+  BANKS,
+  CONSENT_TEXT,
+  EMPLOYMENT_TYPES,
+  type FieldName,
+} from '@/lib/application-schema';
 import { capFreq } from './use-application-form';
 import { cn } from '@/lib/utils';
 import type { Values } from './use-application-form';
@@ -130,9 +135,9 @@ export function Step3({ values, consent, consentError, setConsent, setConsentErr
           className="mt-0.5 accent-navy"
         />
         <span className="text-muted-foreground">
-          Autorizo el tratamiento de mis datos personales conforme a la{' '}
-          <a href="/legal/privacidad" target="_blank" rel="noopener noreferrer" className="text-navy font-semibold hover:underline">Política de Privacidad</a>{' '}
-          y la Ley 1581 de 2012 (Habeas Data).
+          {CONSENT_TEXT.split('Política de Privacidad')[0]}
+          <a href="/legal/privacidad" target="_blank" rel="noopener noreferrer" className="text-navy font-semibold hover:underline">Política de Privacidad</a>
+          {CONSENT_TEXT.split('Política de Privacidad')[1]}
         </span>
       </label>
       <span id="consentError" role="alert" className={cn('text-xs text-destructive', consentError ? 'visible' : 'hidden')}>

@@ -7,12 +7,15 @@ import {
   applySecurityHeaders,
 } from "@/lib/security";
 import { config } from "@/lib/config";
+import {
+  CoreLeadError,
+  forwardApplicationToCore,
+} from "@/lib/core-lead";
 
 /**
  * Application submit endpoint. Validates the payload with the SAME zod schema
- * the client uses, then issues a radicado. In production it forwards the
- * application to the real backend (APPLICATION_ENDPOINT); the prototype's fake
- * 1.4s Promise is replaced by this real round-trip.
+ * the client uses, forwards it to Core, and returns Core's radicado. The
+ * prototype's fake 1.4s Promise is replaced by this real round-trip.
  *
  * Security: rate-limited (5 req/min/IP), origin check, CSRF via Origin/Referer,
  * and security response headers.
@@ -59,18 +62,33 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const radicado = `${config.radicadoPrefix}-${Math.floor(10000 + Math.random() * 89999)}`;
+  const clientIp =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown";
+  const userAgent = request.headers.get("user-agent") || "unknown";
 
-  // ⚠️ Wire the real backend here once APPLICATION_ENDPOINT is configured. The
-  // prod-config guard (lib/config.ts) blocks a production build until the
-  // placeholder endpoint is replaced. Until then we just return the radicado.
-  //
-  //   const res = await fetch(config.applicationEndpoint, { method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(parsed.data) });
-  //   const data = await res.json(); return NextResponse.json({ radicado: data.id });
+  try {
+    const coreResponse = await forwardApplicationToCore(parsed.data, {
+      applicationEndpoint: config.applicationEndpoint,
+      landingApiKey:
+        process.env.LANDING_API_KEY ||
+        "dev-landing-api-key-change-in-production",
+      clientIp,
+      userAgent,
+    });
 
-  return applySecurityHeaders(
-    NextResponse.json({ radicado }, { status: 200 }),
-  );
+    return applySecurityHeaders(
+      NextResponse.json({ radicado: coreResponse.radicado }, { status: 200 }),
+    );
+  } catch (error) {
+    const upstreamStatus = error instanceof CoreLeadError ? error.status : undefined;
+    console.error("Core web-lead forwarding failed", { upstreamStatus });
+    return applySecurityHeaders(
+      NextResponse.json(
+        { error: "No pudimos registrar la solicitud. Intenta nuevamente." },
+        { status: 502 },
+      ),
+    );
+  }
 }

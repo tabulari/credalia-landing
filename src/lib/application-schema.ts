@@ -50,6 +50,8 @@ export const STEP_FIELDS: Record<number, FieldName[]> = {
 };
 
 export const CONSENT_MESSAGE = MSG.consent;
+export const CONSENT_TEXT =
+  "Autorizo el tratamiento de mis datos personales conforme a la Política de Privacidad y la Ley 1581 de 2012 (Habeas Data).";
 
 /** Validate one field; returns the error message ("" when valid). */
 export function validateField(name: FieldName, value: string): string {
@@ -67,8 +69,13 @@ export const applicationSchema = z.object({
   income: fieldSchemas.income,
   bank: fieldSchemas.bank,
   consent: z.boolean().refine((v) => v === true, { message: MSG.consent }),
-  // Frozen simulator snapshot — forwarded, not strictly validated here.
-  terms: z.unknown().optional(),
+  // Frozen simulator snapshot shown to the applicant and locked by Core.
+  terms: z.object({
+    amount: z.number().positive(),
+    term: z.number().int().positive(),
+    monthlyRate: z.number().positive(),
+    frequency: z.enum(["monthly", "biweekly"]),
+  }).passthrough(),
 });
 
 export type ApplicationInput = z.infer<typeof applicationSchema>;
