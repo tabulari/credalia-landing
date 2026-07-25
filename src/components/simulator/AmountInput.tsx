@@ -1,12 +1,15 @@
 'use client';
 
 import { fmtCOP } from '@/lib/credit';
-import { AMOUNT_MIN, AMOUNT_MAX, AMOUNT_STEP, AMOUNT_STEP_BIG, clampAmount, clampRoundAmount } from '../simulator-store';
+import { clampAmount, clampRoundAmount } from '../simulator-store';
 import { MinusIcon, PlusIcon } from '../icons';
-import { config } from '@/lib/config';
 
-export function AmountInput({ amount, setAmount, inputText, setInputText, hint, setHint, inputRef, markInteract }: {
+export function AmountInput({ amount, amountMin, amountMax, amountStep, amountStepBig, setAmount, inputText, setInputText, hint, setHint, inputRef, markInteract }: {
   amount: number;
+  amountMin: number;
+  amountMax: number;
+  amountStep: number;
+  amountStepBig: number;
   setAmount: (v: number, round?: boolean) => void;
   inputText: string;
   setInputText: (v: string) => void;
@@ -20,19 +23,19 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
     const digits = e.target.value.replace(/\D/g, '');
     setInputText(digits ? fmtCOP(parseInt(digits, 10)) : '');
     if (!digits) {
-      setHint(`Ingresa un monto entre $${fmtCOP(AMOUNT_MIN)} y $${fmtCOP(AMOUNT_MAX)}.`);
+      setHint(`Ingresa un monto entre $${fmtCOP(amountMin)} y $${fmtCOP(amountMax)}.`);
       return;
     }
     const raw = parseInt(digits, 10);
-    if (raw > AMOUNT_MAX) setHint(`El monto máximo es $${fmtCOP(AMOUNT_MAX)}.`);
-    else if (raw < AMOUNT_MIN) setHint(`El monto mínimo es $${fmtCOP(AMOUNT_MIN)}.`);
+    if (raw > amountMax) setHint(`El monto máximo es $${fmtCOP(amountMax)}.`);
+    else if (raw < amountMin) setHint(`El monto mínimo es $${fmtCOP(amountMin)}.`);
     else setHint('');
-    setAmount(clampAmount(raw), false);
+    setAmount(clampAmount(raw, amountMin, amountMax), false);
   };
 
   const handleInputBlur = () => {
     setHint('');
-    const v = clampRoundAmount(amount || AMOUNT_MIN);
+    const v = clampRoundAmount(amount || amountMin, amountMin, amountMax, amountStep);
     setAmount(v, true);
     setInputText(fmtCOP(v));
   };
@@ -42,17 +45,22 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
     setHint('');
     const v = Number(e.target.value);
     setAmount(v, true);
-    setInputText(fmtCOP(clampRoundAmount(v)));
+    setInputText(fmtCOP(clampRoundAmount(v, amountMin, amountMax, amountStep)));
   };
 
   const bump = (dir: -1 | 1) => {
     setHint('');
-    const v = clampRoundAmount((amount || AMOUNT_MIN) + dir * AMOUNT_STEP_BIG);
+    const v = clampRoundAmount(
+      (amount || amountMin) + dir * amountStepBig,
+      amountMin,
+      amountMax,
+      amountStep,
+    );
     setAmount(v, true);
     setInputText(fmtCOP(v));
   };
 
-  const pct = ((amount - AMOUNT_MIN) / (AMOUNT_MAX - AMOUNT_MIN)) * 100;
+  const pct = ((amount - amountMin) / (amountMax - amountMin)) * 100;
 
   return (
     <>
@@ -62,7 +70,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           type="button"
           aria-label="Disminuir monto"
           onClick={() => bump(-1)}
-          disabled={amount <= AMOUNT_MIN}
+          disabled={amount <= amountMin}
           className="flex-shrink-0 flex items-center justify-center w-[46px] h-[46px] rounded-md border border-border text-navy hover:bg-bg-soft disabled:opacity-40 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <MinusIcon size={18} />
@@ -86,7 +94,7 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           type="button"
           aria-label="Aumentar monto"
           onClick={() => bump(1)}
-          disabled={amount >= AMOUNT_MAX}
+          disabled={amount >= amountMax}
           className="flex-shrink-0 flex items-center justify-center w-[46px] h-[46px] rounded-md border border-border text-navy hover:bg-bg-soft disabled:opacity-40 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <PlusIcon size={18} />
@@ -108,13 +116,13 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
       <div className="mt-4">
         <input
           type="range"
-          min={AMOUNT_MIN}
-          max={AMOUNT_MAX}
-          step={AMOUNT_STEP}
+          min={amountMin}
+          max={amountMax}
+          step={amountStep}
           value={amount}
           aria-label="Selector de monto"
-          aria-valuemin={AMOUNT_MIN}
-          aria-valuemax={AMOUNT_MAX}
+          aria-valuemin={amountMin}
+          aria-valuemax={amountMax}
           aria-valuenow={amount}
           aria-valuetext={`$${fmtCOP(amount)} COP`}
           onChange={handleSliderChange}
@@ -122,8 +130,8 @@ export function AmountInput({ amount, setAmount, inputText, setInputText, hint, 
           style={{ background: `linear-gradient(to right, var(--green) 0% ${pct}%, var(--border) ${pct}% 100%)` }}
         />
         <div className="flex justify-between mt-1.5">
-          <span className="text-xs text-muted-2">${fmtCOP(config.simulator.amountMin).replace(',00','')}</span>
-          <span className="text-xs text-muted-2">${fmtCOP(config.simulator.amountMax).replace(',00','')}</span>
+          <span className="text-xs text-muted-2">${fmtCOP(amountMin).replace(',00','')}</span>
+          <span className="text-xs text-muted-2">${fmtCOP(amountMax).replace(',00','')}</span>
         </div>
       </div>
     </>

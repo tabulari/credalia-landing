@@ -70,8 +70,9 @@ export function calculatePayment(
   amount: number,
   termMonths: number,
   frequency: Frequency,
+  monthlyRate: number = config.credit.monthlyRate,
 ): Simulation {
-  const MONTHLY_RATE = config.credit.monthlyRate;
+  const MONTHLY_RATE = monthlyRate;
   const isBiweekly = frequency === "biweekly";
 
   const periodsPerMonth = isBiweekly ? 2 : 1;
