@@ -5,6 +5,7 @@ import {
   checkOrigin,
   checkCsrf,
   applySecurityHeaders,
+  getClientIp,
 } from "@/lib/security";
 import { config } from "@/lib/config";
 import {
@@ -18,7 +19,8 @@ import {
  * prototype's fake 1.4s Promise is replaced by this real round-trip.
  *
  * Security: rate-limited (5 req/min/IP), origin check, CSRF via Origin/Referer,
- * and security response headers.
+ * security response headers, and a shared `X-Landing-Api-Key` secret on the
+ * outbound call to Core.
  *
  * Test hook: POST with `?forceError=1` returns 500 so the modal's error panel
  * (and draft-preservation) can be exercised.
@@ -62,19 +64,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const clientIp =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown";
   const userAgent = request.headers.get("user-agent") || "unknown";
 
   try {
     const coreResponse = await forwardApplicationToCore(parsed.data, {
       applicationEndpoint: config.applicationEndpoint,
-      landingApiKey:
-        process.env.LANDING_API_KEY ||
-        "dev-landing-api-key-change-in-production",
-      clientIp,
+      landingApiKey: config.landingApiKey,
+      clientIp: getClientIp(request),
       userAgent,
     });
 
