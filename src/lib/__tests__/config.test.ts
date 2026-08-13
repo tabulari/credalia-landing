@@ -42,10 +42,10 @@ describe("production placeholder guard", () => {
 
   it("throws and names the unresolved keys", () => {
     const env = allRealEnv();
-    env.NEXT_PUBLIC_WHATSAPP_PHONE = PLACEHOLDERS.NEXT_PUBLIC_WHATSAPP_PHONE;
+    env.NEXT_PUBLIC_RATES_CONFIG_ENDPOINT = PLACEHOLDERS.NEXT_PUBLIC_RATES_CONFIG_ENDPOINT;
     env.APPLICATION_ENDPOINT = PLACEHOLDERS.APPLICATION_ENDPOINT;
     expect(() => assertProductionConfig(env)).toThrow(
-      /NEXT_PUBLIC_WHATSAPP_PHONE/,
+      /NEXT_PUBLIC_RATES_CONFIG_ENDPOINT/,
     );
     expect(() => assertProductionConfig(env)).toThrow(/APPLICATION_ENDPOINT/);
   });

@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { config } from "@/lib/config";
 import { fmtCOP } from "@/lib/credit";
 
+const BRAND_ASSET_VERSION = '3ef966e';
+
 export default function manifest(): MetadataRoute.Manifest {
   const maxDisplay = `$${fmtCOP(config.simulator.amountMax).replace(',00','')}`;
   return {
@@ -15,9 +17,9 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: config.colors.navy,
     lang: "es",
     icons: [
-      { src: "/favicon.svg", sizes: "any", type: "image/svg+xml" },
-      { src: "/favicon-32.png", sizes: "32x32", type: "image/png" },
-      { src: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { src: `/favicon.svg?v=${BRAND_ASSET_VERSION}`, sizes: "any", type: "image/svg+xml" },
+      { src: `/favicon-32.png?v=${BRAND_ASSET_VERSION}`, sizes: "32x32", type: "image/png" },
+      { src: `/apple-touch-icon.png?v=${BRAND_ASSET_VERSION}`, sizes: "180x180", type: "image/png" },
     ],
   };
 }

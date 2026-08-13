@@ -172,7 +172,7 @@ export function ApplyModal() {
             {form.submitStatus === 'success' ? (
               <ApplicationSuccess radicado={form.radicado} />
             ) : form.submitStatus === 'error' ? (
-              <ApplicationError />
+              <ApplicationError code={form.submitErrorCode} />
             ) : (
               <>
                 {form.step === 1 && (

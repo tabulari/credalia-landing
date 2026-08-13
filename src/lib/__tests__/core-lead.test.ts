@@ -78,4 +78,14 @@ describe("Core web-lead integration", () => {
       }),
     );
   });
+
+  it("throws CoreLeadError with the upstream status when Core rejects", async () => {
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(new Response("nope", { status: 401 }));
+
+    await expect(
+      forwardApplicationToCore(input, context, fetchMock),
+    ).rejects.toMatchObject({ status: 401 });
+  });
 });

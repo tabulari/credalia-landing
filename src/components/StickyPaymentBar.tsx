@@ -118,7 +118,7 @@ export function StickyPaymentBar() {
           <span className="text-xs font-semibold text-muted-2 uppercase tracking-wide sm:normal-case sm:tracking-normal">
             Tu cuota estimada
           </span>
-          <span className="text-xl sm:text-2xl font-extrabold text-navy whitespace-nowrap tracking-tight">
+          <span className="text-xl sm:text-2xl font-extrabold text-navy whitespace-nowrap tracking-tight tabular-nums">
             {`$${fmtCOP(sim.payment)}`}
             <span className="text-xs font-semibold text-muted-2 ml-1">{sim.unit}</span>
           </span>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { ApplyButton } from './ApplyButton';
 import { cn } from '@/lib/utils';
 import { config } from '@/lib/config';
-import { BrandLogo, HamburgerIcon, CloseIcon } from './icons';
+import { CloseIcon, HamburgerIcon } from './icons';
 
 const LINKS = [
   { href: '#simula', label: 'Simula tu crédito' },
@@ -136,21 +136,23 @@ export function Nav() {
       id="top"
       className={cn(
         'sticky top-0 z-50 backdrop-blur-lg transition-colors duration-200',
-        // Mobile (default): siempre fondo blanco con una sutil sombra de distinción
-        'bg-white shadow-[0_1px_0_rgba(13,42,94,0.05)]',
-        // Desktop/Tablet (md:): dinámico según scroll
         scrolled
-          ? 'md:bg-white/80 md:shadow-[0_1px_0_rgba(13,42,94,0.05)]'
-          : 'md:bg-white/0 md:shadow-none',
+          ? 'bg-white/80 shadow-[0_1px_0_rgba(13,42,94,0.05)]'
+          : 'bg-white/0 shadow-none',
       )}
     >
       <div className="mx-auto max-w-container px-6 flex items-center justify-between h-[68px]">
         <a
           href="#top"
           aria-label={`${config.brandName} — inicio`}
-          className="flex items-center gap-2.5 py-2 text-navy"
+          className="flex items-center py-2 text-navy"
         >
-          <BrandLogo height={48} />
+          <img
+            src="/brand_Logo.svg"
+            alt=""
+            aria-hidden="true"
+            className="h-auto w-[240px]"
+          />
         </a>
 
         <nav aria-label="Navegación principal" className="hidden md:flex items-center gap-6">
@@ -201,8 +203,8 @@ export function Nav() {
           ref={mobilePanelRef}
           inert={!open || undefined}
           className={cn(
-            'absolute left-0 right-0 top-[68px] z-50 bg-white overflow-hidden transition-[max-height,border-color] duration-200 shadow-lg',
-            open ? 'max-h-[600px] border-t border-border border-b border-border' : 'max-h-0 border-t border-transparent border-b border-transparent',
+            'md:hidden overflow-hidden transition-[max-height,border-color] duration-200',
+            open ? 'max-h-[600px] border-t border-border' : 'max-h-0 border-t border-transparent',
           )}
           onClick={(e) => {
             if ((e.target as HTMLElement).closest('a, button'))
@@ -218,7 +220,7 @@ export function Nav() {
                   href={l.href}
                   ref={i === 0 ? firstLinkRef : undefined}
                   className={cn(
-                    'text-sm font-semibold py-3.5 px-2 -mx-2 rounded transition-colors',
+                    'text-sm font-semibold py-3.5 px-2 -mx-2 rounded-lg transition-colors',
                     isActive
                       ? 'text-navy bg-green-tint font-bold'
                       : 'text-muted-2 hover:text-navy',

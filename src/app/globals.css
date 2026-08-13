@@ -124,14 +124,34 @@
   .animate-overlay-out {
     animation: overlay-out 0.15s ease-in;
   }
+
+  /* Tailwind v3 ring utility: box-shadow with var() doesn't resolve in the
+     computed style in some Chromium versions, so the ring is invisible.
+     This fallback gives every button, [role=radio], and accordion trigger a
+     visible focus indicator using outline, which always works. The !important
+     is needed to override Tailwind's .outline-none and .focus-visible:outline-none
+     utilities which set outline: transparent. */
+  button:focus-visible,
+  [role='radio']:focus-visible,
+  [data-slot='button']:focus-visible,
+  [data-slot='accordion-trigger']:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid #1e9e55 !important;
+    outline-offset: 2px !important;
+  }
 }
 
 /* ===== accessibility ===== */
 a:focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/* Tailwind v3 ring utility fallback for buttons — moved to @layer utilities above */
 
 .skip-link {
   position: absolute;
@@ -306,18 +326,6 @@ body.has-payment-bar {
   body.has-payment-bar {
     padding-bottom: 4.625rem;
   }
-}
-
-/* ===== Premium CTA Button micro-interactions ===== */
-[data-slot="button"] {
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
-}
-[data-slot="button"]:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 4px 14px rgba(13, 42, 94, 0.1);
-}
-[data-slot="button"]:active:not(:disabled) {
-  transform: translateY(0) scale(0.98);
 }
 
 /* ===== CTA banner ambient glow (static depth, no perpetual motion) ===== */

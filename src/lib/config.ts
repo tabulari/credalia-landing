@@ -132,6 +132,8 @@ export const config = {
   applicationEndpoint: read("APPLICATION_ENDPOINT", process.env.APPLICATION_ENDPOINT),
   /** Server-only: shared secret sent as `X-Landing-Api-Key` to Core. */
   landingApiKey: read("LANDING_API_KEY", process.env.LANDING_API_KEY),
+  /** Server-only: POST /api/application rate limit (req/min per IP). Synced with Core's intake.py. */
+  webLeadRateLimitPerMinute: readNum(process.env.WEB_LEAD_RATE_LIMIT_PER_MIN, 5),
   /** Public Core endpoint read once by the simulator provider, with static fallback on failure. */
   ratesConfigEndpoint:
     process.env.NEXT_PUBLIC_RATES_CONFIG_ENDPOINT ||

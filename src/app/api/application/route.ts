@@ -8,19 +8,17 @@ import {
   getClientIp,
 } from "@/lib/security";
 import { config } from "@/lib/config";
-import {
-  CoreLeadError,
-  forwardApplicationToCore,
-} from "@/lib/core-lead";
+import { CoreLeadError, forwardApplicationToCore } from "@/lib/core-lead";
 
 /**
  * Application submit endpoint. Validates the payload with the SAME zod schema
- * the client uses, forwards it to Core, and returns Core's radicado. The
- * prototype's fake 1.4s Promise is replaced by this real round-trip.
+ * the client uses, forwards it to Core's web-lead intake (APPLICATION_ENDPOINT),
+ * and returns Core's authoritative radicado. The prototype's fake 1.4s Promise
+ * is replaced by this real round-trip.
  *
  * Security: rate-limited (5 req/min/IP), origin check, CSRF via Origin/Referer,
- * security response headers, and a shared `X-Landing-Api-Key` secret on the
- * outbound call to Core.
+ * security response headers, and a shared `X-Landing-Api-Key` secret (never
+ * browser-exposed) on the outbound call to Core.
  *
  * Test hook: POST with `?forceError=1` returns 500 so the modal's error panel
  * (and draft-preservation) can be exercised.
@@ -80,9 +78,33 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     const upstreamStatus = error instanceof CoreLeadError ? error.status : undefined;
     console.error("Core web-lead forwarding failed", { upstreamStatus });
+    // A Core 429 — its own independent rate limit (5/min), lower than the
+    // landing's 10/min — is NOT a backend outage. Surface it as rate_limited
+    // with the retry hint so the user sees honest copy instead of a misleading
+    // "system is slow" backend error.
+    if (upstreamStatus === 429) {
+      const retryAfterSeconds =
+        error instanceof CoreLeadError ? error.retryAfterSeconds : undefined;
+      return applySecurityHeaders(
+        NextResponse.json(
+          {
+            error: "Demasiadas solicitudes. Intenta de nuevo en unos segundos.",
+            code: "rate_limited",
+            retryAfterSeconds,
+          },
+          { status: 429, headers: retryAfterSeconds ? { "Retry-After": String(retryAfterSeconds) } : {} },
+        ),
+      );
+    }
+    // Otherwise it's an upstream (Core) failure — which the user should NOT be
+    // told is their connection. The client reads `code` for accurate copy.
     return applySecurityHeaders(
       NextResponse.json(
-        { error: "No pudimos registrar la solicitud. Intenta nuevamente." },
+        {
+          error: "No pudimos registrar la solicitud. Intenta nuevamente.",
+          code: "backend",
+          upstreamStatus,
+        },
         { status: 502 },
       ),
     );

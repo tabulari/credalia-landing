@@ -9,7 +9,7 @@ import { fmtCOP } from '@/lib/credit';
 import { ApplyButton } from './ApplyButton';
 import { ScrollButton } from './ScrollButton';
 import { PhoneChat } from './PhoneChat';
-import { ShieldCheckIcon, LockIcon, ClockIcon, CredaliaLogo } from './icons';
+import { ShieldCheckIcon, LockIcon, ClockIcon } from './icons';
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -64,10 +64,10 @@ export function Hero() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} aria-labelledby="hero-heading" className="pt-12 pb-8 lg:pt-16 lg:pb-12 stack:py-0 overflow-hidden hero-atmosphere stack:min-h-[calc(100vh-68px)] stack:flex stack:items-center">
-      <div className="w-full mx-auto max-w-container px-6 grid stack:grid-cols-[1.3fr_0.7fr] gap-8 lg:gap-10 items-center">
+    <section ref={containerRef} aria-labelledby="hero-heading" className="pt-12 pb-8 lg:pt-16 lg:pb-12 overflow-hidden hero-atmosphere">
+      <div className="mx-auto max-w-container px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
         <div className="flex flex-col gap-3 lg:gap-4 relative z-10">
-          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-1">Credalia Digital</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-1">Crédito digital</p>
           <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
             <ShieldCheckIcon size={20} className="text-green-ink" />
             {config.disbursementTime
@@ -75,9 +75,9 @@ export function Hero() {
               : '100% en línea'}
           </span>
           <h1 ref={h1Ref} id="hero-heading" className="text-5xl lg:text-7xl font-display tracking-tight text-navy leading-tight">
-            Préstamos rápidos hasta{' '}
+            Crédito digital hasta{' '}
           </h1>
-          <span data-hero="amount" className="block text-4xl lg:text-6xl tracking-tight font-extrabold text-orange leading-none">{`$${fmtCOP(config.simulator.amountMax).replace(',00','')}`}</span>
+          <span data-hero="amount" className="block text-6xl lg:text-8xl tracking-tight font-extrabold text-orange leading-none">{`$${fmtCOP(config.simulator.amountMax).replace(',00','')}`}</span>
           <p data-hero="subhead" className="text-lg font-normal text-muted-foreground">
             Respuesta en minutos. Tasa clara. Sin papeles.
           </p>
@@ -109,15 +109,20 @@ export function Hero() {
           </div>
         </div>
 
-        <div data-hero="phone" className="relative z-10 flex items-center justify-center mt-8 stack:mt-0" style={{ perspective: '1200px' }}>
+        <div data-hero="phone" className="relative hidden stack:flex items-center justify-center" style={{ perspective: '1200px' }}>
           <div style={{ transformStyle: 'preserve-3d' }}>
             <PhoneChat />
           </div>
         </div>
 
-        <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-4 shadow-sm mt-10 relative z-10">
+        <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-4 shadow-sm mt-2 relative z-10">
           <div className="flex items-center gap-2.5 mb-3">
-            <CredaliaLogo size={22} />
+            <img
+              src="/credalia-logo.svg"
+              alt=""
+              aria-hidden="true"
+              className="h-7 w-7 shrink-0"
+            />
             <div>
               <p className="text-sm font-extrabold text-navy">{config.brandName}</p>
               <p className="text-xs text-muted-2">Crédito digital 100% en línea</p>

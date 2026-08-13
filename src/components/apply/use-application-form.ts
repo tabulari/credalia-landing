@@ -12,6 +12,12 @@ import { track } from '@/lib/analytics';
 import { saveDraft, loadDraft, clearDraft } from '@/lib/draft-storage';
 
 export type SubmitStatus = 'idle' | 'pending' | 'success' | 'error';
+/** Machine-readable reason for a failed submit — mirrors the route's `code` field. */
+export type SubmitErrorCode =
+  | 'rate_limited' // 429 — too many requests, show wait hint
+  | 'backend' // 502 — Core upstream rejected/errored, not the user's connection
+  | 'connection' // network/other — genuinely can't reach the route
+  | null;
 export type Values = Record<FieldName, string>;
 
 export const FIELDS: FieldName[] = [
@@ -39,6 +45,7 @@ export function useApplicationForm(modalRef: React.RefObject<HTMLDivElement | nu
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [consentError, setConsentError] = useState('');
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
+  const [submitErrorCode, setSubmitErrorCode] = useState<SubmitErrorCode>(null);
   const [radicado, setRadicado] = useState('');
 
   const onFieldChange = useCallback((name: FieldName, raw: string) => {
@@ -88,20 +95,35 @@ export function useApplicationForm(modalRef: React.RefObject<HTMLDivElement | nu
     setSubmitStatus('pending');
     track('apply_submit', { amount: frozen.amount, term: frozen.term, frequency: frozen.frequency });
     const payload = { ...values, consent, terms: frozen };
+    // Hoisted so both the try and catch can read the reason for the failure.
+    let code: SubmitErrorCode = null;
     try {
       const forceError = typeof window !== 'undefined' && (window as unknown as { __forceApplicationError?: boolean }).__forceApplicationError;
       const res = await fetch(`/api/application${forceError ? '?forceError=1' : ''}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error('submit failed');
+      if (!res.ok) {
+        // Read the route's machine-readable `code` so the error panel can tell a
+        // rate-limit / backend failure apart from a genuine connection problem.
+        try {
+          const errBody = (await res.json()) as { code?: SubmitErrorCode } | null;
+          code = errBody?.code ?? (res.status === 429 ? 'rate_limited' : 'connection');
+        } catch {
+          code = res.status === 429 ? 'rate_limited' : 'connection';
+        }
+        if (res.status === 429) code = 'rate_limited';
+        throw new Error(`submit failed (${res.status})`);
+      }
       const data = (await res.json()) as { radicado: string };
       setRadicado(data.radicado);
       clearDraft();
       setSubmitStatus('success');
+      setSubmitErrorCode(null);
       track('apply_submit_success', { radicado: data.radicado });
     } catch {
       setSubmitStatus('error');
-      track('apply_submit_error');
+      setSubmitErrorCode((prev) => prev ?? code);
+      track('apply_submit_error', { code });
     }
   }, [values, consent]);
 
@@ -124,6 +146,7 @@ export function useApplicationForm(modalRef: React.RefObject<HTMLDivElement | nu
     setErrors({});
     setConsentError('');
     setSubmitStatus('idle');
+    setSubmitErrorCode(null);
     setRadicado('');
   }, []);
 
@@ -134,6 +157,7 @@ export function useApplicationForm(modalRef: React.RefObject<HTMLDivElement | nu
     setErrors({});
     setConsentError('');
     setSubmitStatus('idle');
+    setSubmitErrorCode(null);
     setRadicado('');
   }, []);
 
@@ -142,7 +166,7 @@ export function useApplicationForm(modalRef: React.RefObject<HTMLDivElement | nu
     values, onFieldChange, onFieldBlur,
     consent, setConsent,
     errors, consentError, setConsentError,
-    submitStatus, radicado,
+    submitStatus, submitErrorCode, radicado,
     onNext, submit,
     restoreDraft, resetForm,
   };
