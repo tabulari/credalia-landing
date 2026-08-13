@@ -24,6 +24,7 @@ export const PLACEHOLDER_KEYS = [
   "NEXT_PUBLIC_SOCIAL_LINKEDIN",
   "NEXT_PUBLIC_SOCIAL_YOUTUBE",
   "APPLICATION_ENDPOINT",
+  "LANDING_API_KEY",
 ] as const;
 
 export type PlaceholderKey = (typeof PLACEHOLDER_KEYS)[number];
@@ -40,7 +41,8 @@ export const PLACEHOLDERS: Record<PlaceholderKey, string> = {
   NEXT_PUBLIC_SOCIAL_INSTAGRAM: "https://instagram.com/credalia",
   NEXT_PUBLIC_SOCIAL_LINKEDIN: "https://www.linkedin.com/company/credalia",
   NEXT_PUBLIC_SOCIAL_YOUTUBE: "https://www.youtube.com/@credalia",
-  APPLICATION_ENDPOINT: "https://example.invalid/applications",
+  APPLICATION_ENDPOINT: "http://localhost:8000/api/v1/intake/web-lead",
+  LANDING_API_KEY: "dev-landing-api-key-change-in-production",
 };
 
 type Env = Record<string, string | undefined>;
@@ -138,6 +140,19 @@ export const config = {
   },
   /** Server-only: where app/api/application forwards the submitted application. */
   applicationEndpoint: read("APPLICATION_ENDPOINT"),
+  /** Server-only: shared secret sent as X-Landing-Api-Key to Core. Must match Core's LANDING_API_KEY. Never NEXT_PUBLIC_. */
+  landingApiKey: read("LANDING_API_KEY"),
+  /**
+   * Server-only: per-IP submissions/minute accepted by the apply endpoint.
+   *
+   * MUST match Core's `RATE_LIMIT_MAX_REQUESTS` in `apps/core/src/api/intake.py`
+   * (currently 5). If the landing admits more requests per minute than Core,
+   * the 6th..Nth request flows through the landing's limiter, hits Core's
+   * tighter one, and is returned to the user as an opaque "rate_limited" / 5xx
+   * — exactly the historic drift that confused this seam's UX. Keeping the
+   * value in sync here is the only way the two sides stay honest to the user.
+   */
+  webLeadRateLimitPerMinute: readNum("WEB_LEAD_RATE_LIMIT_PER_MIN", 5),
   /**
    * Gates the "Vigilados por Superfinanciera" / "Entidad vigilada" claims.
    * Compliance-sensitive: the seal and regulator copy render ONLY when this is

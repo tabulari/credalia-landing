@@ -15,14 +15,36 @@ export function ApplicationSuccess({ radicado }: { radicado: string }) {
   );
 }
 
-export function ApplicationError() {
+type SubmitErrorCopy = {
+  title: string;
+  body: string;
+};
+
+const ERROR_COPY: Record<string, SubmitErrorCopy> = {
+  rate_limited: {
+    title: 'Son demasiadas solicitudes por ahora',
+    body: 'Espera unos segundos y vuelve a intentar. Tus datos siguen guardados.',
+  },
+  backend: {
+    title: 'Nuestro sistema está tardando más de lo normal',
+    body: 'No fue un problema de tu conexión. Tus datos siguen guardados — puedes reintentar el envío en unos momentos.',
+  },
+};
+
+const DEFAULT_ERROR_COPY: SubmitErrorCopy = {
+  title: 'No pudimos enviar tu solicitud',
+  body: 'Ocurrió un problema de conexión. Tus datos siguen guardados — puedes reintentar el envío.',
+};
+
+export function ApplicationError({ code }: { code?: string | null }) {
+  const copy = (code ? ERROR_COPY[code] : undefined) ?? DEFAULT_ERROR_COPY;
   return (
     <section className="flex-1 flex flex-col items-center justify-center text-center py-8">
       <div className="w-[72px] h-[72px] rounded-full bg-destructive flex items-center justify-center mb-5 shadow-lg animate-[popIn_0.4s_cubic-bezier(0.2,1.4,0.4,1)] motion-reduce:animate-none">
         <AlertCircleIcon size={38} className="text-white" />
       </div>
-      <h2 className="text-xl font-extrabold text-navy">No pudimos enviar tu solicitud</h2>
-      <p className="text-sm text-muted-foreground mt-2 max-w-[380px]">Ocurrió un problema de conexión. Tus datos siguen guardados — puedes reintentar el envío.</p>
+      <h2 className="text-xl font-extrabold text-navy">{copy.title}</h2>
+      <p className="text-sm text-muted-foreground mt-2 max-w-[380px]">{copy.body}</p>
     </section>
   );
 }
