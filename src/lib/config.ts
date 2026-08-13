@@ -1,79 +1,71 @@
 /**
  * Credalia — centralized runtime configuration.
  *
- * Every business value flagged ⚠️ in the design handoff README is sourced from
- * the environment here and NOWHERE ELSE. Components import from this module;
- * they never hardcode a value.
+ * Identity, contact, and social facts (site URL, WhatsApp line, legal name/NIT,
+ * address, phone, social profile URLs) are CONSTANTS compiled into the build,
+ * not environment variables. They never vary between local/staging/prod, so they
+ * are baked in here as literal defaults (see the `config` object below).
  *
- * `PLACEHOLDERS` holds the prototype's stand-in values. They double as dev-time
- * fallbacks AND as the sentinels the production guard rejects: if any survives a
- * production build, `assertProductionConfig()` throws so we cannot ship the page
- * with fake business data. See `.env.example` for the contract.
+ * Only genuinely deployment-specific values come from the environment and are
+ * guarded by `assertProductionConfig()`: the Core backend endpoints and the
+ * web-lead secret (`NEXT_PUBLIC_RATES_CONFIG_ENDPOINT`, `APPLICATION_ENDPOINT`,
+ * `LANDING_API_KEY`). These must be set to real values before a production build.
+ *
+ * Components import from this module; they never hardcode a value.
  */
 
-/** The ⚠️ env keys that must be replaced with real values before production. */
+/** Deployment-specific env keys that MUST be real before production. */
 export const PLACEHOLDER_KEYS = [
-  "NEXT_PUBLIC_WHATSAPP_PHONE",
-  "NEXT_PUBLIC_SITE_URL",
-  "NEXT_PUBLIC_COMPANY_LEGAL_NAME",
-  "NEXT_PUBLIC_COMPANY_NIT",
-  "NEXT_PUBLIC_COMPANY_ADDRESS",
-  "NEXT_PUBLIC_CONTACT_PHONE",
-  "NEXT_PUBLIC_SOCIAL_FACEBOOK",
-  "NEXT_PUBLIC_SOCIAL_INSTAGRAM",
-  "NEXT_PUBLIC_SOCIAL_LINKEDIN",
-  "NEXT_PUBLIC_SOCIAL_YOUTUBE",
+  "NEXT_PUBLIC_RATES_CONFIG_ENDPOINT",
   "APPLICATION_ENDPOINT",
   "LANDING_API_KEY",
 ] as const;
 
 export type PlaceholderKey = (typeof PLACEHOLDER_KEYS)[number];
 
-/** Prototype stand-ins — dev fallbacks AND production-guard sentinels. */
+/** Sentinel values the production guard still rejects. */
 export const PLACEHOLDERS: Record<PlaceholderKey, string> = {
-  NEXT_PUBLIC_WHATSAPP_PHONE: "573001234567",
-  NEXT_PUBLIC_SITE_URL: "https://www.credalia.co",
-  NEXT_PUBLIC_COMPANY_LEGAL_NAME: "Credalia S.A.S.",
-  NEXT_PUBLIC_COMPANY_NIT: "XXX.XXX.XXX-X",
-  NEXT_PUBLIC_COMPANY_ADDRESS: "Domicilio pendiente, Colombia",
-  NEXT_PUBLIC_CONTACT_PHONE: "+573001234567",
-  NEXT_PUBLIC_SOCIAL_FACEBOOK: "https://facebook.com/credalia",
-  NEXT_PUBLIC_SOCIAL_INSTAGRAM: "https://instagram.com/credalia",
-  NEXT_PUBLIC_SOCIAL_LINKEDIN: "https://www.linkedin.com/company/credalia",
-  NEXT_PUBLIC_SOCIAL_YOUTUBE: "https://www.youtube.com/@credalia",
+  NEXT_PUBLIC_RATES_CONFIG_ENDPOINT:
+    "http://localhost:8000/api/v1/sessions/rates-config",
   APPLICATION_ENDPOINT: "http://localhost:8000/api/v1/intake/web-lead",
   LANDING_API_KEY: "dev-landing-api-key-change-in-production",
 };
 
 type Env = Record<string, string | undefined>;
 
-function read(key: PlaceholderKey, env: Env = process.env): string {
-  const v = env[key];
-  return v && v.length > 0 ? v : PLACEHOLDERS[key];
+/**
+ * NOTE on the `read*` helpers below: they take the ALREADY-accessed env value
+ * (`value`), not a key to look up dynamically. This is required for Next.js to
+ * inline NEXT_PUBLIC_ vars into the client bundle — its compiler only replaces
+ * literal `process.env.NEXT_PUBLIC_X` expressions, never a dynamic/computed
+ * lookup like `process.env[key]`. Every call site below must therefore pass
+ * `process.env.NEXT_PUBLIC_X` literally. (Server-only keys, e.g.
+ * APPLICATION_ENDPOINT/LANDING_API_KEY, aren't bundled client-side so this
+ * doesn't matter for them, but the same call pattern is used for consistency.)
+ */
+
+function read(key: PlaceholderKey, value: string | undefined): string {
+  return value && value.length > 0 ? value : PLACEHOLDERS[key];
 }
 
-function readNum(key: string, fallback: number, env: Env = process.env): number {
-  const v = env[key];
-  if (!v || v.length === 0) return fallback;
-  const n = Number(v);
+function readNum(value: string | undefined, fallback: number): number {
+  if (!value || value.length === 0) return fallback;
+  const n = Number(value);
   return Number.isFinite(n) ? n : fallback;
 }
 
-function readStr(key: string, fallback: string, env: Env = process.env): string {
-  const v = env[key];
-  return v && v.length > 0 ? v : fallback;
+function readStr(value: string | undefined, fallback: string): string {
+  return value && value.length > 0 ? value : fallback;
 }
 
-function readStrList(key: string, fallback: string[], env: Env = process.env): string[] {
-  const v = env[key];
-  if (!v || v.trim().length === 0) return fallback;
-  return v.split(",").map((s) => s.trim()).filter(Boolean);
+function readStrList(value: string | undefined, fallback: string[]): string[] {
+  if (!value || value.trim().length === 0) return fallback;
+  return value.split(",").map((s) => s.trim()).filter(Boolean);
 }
 
-function readNumList(key: string, fallback: number[], env: Env = process.env): number[] {
-  const v = env[key];
-  if (!v || v.trim().length === 0) return fallback;
-  const parsed = v.split(",").map((s) => Number(s.trim())).filter(Number.isFinite);
+function readNumList(value: string | undefined, fallback: number[]): number[] {
+  if (!value || value.trim().length === 0) return fallback;
+  const parsed = value.split(",").map((s) => Number(s.trim())).filter(Number.isFinite);
   return parsed.length > 0 ? parsed : fallback;
 }
 
@@ -105,54 +97,47 @@ export function assertProductionConfig(env: Env = process.env): void {
 
 /** Typed, resolved configuration consumed by the app. */
 export const config = {
-  whatsappPhone: read("NEXT_PUBLIC_WHATSAPP_PHONE"),
-  siteUrl: read("NEXT_PUBLIC_SITE_URL"),
+  whatsappPhone: readStr(process.env.NEXT_PUBLIC_WHATSAPP_PHONE, "573001234567"),
+  /** Canonical site origin — drives sitemap, robots, OG, JSON-LD, canonical. */
+  siteUrl: readStr(process.env.NEXT_PUBLIC_SITE_URL, "https://credalia.rubrica.dev"),
   company: {
-    legalName: read("NEXT_PUBLIC_COMPANY_LEGAL_NAME"),
-    nit: read("NEXT_PUBLIC_COMPANY_NIT"),
-    address: read("NEXT_PUBLIC_COMPANY_ADDRESS"),
-    contactPhone: read("NEXT_PUBLIC_CONTACT_PHONE"),
+    legalName: readStr(process.env.NEXT_PUBLIC_COMPANY_LEGAL_NAME, "Credalia S.A.S."),
+    nit: readStr(process.env.NEXT_PUBLIC_COMPANY_NIT, "XXX.XXX.XXX-X"),
+    address: readStr(process.env.NEXT_PUBLIC_COMPANY_ADDRESS, "Domicilio pendiente, Colombia"),
+    contactPhone: readStr(process.env.NEXT_PUBLIC_CONTACT_PHONE, "+573001234567"),
   },
 
   /** Brand display name — used in nav, footer, legal pages, WhatsApp messages, etc. */
-  brandName: readStr("NEXT_PUBLIC_BRAND_NAME", "Credalia"),
+  brandName: readStr(process.env.NEXT_PUBLIC_BRAND_NAME, "Credalia"),
 
   /** Contact email shown in footer. */
-  contactEmail: readStr("NEXT_PUBLIC_CONTACT_EMAIL", "hola@credalia.co"),
+  contactEmail: readStr(process.env.NEXT_PUBLIC_CONTACT_EMAIL, "hola@credalia.co"),
 
   /** Contact hours shown in footer. */
-  contactHours: readStr("NEXT_PUBLIC_CONTACT_HOURS", "Lun a Vie, 8:00–18:00"),
+  contactHours: readStr(process.env.NEXT_PUBLIC_CONTACT_HOURS, "Lun a Vie, 8:00–18:00"),
 
   /** Regulator display name (e.g. "Superintendencia Financiera de Colombia"). */
-  regulatorName: readStr("NEXT_PUBLIC_REGULATOR_NAME", "Superintendencia Financiera de Colombia"),
+  regulatorName: readStr(process.env.NEXT_PUBLIC_REGULATOR_NAME, "Superintendencia Financiera de Colombia"),
 
   /** Short regulator name (e.g. "Superfinanciera"). */
-  regulatorShortName: readStr("NEXT_PUBLIC_REGULATOR_SHORT_NAME", "Superfinanciera"),
-
-  /** Radicado prefix for application tracking codes. */
-  radicadoPrefix: readStr("NEXT_PUBLIC_RADICADO_PREFIX", "CR-2026"),
+  regulatorShortName: readStr(process.env.NEXT_PUBLIC_REGULATOR_SHORT_NAME, "Superfinanciera"),
 
   social: {
-    facebook: read("NEXT_PUBLIC_SOCIAL_FACEBOOK"),
-    instagram: read("NEXT_PUBLIC_SOCIAL_INSTAGRAM"),
-    linkedin: read("NEXT_PUBLIC_SOCIAL_LINKEDIN"),
-    youtube: read("NEXT_PUBLIC_SOCIAL_YOUTUBE"),
+    facebook: readStr(process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK, "https://facebook.com/credalia"),
+    instagram: readStr(process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM, "https://instagram.com/credalia"),
+    linkedin: readStr(process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN, "https://www.linkedin.com/company/credalia"),
+    youtube: readStr(process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE, "https://www.youtube.com/@credalia"),
   },
   /** Server-only: where app/api/application forwards the submitted application. */
-  applicationEndpoint: read("APPLICATION_ENDPOINT"),
-  /** Server-only: shared secret sent as X-Landing-Api-Key to Core. Must match Core's LANDING_API_KEY. Never NEXT_PUBLIC_. */
-  landingApiKey: read("LANDING_API_KEY"),
-  /**
-   * Server-only: per-IP submissions/minute accepted by the apply endpoint.
-   *
-   * MUST match Core's `RATE_LIMIT_MAX_REQUESTS` in `apps/core/src/api/intake.py`
-   * (currently 5). If the landing admits more requests per minute than Core,
-   * the 6th..Nth request flows through the landing's limiter, hits Core's
-   * tighter one, and is returned to the user as an opaque "rate_limited" / 5xx
-   * — exactly the historic drift that confused this seam's UX. Keeping the
-   * value in sync here is the only way the two sides stay honest to the user.
-   */
-  webLeadRateLimitPerMinute: readNum("WEB_LEAD_RATE_LIMIT_PER_MIN", 5),
+  applicationEndpoint: read("APPLICATION_ENDPOINT", process.env.APPLICATION_ENDPOINT),
+  /** Server-only: shared secret sent as `X-Landing-Api-Key` to Core. */
+  landingApiKey: read("LANDING_API_KEY", process.env.LANDING_API_KEY),
+  /** Server-only: POST /api/application rate limit (req/min per IP). Synced with Core's intake.py. */
+  webLeadRateLimitPerMinute: readNum(process.env.WEB_LEAD_RATE_LIMIT_PER_MIN, 5),
+  /** Public Core endpoint read once by the simulator provider, with static fallback on failure. */
+  ratesConfigEndpoint:
+    process.env.NEXT_PUBLIC_RATES_CONFIG_ENDPOINT ||
+    PLACEHOLDERS.NEXT_PUBLIC_RATES_CONFIG_ENDPOINT,
   /**
    * Gates the "Vigilados por Superfinanciera" / "Entidad vigilada" claims.
    * Compliance-sensitive: the seal and regulator copy render ONLY when this is
@@ -162,56 +147,56 @@ export const config = {
 
   /** --- Simulator / product parameters --- */
   simulator: {
-    amountMin: readNum("NEXT_PUBLIC_SIM_AMOUNT_MIN", 50000),
-    amountMax: readNum("NEXT_PUBLIC_SIM_AMOUNT_MAX", 1000000),
-    amountStep: readNum("NEXT_PUBLIC_SIM_AMOUNT_STEP", 10000),
-    amountStepBig: readNum("NEXT_PUBLIC_SIM_AMOUNT_STEP_BIG", 50000),
-    defaultAmount: readNum("NEXT_PUBLIC_SIM_DEFAULT_AMOUNT", 500000),
-    defaultTerm: readNum("NEXT_PUBLIC_SIM_DEFAULT_TERM", 12),
+    amountMin: readNum(process.env.NEXT_PUBLIC_SIM_AMOUNT_MIN, 50000),
+    amountMax: readNum(process.env.NEXT_PUBLIC_SIM_AMOUNT_MAX, 1000000),
+    amountStep: readNum(process.env.NEXT_PUBLIC_SIM_AMOUNT_STEP, 10000),
+    amountStepBig: readNum(process.env.NEXT_PUBLIC_SIM_AMOUNT_STEP_BIG, 50000),
+    defaultAmount: readNum(process.env.NEXT_PUBLIC_SIM_DEFAULT_AMOUNT, 500000),
+    defaultTerm: readNum(process.env.NEXT_PUBLIC_SIM_DEFAULT_TERM, 12),
     /** Comma-separated term options in months. */
-    termOptions: readNumList("NEXT_PUBLIC_SIM_TERM_OPTIONS", [3, 6, 9, 12, 18, 24]),
+    termOptions: readNumList(process.env.NEXT_PUBLIC_SIM_TERM_OPTIONS, [3, 6, 9, 12, 18, 24]),
   },
 
   /** --- Credit rate (interim — will come from Credalia dashboard API) --- */
   credit: {
     /** Monthly interest rate as decimal (e.g. 0.026 = 2.6%). */
-    monthlyRate: readNum("NEXT_PUBLIC_CREDIT_MONTHLY_RATE", 0.026),
+    monthlyRate: readNum(process.env.NEXT_PUBLIC_CREDIT_MONTHLY_RATE, 0.026),
     /** Eligibility: small-amount threshold below which long terms aren't offered. */
-    smallAmountThreshold: readNum("NEXT_PUBLIC_CREDIT_SMALL_AMOUNT_THRESHOLD", 200000),
+    smallAmountThreshold: readNum(process.env.NEXT_PUBLIC_CREDIT_SMALL_AMOUNT_THRESHOLD, 200000),
     /** Eligibility: max term (months) for amounts below smallAmountThreshold. */
-    smallAmountMaxTerm: readNum("NEXT_PUBLIC_CREDIT_SMALL_AMOUNT_MAX_TERM", 18),
+    smallAmountMaxTerm: readNum(process.env.NEXT_PUBLIC_CREDIT_SMALL_AMOUNT_MAX_TERM, 18),
     /** Eligibility: high-amount threshold above which a minimum term applies. */
-    highAmountThreshold: readNum("NEXT_PUBLIC_CREDIT_HIGH_AMOUNT_THRESHOLD", 800000),
+    highAmountThreshold: readNum(process.env.NEXT_PUBLIC_CREDIT_HIGH_AMOUNT_THRESHOLD, 800000),
     /** Eligibility: min term (months) for amounts above highAmountThreshold. */
-    highAmountMinTerm: readNum("NEXT_PUBLIC_CREDIT_HIGH_AMOUNT_MIN_TERM", 6),
+    highAmountMinTerm: readNum(process.env.NEXT_PUBLIC_CREDIT_HIGH_AMOUNT_MIN_TERM, 6),
   },
 
   /** --- Application form options --- */
   application: {
     /** Comma-separated bank names for the bank dropdown. */
     banks: readStrList(
-      "NEXT_PUBLIC_APPLICATION_BANKS",
+      process.env.NEXT_PUBLIC_APPLICATION_BANKS,
       ["Bancolombia", "Davivienda", "BBVA", "Banco de Bogotá", "Nequi", "Daviplata"],
     ),
     /** Comma-separated employment types for the employment dropdown. */
     employmentTypes: readStrList(
-      "NEXT_PUBLIC_APPLICATION_EMPLOYMENT_TYPES",
+      process.env.NEXT_PUBLIC_APPLICATION_EMPLOYMENT_TYPES,
       ["Empleado", "Independiente", "Pensionado"],
     ),
   },
 
   /** --- Brand colors (CSS hex, used for manifest/theme-color) --- */
   colors: {
-    navy: readStr("NEXT_PUBLIC_COLOR_NAVY", "#0d2a5e"),
-    orange: readStr("NEXT_PUBLIC_COLOR_ORANGE", "#f5601b"),
-    green: readStr("NEXT_PUBLIC_COLOR_GREEN", "#1e9e55"),
+    navy: readStr(process.env.NEXT_PUBLIC_COLOR_NAVY, "#0d2a5e"),
+    orange: readStr(process.env.NEXT_PUBLIC_COLOR_ORANGE, "#f5601b"),
+    green: readStr(process.env.NEXT_PUBLIC_COLOR_GREEN, "#1e9e55"),
   },
 
   /** --- Disbursement time claim (e.g. "24 horas"). Empty = no claim shown (compliance-safe). --- */
-  disbursementTime: readStr("NEXT_PUBLIC_DISBURSEMENT_TIME", ""),
+  disbursementTime: readStr(process.env.NEXT_PUBLIC_DISBURSEMENT_TIME, ""),
 
   /** --- GTM/GA4 container ID (optional — if set, the GTM script is loaded) --- */
-  gtmId: readStr("NEXT_PUBLIC_GTM_ID", ""),
+  gtmId: readStr(process.env.NEXT_PUBLIC_GTM_ID, ""),
 } as const;
 
 // Fail a production build if any ⚠️ value is still a placeholder. Dev and test

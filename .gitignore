@@ -25,6 +25,7 @@ pnpm-debug.log*
 .env
 .env.local
 .env.*.local
+.env.example
 
 # testing / coverage
 /coverage
@@ -40,6 +41,9 @@ pnpm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# local-only CI tooling (keep local, don't version)
+lighthouserc.json
 
 # ai tool generated
 .agents/

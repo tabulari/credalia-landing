@@ -39,7 +39,7 @@ export interface Validity {
  * Eligibility / constraint rules. Returns { ok, message } — message is shown to
  * the user and the apply CTA is disabled while ok === false.
  *
- * Thresholds come from config (env-driven, interim until real rate engine).
+ * Thresholds default to config (env-driven, interim until real rate engine).
  */
 export function validateApplication(
   amount: number,
@@ -70,8 +70,9 @@ export function calculatePayment(
   amount: number,
   termMonths: number,
   frequency: Frequency,
+  monthlyRate: number = config.credit.monthlyRate,
 ): Simulation {
-  const MONTHLY_RATE = config.credit.monthlyRate;
+  const MONTHLY_RATE = monthlyRate;
   const isBiweekly = frequency === "biweekly";
 
   const periodsPerMonth = isBiweekly ? 2 : 1;

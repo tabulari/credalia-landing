@@ -1,11 +1,17 @@
 'use client';
 
 import { fmtCOP } from '@/lib/credit';
-import { BANKS, EMPLOYMENT_TYPES, type FieldName } from '@/lib/application-schema';
+import {
+  BANKS,
+  CONSENT_TEXT,
+  EMPLOYMENT_TYPES,
+  type FieldName,
+} from '@/lib/application-schema';
 import { capFreq } from './use-application-form';
 import { cn } from '@/lib/utils';
 import type { Values } from './use-application-form';
 import { CheckIcon } from '../icons';
+import { WhatsAppLink } from '../WhatsAppLink';
 
 type FieldHandlers = {
   onFieldChange: (name: FieldName, raw: string) => void;
@@ -68,8 +74,14 @@ export function Step1({ values, applyOrigin, handlers, frozen }: {
         {fieldEl('idNumber', 'Número de cédula', handlers, { type: 'text', inputMode: 'numeric', placeholder: 'Ej. 1.024.567.890', value: values.idNumber })}
         {fieldEl('phone', 'Celular', handlers, { type: 'tel', inputMode: 'numeric', placeholder: 'Ej. 300 123 4567', value: values.phone })}
       </div>
-      <div>{fieldEl('email', 'Correo electrónico', handlers, { type: 'email', autoComplete: 'email', placeholder: 'tucorreo@ejemplo.com', value: values.email })}</div>
-    </section>
+       <div>{fieldEl('email', 'Correo electrónico', handlers, { type: 'email', autoComplete: 'email', placeholder: 'tucorreo@ejemplo.com', value: values.email })}</div>
+       <div className="mt-3 text-center">
+         <WhatsAppLink ctx="contact" className="text-xs text-muted-foreground hover:text-navy transition-colors underline underline-offset-2">
+           ¿Preferís escribirnos por WhatsApp?
+         </WhatsAppLink>
+       </div>
+     </section>
+
   );
 }
 
@@ -130,9 +142,9 @@ export function Step3({ values, consent, consentError, setConsent, setConsentErr
           className="mt-0.5 accent-navy"
         />
         <span className="text-muted-foreground">
-          Autorizo el tratamiento de mis datos personales conforme a la{' '}
-          <a href="/legal/privacidad" target="_blank" rel="noopener noreferrer" className="text-navy font-semibold hover:underline">Política de Privacidad</a>{' '}
-          y la Ley 1581 de 2012 (Habeas Data).
+          {CONSENT_TEXT.split('Política de Privacidad')[0]}
+          <a href="/legal/privacidad" target="_blank" rel="noopener noreferrer" className="text-navy font-semibold hover:underline">Política de Privacidad</a>
+          {CONSENT_TEXT.split('Política de Privacidad')[1]}
         </span>
       </label>
       <span id="consentError" role="alert" className={cn('text-xs text-destructive', consentError ? 'visible' : 'hidden')}>

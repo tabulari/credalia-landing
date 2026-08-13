@@ -1,10 +1,9 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { fmtCOP, type Frequency } from '@/lib/credit';
-import { config } from '@/lib/config';
 import { useSimulator } from './simulator-store';
 import { ChipRadioGroup } from './ChipRadioGroup';
 import { ApplyButton } from './ApplyButton';
@@ -14,18 +13,30 @@ import { track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { ShieldCheckIcon } from './icons';
 
-const TERMS = config.simulator.termOptions.map((n) => ({
-  value: n,
-  label: `${n} meses`,
-}));
-
 const FREQUENCIES: { value: Frequency; label: string }[] = [
   { value: 'monthly', label: 'Mensual' },
   { value: 'biweekly', label: 'Quincenal' },
 ];
 
 export function Simulator() {
-  const { amount, term, frequency, sim, setAmount, setTerm, setFrequency } = useSimulator();
+  const {
+    amount,
+    amountMax,
+    amountMin,
+    amountStep,
+    amountStepBig,
+    term,
+    termOptions,
+    frequency,
+    sim,
+    setAmount,
+    setTerm,
+    setFrequency,
+  } = useSimulator();
+  const terms = useMemo(
+    () => termOptions.map((value) => ({ value, label: `${value} meses` })),
+    [termOptions],
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
   const simRef = useRef<HTMLFormElement>(null);
@@ -75,6 +86,10 @@ export function Simulator() {
 
       <AmountInput
         amount={amount}
+        amountMin={amountMin}
+        amountMax={amountMax}
+        amountStep={amountStep}
+        amountStepBig={amountStepBig}
         setAmount={setAmount}
         inputText={inputText}
         setInputText={setInputText}
@@ -92,7 +107,7 @@ export function Simulator() {
           className="flex flex-wrap gap-2.5"
           ariaLabelledBy="plazoLabel"
           checkBefore
-          options={TERMS}
+          options={terms}
           value={term}
           onChange={(v) => { markInteract('term'); setTerm(v); }}
         />

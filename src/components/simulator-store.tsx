@@ -14,6 +14,10 @@ import {
   type Simulation,
 } from "@/lib/credit";
 import { config } from "@/lib/config";
+import {
+  loadRatesConfig,
+  type RuntimeRatesConfig,
+} from "@/lib/rates-config";
 
 /**
  * Shared simulator store (ported from the prototype's window.Credalia bridge).
@@ -24,22 +28,33 @@ import { config } from "@/lib/config";
  * All numeric params come from config (env-driven).
  */
 
-export const AMOUNT_MIN = config.simulator.amountMin;
-export const AMOUNT_MAX = config.simulator.amountMax;
-export const AMOUNT_STEP = config.simulator.amountStep;
-export const AMOUNT_STEP_BIG = config.simulator.amountStepBig;
+const STATIC_RATES: RuntimeRatesConfig = {
+  monthlyRate: config.credit.monthlyRate,
+  amountMin: config.simulator.amountMin,
+  amountMax: config.simulator.amountMax,
+  termOptions: config.simulator.termOptions,
+};
 
-export const clampAmount = (v: number): number =>
-  Math.max(AMOUNT_MIN, Math.min(AMOUNT_MAX, v));
+export const clampAmount = (v: number, min: number, max: number): number =>
+  Math.max(min, Math.min(max, v));
 
-export const clampRoundAmount = (v: number): number =>
-  clampAmount(Math.round(v / AMOUNT_STEP) * AMOUNT_STEP);
+export const clampRoundAmount = (
+  v: number,
+  min: number,
+  max: number,
+  step: number,
+): number => clampAmount(Math.round(v / step) * step, min, max);
 
 interface SimulatorStore {
   amount: number;
   term: number;
   frequency: Frequency;
   sim: Simulation;
+  amountMin: number;
+  amountMax: number;
+  amountStep: number;
+  amountStepBig: number;
+  termOptions: number[];
   /** Clamp to [MIN,MAX]; `round` also snaps to AMOUNT_STEP (slider/stepper/blur). */
   setAmount: (value: number, round?: boolean) => void;
   setTerm: (term: number) => void;
@@ -49,12 +64,49 @@ interface SimulatorStore {
 const SimulatorContext = createContext<SimulatorStore | null>(null);
 
 export function SimulatorProvider({ children }: { children: React.ReactNode }) {
+  const [rates, setRates] = useState<RuntimeRatesConfig>(STATIC_RATES);
   const [amount, setAmountState] = useState(config.simulator.defaultAmount);
   const [term, setTerm] = useState(config.simulator.defaultTerm);
   const [frequency, setFrequency] = useState<Frequency>("monthly");
 
-  const setAmount = useCallback((value: number, round = true) => {
-    setAmountState(round ? clampRoundAmount(value) : clampAmount(value));
+  const setAmount = useCallback(
+    (value: number, round = true) => {
+      setAmountState(
+        round
+          ? clampRoundAmount(
+              value,
+              rates.amountMin,
+              rates.amountMax,
+              config.simulator.amountStep,
+            )
+          : clampAmount(value, rates.amountMin, rates.amountMax),
+      );
+    },
+    [rates.amountMax, rates.amountMin],
+  );
+
+  useEffect(() => {
+    let active = true;
+    void loadRatesConfig(config.ratesConfigEndpoint).then((nextRates) => {
+      if (!active || nextRates === null) return;
+      setRates(nextRates);
+      setAmountState((current) =>
+        clampRoundAmount(
+          current,
+          nextRates.amountMin,
+          nextRates.amountMax,
+          config.simulator.amountStep,
+        ),
+      );
+      setTerm((current) =>
+        nextRates.termOptions.includes(current)
+          ? current
+          : nextRates.termOptions[0],
+      );
+    });
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Settle the amount before deriving sim. Dragging the slider fires every ~15ms;
@@ -69,13 +121,26 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   }, [amount]);
 
   const sim = useMemo(
-    () => calculatePayment(settledAmount, term, frequency),
-    [settledAmount, term, frequency],
+    () => calculatePayment(settledAmount, term, frequency, rates.monthlyRate),
+    [settledAmount, term, frequency, rates.monthlyRate],
   );
 
   const value = useMemo<SimulatorStore>(
-    () => ({ amount, term, frequency, sim, setAmount, setTerm, setFrequency }),
-    [amount, term, frequency, sim, setAmount],
+    () => ({
+      amount,
+      term,
+      frequency,
+      sim,
+      amountMin: rates.amountMin,
+      amountMax: rates.amountMax,
+      amountStep: config.simulator.amountStep,
+      amountStepBig: config.simulator.amountStepBig,
+      termOptions: rates.termOptions,
+      setAmount,
+      setTerm,
+      setFrequency,
+    }),
+    [amount, term, frequency, sim, rates, setAmount],
   );
 
   return (
