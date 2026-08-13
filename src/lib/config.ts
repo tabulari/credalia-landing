@@ -1,28 +1,21 @@
 /**
  * Credalia — centralized runtime configuration.
  *
- * Every business value flagged ⚠️ in the design handoff README is sourced from
- * the environment here and NOWHERE ELSE. Components import from this module;
- * they never hardcode a value.
+ * Identity, contact, and social facts (site URL, WhatsApp line, legal name/NIT,
+ * address, phone, social profile URLs) are CONSTANTS compiled into the build,
+ * not environment variables. They never vary between local/staging/prod, so they
+ * are baked in here as literal defaults (see the `config` object below).
  *
- * `PLACEHOLDERS` holds the prototype's stand-in values. They double as dev-time
- * fallbacks AND as the sentinels the production guard rejects: if any survives a
- * production build, `assertProductionConfig()` throws so we cannot ship the page
- * with fake business data. See `.env.example` for the contract.
+ * Only genuinely deployment-specific values come from the environment and are
+ * guarded by `assertProductionConfig()`: the Core backend endpoints and the
+ * web-lead secret (`NEXT_PUBLIC_RATES_CONFIG_ENDPOINT`, `APPLICATION_ENDPOINT`,
+ * `LANDING_API_KEY`). These must be set to real values before a production build.
+ *
+ * Components import from this module; they never hardcode a value.
  */
 
-/** The ⚠️ env keys that must be replaced with real values before production. */
+/** Deployment-specific env keys that MUST be real before production. */
 export const PLACEHOLDER_KEYS = [
-  "NEXT_PUBLIC_WHATSAPP_PHONE",
-  "NEXT_PUBLIC_SITE_URL",
-  "NEXT_PUBLIC_COMPANY_LEGAL_NAME",
-  "NEXT_PUBLIC_COMPANY_NIT",
-  "NEXT_PUBLIC_COMPANY_ADDRESS",
-  "NEXT_PUBLIC_CONTACT_PHONE",
-  "NEXT_PUBLIC_SOCIAL_FACEBOOK",
-  "NEXT_PUBLIC_SOCIAL_INSTAGRAM",
-  "NEXT_PUBLIC_SOCIAL_LINKEDIN",
-  "NEXT_PUBLIC_SOCIAL_YOUTUBE",
   "NEXT_PUBLIC_RATES_CONFIG_ENDPOINT",
   "APPLICATION_ENDPOINT",
   "LANDING_API_KEY",
@@ -30,18 +23,8 @@ export const PLACEHOLDER_KEYS = [
 
 export type PlaceholderKey = (typeof PLACEHOLDER_KEYS)[number];
 
-/** Prototype stand-ins — dev fallbacks AND production-guard sentinels. */
+/** Sentinel values the production guard still rejects. */
 export const PLACEHOLDERS: Record<PlaceholderKey, string> = {
-  NEXT_PUBLIC_WHATSAPP_PHONE: "573001234567",
-  NEXT_PUBLIC_SITE_URL: "https://www.credalia.co",
-  NEXT_PUBLIC_COMPANY_LEGAL_NAME: "Credalia S.A.S.",
-  NEXT_PUBLIC_COMPANY_NIT: "XXX.XXX.XXX-X",
-  NEXT_PUBLIC_COMPANY_ADDRESS: "Domicilio pendiente, Colombia",
-  NEXT_PUBLIC_CONTACT_PHONE: "+573001234567",
-  NEXT_PUBLIC_SOCIAL_FACEBOOK: "https://facebook.com/credalia",
-  NEXT_PUBLIC_SOCIAL_INSTAGRAM: "https://instagram.com/credalia",
-  NEXT_PUBLIC_SOCIAL_LINKEDIN: "https://www.linkedin.com/company/credalia",
-  NEXT_PUBLIC_SOCIAL_YOUTUBE: "https://www.youtube.com/@credalia",
   NEXT_PUBLIC_RATES_CONFIG_ENDPOINT:
     "http://localhost:8000/api/v1/sessions/rates-config",
   APPLICATION_ENDPOINT: "http://localhost:8000/api/v1/intake/web-lead",
@@ -114,13 +97,14 @@ export function assertProductionConfig(env: Env = process.env): void {
 
 /** Typed, resolved configuration consumed by the app. */
 export const config = {
-  whatsappPhone: read("NEXT_PUBLIC_WHATSAPP_PHONE", process.env.NEXT_PUBLIC_WHATSAPP_PHONE),
-  siteUrl: read("NEXT_PUBLIC_SITE_URL", process.env.NEXT_PUBLIC_SITE_URL),
+  whatsappPhone: readStr(process.env.NEXT_PUBLIC_WHATSAPP_PHONE, "573001234567"),
+  /** Canonical site origin — drives sitemap, robots, OG, JSON-LD, canonical. */
+  siteUrl: readStr(process.env.NEXT_PUBLIC_SITE_URL, "https://credalia.rubrica.dev"),
   company: {
-    legalName: read("NEXT_PUBLIC_COMPANY_LEGAL_NAME", process.env.NEXT_PUBLIC_COMPANY_LEGAL_NAME),
-    nit: read("NEXT_PUBLIC_COMPANY_NIT", process.env.NEXT_PUBLIC_COMPANY_NIT),
-    address: read("NEXT_PUBLIC_COMPANY_ADDRESS", process.env.NEXT_PUBLIC_COMPANY_ADDRESS),
-    contactPhone: read("NEXT_PUBLIC_CONTACT_PHONE", process.env.NEXT_PUBLIC_CONTACT_PHONE),
+    legalName: readStr(process.env.NEXT_PUBLIC_COMPANY_LEGAL_NAME, "Credalia S.A.S."),
+    nit: readStr(process.env.NEXT_PUBLIC_COMPANY_NIT, "XXX.XXX.XXX-X"),
+    address: readStr(process.env.NEXT_PUBLIC_COMPANY_ADDRESS, "Domicilio pendiente, Colombia"),
+    contactPhone: readStr(process.env.NEXT_PUBLIC_CONTACT_PHONE, "+573001234567"),
   },
 
   /** Brand display name — used in nav, footer, legal pages, WhatsApp messages, etc. */
@@ -139,10 +123,10 @@ export const config = {
   regulatorShortName: readStr(process.env.NEXT_PUBLIC_REGULATOR_SHORT_NAME, "Superfinanciera"),
 
   social: {
-    facebook: read("NEXT_PUBLIC_SOCIAL_FACEBOOK", process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK),
-    instagram: read("NEXT_PUBLIC_SOCIAL_INSTAGRAM", process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM),
-    linkedin: read("NEXT_PUBLIC_SOCIAL_LINKEDIN", process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN),
-    youtube: read("NEXT_PUBLIC_SOCIAL_YOUTUBE", process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE),
+    facebook: readStr(process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK, "https://facebook.com/credalia"),
+    instagram: readStr(process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM, "https://instagram.com/credalia"),
+    linkedin: readStr(process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN, "https://www.linkedin.com/company/credalia"),
+    youtube: readStr(process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE, "https://www.youtube.com/@credalia"),
   },
   /** Server-only: where app/api/application forwards the submitted application. */
   applicationEndpoint: read("APPLICATION_ENDPOINT", process.env.APPLICATION_ENDPOINT),
