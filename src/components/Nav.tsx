@@ -151,7 +151,7 @@ export function Nav() {
             src="/brand_Logo.svg"
             alt=""
             aria-hidden="true"
-            className="h-auto w-[183px]"
+            className="h-auto w-[240px]"
           />
         </a>
 
@@ -220,7 +220,7 @@ export function Nav() {
                   href={l.href}
                   ref={i === 0 ? firstLinkRef : undefined}
                   className={cn(
-                    'text-sm font-semibold py-3.5 px-2 -mx-2 rounded transition-colors',
+                    'text-sm font-semibold py-3.5 px-2 -mx-2 rounded-lg transition-colors',
                     isActive
                       ? 'text-navy bg-green-tint font-bold'
                       : 'text-muted-2 hover:text-navy',

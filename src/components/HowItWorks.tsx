@@ -201,8 +201,8 @@ export function HowItWorks() {
                     </span>
                     {s.icon}
                   </div>
-                  <h3 className={cn('mt-1.5 sm:mt-2 text-navy', isLast ? 'text-sm sm:text-base font-bold' : 'text-xs sm:text-sm font-semibold')}>{s.title}</h3>
-                  <p className={cn('mt-0.5 sm:mt-1', isLast ? 'text-xs sm:text-sm text-navy/70' : 'text-[11px] sm:text-xs text-muted-foreground')}>{s.text}</p>
+                  <h3 className={cn('mt-1.5 sm:mt-2 text-navy', isLast ? 'text-sm sm:text-base font-bold' : 'text-sm sm:text-base font-semibold')}>{s.title}</h3>
+                  <p className={cn('mt-0.5 sm:mt-1', isLast ? 'text-xs sm:text-sm text-navy/70' : 'text-xs sm:text-sm text-muted-foreground')}>{s.text}</p>
 
                   {isLast && (
                     <div

@@ -41,7 +41,7 @@ export function SimulationResults({ sim, frequency }: { sim: SimData; frequency:
       <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
         <div className="flex-shrink-0">
           <p className="text-xs font-semibold text-muted-2 mb-1">Tu cuota estimada</p>
-          <div ref={paymentRef} className="font-extrabold text-navy leading-none" style={{ letterSpacing: '-0.03em' }}>
+          <div ref={paymentRef} className="font-extrabold text-navy leading-none tabular-nums" style={{ letterSpacing: '-0.03em' }}>
             <span className="text-2xl">$</span><span className="text-4xl sm:text-5xl">{fmtCOP(sim.payment)}</span> <span className="text-base font-semibold text-muted-2">{sim.unit}</span>
           </div>
           <span className="inline-flex items-center gap-1.5 mt-3 text-green-ink font-bold text-sm">
@@ -56,28 +56,28 @@ export function SimulationResults({ sim, frequency }: { sim: SimData; frequency:
                 <CalendarIcon size={14} className="text-muted-2" />
                 Monto solicitado
               </div>
-              <div className="text-base font-bold text-navy-ink">{`$${fmtCOP(sim.amount)}`}</div>
+              <div className="text-base font-bold text-navy-ink tabular-nums">{`$${fmtCOP(sim.amount)}`}</div>
             </div>
             <div>
               <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-2 mb-0.5">
                 <CalendarIcon size={14} className="text-muted-2" />
                 Plazo seleccionado
               </div>
-              <div className="text-base font-bold text-navy-ink">{`${sim.term} meses`}</div>
+              <div className="text-base font-bold text-navy-ink tabular-nums">{`${sim.term} meses`}</div>
             </div>
             <div>
               <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-2 mb-0.5">
                 <HomeIcon size={14} className="text-muted-2" />
                 Tasa estimada
               </div>
-              <div className="text-base font-bold text-navy-ink">{fmtPct(sim.periodRate, 1) + rateLabel}</div>
+              <div className="text-base font-bold text-navy-ink tabular-nums">{fmtPct(sim.periodRate, 1) + rateLabel}</div>
             </div>
             <div>
               <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-2 mb-0.5">
                 <ClockIcon size={14} className="text-muted-2" />
                 Costo total estimado
               </div>
-              <div className="text-base font-bold text-navy-ink">{`$${fmtCOP(sim.totalCost)}`}</div>
+              <div className="text-base font-bold text-navy-ink tabular-nums">{`$${fmtCOP(sim.totalCost)}`}</div>
             </div>
 
           <p className="col-span-2 text-sm text-muted-2 leading-snug">

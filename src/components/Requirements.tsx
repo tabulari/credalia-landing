@@ -36,7 +36,14 @@ export function Requirements() {
 
   useGSAP(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
+    if (reduceMotion) {
+      // No animation, but the content must still be in its resting (visible)
+      // state: draw the checkmarks and show the completed counter chip.
+      const marks = containerRef.current?.querySelectorAll('[data-req="checkmark"]');
+      marks?.forEach((cm) => gsap.set(cm, { strokeDashoffset: 0 }));
+      setCountDone(true);
+      return;
+    }
 
     const heading = containerRef.current?.querySelector('[data-req="heading"]');
     const items = containerRef.current?.querySelectorAll('[data-req="item"]');
@@ -91,38 +98,42 @@ export function Requirements() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} aria-labelledby="req-heading" className="w-full">
-      <div data-req="heading" className="mb-6 text-left">
-          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Requisitos</p>
-          <h2 id="req-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
-            Solo necesitas 4 cosas
-          </h2>
-      </div>
+    <section ref={containerRef} aria-labelledby="req-heading" className="py-16 lg:py-24 bg-white">
+      <div className="mx-auto max-w-container px-6">
+        <div className="mx-auto max-w-lg">
+          <div data-req="heading" className="mb-8 text-center">
+            <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Requisitos</p>
+            <h2 id="req-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
+              Solo necesitas 4 cosas
+            </h2>
+          </div>
 
-      <ul role="list" className="flex flex-col gap-2">
-        {REQS.map((r) => (
-          <li
-            key={r.label}
-            data-req="item"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg border border-border bg-card hover:-translate-y-0.5 hover:shadow-sm transition-all duration-300"
-          >
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-tint text-green shrink-0">
-              {r.icon}
+          <ul role="list" className="flex flex-col gap-2">
+            {REQS.map((r) => (
+              <li
+                key={r.label}
+                data-req="item"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg border border-border bg-card hover:-translate-y-0.5 hover:shadow-sm transition-all duration-300"
+              >
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-tint text-green shrink-0">
+                  {r.icon}
+                </span>
+                <span className="flex-1 text-sm font-medium text-foreground">{r.label}</span>
+                <AnimatedCheck />
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-6 text-center">
+            <span data-req="counter" className={cn(
+              'inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-4 py-1.5 transition-opacity duration-500',
+              countDone ? 'opacity-100' : 'opacity-80',
+            )}>
+              {countDone && <CheckIcon size={16} className="text-green" />}
+              {countDone ? '4 requisitos simples' : ''}
             </span>
-            <span className="flex-1 text-sm font-medium text-foreground">{r.label}</span>
-            <AnimatedCheck />
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-5 text-left">
-        <span data-req="counter" className={cn(
-          'inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-4 py-1.5 transition-opacity duration-500',
-          countDone ? 'opacity-100' : 'opacity-80',
-        )}>
-          {countDone && <CheckIcon size={16} className="text-green" />}
-          {countDone ? '4 requisitos simples' : ''}
-        </span>
+          </div>
+        </div>
       </div>
     </section>
   );

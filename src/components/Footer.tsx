@@ -7,7 +7,7 @@ export function Footer() {
     <footer data-slot="footer" className="bg-gradient-to-b from-navy-deep to-[#071940] text-white border-t border-white/10">
       <div className="mx-auto max-w-container px-6 pt-14 pb-12 lg:pt-16 lg:pb-14 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-x-8 gap-y-10 overflow-hidden">
         <div className="col-span-2 md:col-span-4 lg:col-span-1">
-          <a href="#top" className="flex items-center gap-2 mb-3 min-h-[44px] py-1.5 text-white">
+          <a href="#top" aria-label={`${config.brandName} — inicio`} className="flex items-center gap-2 mb-3 min-h-[44px] py-1.5 text-white">
             <img
               src="/brand_Logo.svg"
               alt=""
