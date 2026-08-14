@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { ApplyButton } from './ApplyButton';
 import { cn } from '@/lib/utils';
 import { config } from '@/lib/config';
@@ -147,10 +148,13 @@ export function Nav() {
           aria-label={`${config.brandName} — inicio`}
           className="flex items-center py-2 text-navy"
         >
-          <img
+          <Image
             src="/brand_Logo.svg"
             alt=""
             aria-hidden="true"
+            width={0}
+            height={0}
+            sizes="100vw"
             className="h-auto w-[240px]"
           />
         </a>

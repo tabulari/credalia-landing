@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import Image from 'next/image';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { SplitText } from 'gsap/SplitText';
@@ -117,10 +118,13 @@ export function Hero() {
 
         <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-4 shadow-sm mt-2 relative z-10">
           <div className="flex items-center gap-2.5 mb-3">
-            <img
+            <Image
               src="/credalia-logo.svg"
               alt=""
               aria-hidden="true"
+              width={0}
+              height={0}
+              sizes="100vw"
               className="h-7 w-7 shrink-0"
             />
             <div>

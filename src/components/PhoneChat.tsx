@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import Image from 'next/image';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { config } from '@/lib/config';
@@ -236,7 +237,7 @@ export function PhoneChat() {
             <div className="chat-header">
               <span className="back">‹</span>
               <div className="avatar">
-                <img src="/credalia-logo.svg" alt="" aria-hidden="true" className="h-5 w-5" />
+                <Image src="/credalia-logo.svg" alt="" aria-hidden="true" width={0} height={0} sizes="100vw" className="h-5 w-5" />
               </div>
               <div className="header-info">
                 <div className="who">
