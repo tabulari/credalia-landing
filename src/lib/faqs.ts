@@ -1,45 +1,44 @@
 export interface Faq {
   q: string;
-  a: string;
-  preview: string;
-  highlight: string;
-  tag: string;
+  verdict: string;
+  explanation: string;
+  icon: 'shield' | 'bolt' | 'document' | 'refresh' | 'star';
 }
 
 export const FAQS: Faq[] = [
   {
-    q: "¿Simular o solicitar me baja puntos o me afecta en Datacrédito?",
-    highlight: "Tranquilo: simular es 100% libre de consultas.",
-    a: "Puedes probar todos los montos y plazos que quieras sin ningún miedo. Simular es solo informativo y no genera consultas en centrales de riesgo. Solo cuando tú decides enviar tu solicitud definitiva hacemos la validación formal.",
-    preview: "Simular no afecta tu historial.",
-    tag: "Sin riesgo",
+    q: '¿Simular o solicitar me baja puntos o afecta en Datacrédito?',
+    verdict: 'No, simular no afecta tu historial ni baja tu puntaje en centrales de riesgo.',
+    explanation:
+      'Puedes cotizar diferentes montos y plazos con total libertad. La validación formal solo se realiza si decides enviar tu solicitud definitiva.',
+    icon: 'shield',
   },
   {
-    q: "¿Cuánto demora en llegar el dinero a mi cuenta o Nequi?",
-    highlight: "Respuesta en minutos y desembolso directo a tu billetera.",
-    a: "Nuestro motor evalúa tu solicitud en minutos y te confirma directo por WhatsApp. Una vez aceptes, transferimos tu dinero de inmediato a Nequi, DaviPlata o tu cuenta bancaria preferida.",
-    preview: "Desembolso en minutos.",
-    tag: "Desembolso rápido",
+    q: '¿Cuánto demora en llegar el dinero a mi cuenta o Nequi?',
+    verdict: 'La evaluación toma minutos y el desembolso es inmediato una vez aceptada la oferta.',
+    explanation:
+      'Transferimos los fondos directamente a tu cuenta bancaria, Nequi o DaviPlata tan pronto apruebes las condiciones.',
+    icon: 'bolt',
   },
   {
-    q: "¿Qué requisitos me van a pedir? ¿Necesito fiador?",
-    highlight: "Solo tu cédula vigente y soporte de ingresos. Cero fiadores.",
-    a: "Olvídate de pedirle favores a nadie ni hacer filas en notarías. Solo necesitas foto de tu cédula y un soporte básico de ingresos. Todo el trámite es 100% digital desde tu celular.",
-    preview: "Solo cédula y soporte.",
-    tag: "Cero trámites",
+    q: '¿Qué requisitos necesito para solicitar? ¿Piden fiador?',
+    verdict: 'Solo necesitas tu cédula de ciudadanía vigente y soporte de ingresos. Cero fiadores.',
+    explanation:
+      'Todo el proceso es 100% digital desde tu celular, sin papeleos físicos, sin filas y sin trámites notariales.',
+    icon: 'document',
   },
   {
-    q: "¿Puedo pagar mi crédito antes de tiempo sin que me cobren penalidades?",
-    highlight: "Total libertad: paga anticipado sin cargos extra.",
-    a: "Si te entra un dinero extra, puedes hacer abonos a capital o liquidar la totalidad de tu préstamo cuando quieras. Te cobramos únicamente los intereses del tiempo que tuviste el dinero.",
-    preview: "Sin penalidades por pago anticipado.",
-    tag: "Flexibilidad",
+    q: '¿Puedo pagar mi crédito antes de tiempo sin penalidades?',
+    verdict: 'Sí, puedes hacer abonos a capital o liquidar el crédito anticipadamente sin ningún cobro extra.',
+    explanation:
+      'Tienes total libertad para pagar cuando quieras, liquidando únicamente los intereses del tiempo que utilizaste el dinero.',
+    icon: 'refresh',
   },
   {
-    q: "¿Puedo aplicar si no tengo historial crediticio?",
-    highlight: "Sí, evaluamos tu perfil con tecnología propia.",
-    a: "No necesitas años de vida crediticia tradicional para que te escuchemos. Analizamos tus datos de forma integral para brindarte una oportunidad clara y construir tu historial.",
-    preview: "Puedes aplicar sin historial bancario previo.",
-    tag: "Inclusión",
+    q: '¿Puedo aplicar si no tengo historial crediticio bancario?',
+    verdict: 'Sí, puedes aplicar incluso si estás iniciando tu vida crediticia o no tienes historial previo.',
+    explanation:
+      'Evaluamos tu perfil de forma integral con modelos propios para darte la oportunidad de acceder y construir tu historial financiero.',
+    icon: 'star',
   },
 ];

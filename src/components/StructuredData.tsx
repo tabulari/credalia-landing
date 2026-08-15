@@ -18,7 +18,7 @@ export function StructuredData() {
     "@type": "FinancialService",
     name: config.brandName,
     description:
-      `Crédito digital en Colombia hasta $${fmtCOP(config.simulator.amountMax).replace(',00','')}. Respuesta en minutos, tasa clara y sin papeles. Simula tu crédito sin afectar tu historial y solicita 100% en línea.`,
+      `Crédito digital en Colombia hasta $${fmtCOP(config.simulator.amountMax).replace(',00','')}. Respuesta en minutos, tasa clara y sin papeles. Simula tu cuota y solicita 100% en línea.`,
     url: `${base}/`,
     logo: `${base}/credalia-logo.svg?v=${BRAND_ASSET_VERSION}`,
     image: `${base}/og-image.png`,
@@ -37,10 +37,10 @@ export function StructuredData() {
   const faqPage = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FAQS.map(({ q, a }) => ({
+    mainEntity: FAQS.map(({ q, verdict, explanation }) => ({
       "@type": "Question",
       name: q,
-      acceptedAnswer: { "@type": "Answer", text: a },
+      acceptedAnswer: { "@type": "Answer", text: `${verdict} ${explanation}` },
     })),
   };
 

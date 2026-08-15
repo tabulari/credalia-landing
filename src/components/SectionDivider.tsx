@@ -12,21 +12,23 @@ interface SectionDividerProps {
   className?: string;
 }
 
+// Oversized paths starting at -200 and extending to 1640 with deep bottom anchor (V140)
+// Guarantees zero side gaps and zero sub-pixel seam glitches across all screen sizes and zoom levels.
 const WAVES = {
   soft: {
     viewBox: '0 0 1440 40',
-    d: 'M-100 80V28C200 16 500 16 720 28C940 40 1240 40 1540 28V80H-100Z',
-    dSecondary: 'M-100 80V32C280 20 600 22 960 32C1180 38 1340 34 1540 30V80H-100Z',
+    d: 'M-200 120V24C160 14 460 14 720 24C980 34 1280 34 1640 24V120H-200Z',
+    dSecondary: 'M-200 120V28C220 18 520 20 840 28C1100 34 1360 30 1640 26V120H-200Z',
   },
   medium: {
     viewBox: '0 0 1440 60',
-    d: 'M-100 100V30C200 0 500 0 720 30C940 60 1240 60 1540 30V100H-100Z',
-    dSecondary: 'M-100 100V38C260 12 540 8 860 36C1080 54 1300 48 1540 34V100H-100Z',
+    d: 'M-200 140V30C160 8 460 8 720 30C980 52 1280 52 1640 30V140H-200Z',
+    dSecondary: 'M-200 140V38C220 16 520 12 840 36C1100 50 1360 44 1640 34V140H-200Z',
   },
   bold: {
     viewBox: '0 0 1440 80',
-    d: 'M-100 130V48C200 18 460 18 720 44C980 70 1240 70 1540 40V130H-100Z',
-    dSecondary: 'M-100 130V56C240 28 500 26 760 52C1020 74 1260 70 1540 48V130H-100Z',
+    d: 'M-200 160V42C160 18 460 18 720 40C980 62 1280 62 1640 38V160H-200Z',
+    dSecondary: 'M-200 160V50C220 28 520 26 840 48C1100 66 1360 62 1640 44V160H-200Z',
   },
 };
 
@@ -38,7 +40,7 @@ export function SectionDivider({
   className = '',
 }: SectionDividerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const waveRef = useRef<SVGPathElement>(null);
+  const primaryWaveRef = useRef<SVGPathElement>(null);
   const secondaryWaveRef = useRef<SVGPathElement>(null);
   const { viewBox, d, dSecondary } = WAVES[amplitude];
 
@@ -48,55 +50,40 @@ export function SectionDivider({
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion || !containerRef.current) return;
 
-    const el = containerRef.current;
-    const wave = waveRef.current;
-    const secondaryWave = secondaryWaveRef.current;
+    const primary = primaryWaveRef.current;
+    const secondary = secondaryWaveRef.current;
 
-    // Pin transform origin to bottom center so scaleY only undulates upward into 'from' color
-    // and NEVER lifts the bottom edge away from the following section.
-    if (wave) {
-      gsap.fromTo(
-        wave,
-        { x: flip ? 14 : -14, scaleY: 1, transformOrigin: '50% 100%' },
-        {
-          x: flip ? -14 : 14,
-          scaleY: 1.08,
-          transformOrigin: '50% 100%',
-          ease: 'none',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 0.6,
-          },
-        },
-      );
+    // 01: Butter-smooth, calming harmonic fluid sine oscillations
+    if (primary) {
+      gsap.to(primary, {
+        x: flip ? -20 : 20,
+        scaleY: 1.05,
+        duration: 5.2,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        transformOrigin: '50% 100%',
+      });
     }
 
-    if (secondaryWave) {
-      gsap.fromTo(
-        secondaryWave,
-        { x: flip ? -20 : 20, scaleY: 1, transformOrigin: '50% 100%' },
-        {
-          x: flip ? 20 : -20,
-          scaleY: 1.06,
-          transformOrigin: '50% 100%',
-          ease: 'none',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        },
-      );
+    if (secondary) {
+      gsap.to(secondary, {
+        x: flip ? 28 : -28,
+        scaleY: 1.08,
+        duration: 6.8,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: 0.5,
+        transformOrigin: '50% 100%',
+      });
     }
   }, { scope: containerRef });
 
   return (
     <div
       ref={containerRef}
-      className={`relative -mt-px overflow-hidden pointer-events-none select-none z-10 ${className}`}
+      className={`relative -mt-px -mb-px overflow-hidden pointer-events-none select-none z-10 ${className}`}
       aria-hidden="true"
       style={from ? { backgroundColor: from } : undefined}
     >
@@ -107,20 +94,20 @@ export function SectionDivider({
         className="w-full block transform-gpu will-change-transform"
         preserveAspectRatio="none"
         style={{
-          marginBottom: '-4px',
+          marginBottom: '-2px',
           ...(flip ? { transform: 'scaleX(-1)' } : {}),
         }}
       >
-        {/* Subtle organic secondary wave layer */}
+        {/* Harmonic Translucent Undertone Wave */}
         <path
           ref={secondaryWaveRef}
           d={dSecondary}
           fill={isDarkTo ? '#1e9e55' : to}
-          opacity={isDarkTo ? '0.2' : '0.35'}
+          opacity={isDarkTo ? '0.22' : '0.35'}
         />
-        {/* Primary solid wave path */}
+        {/* Primary Solid Surface Wave */}
         <path
-          ref={waveRef}
+          ref={primaryWaveRef}
           d={d}
           fill={to}
         />

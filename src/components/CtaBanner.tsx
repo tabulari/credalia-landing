@@ -3,131 +3,141 @@
 import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { SplitText } from 'gsap/SplitText';
-import { config } from '@/lib/config';
 import { ApplyButton } from './ApplyButton';
 import { ScrollButton } from './ScrollButton';
-import { CheckCircleIcon } from './icons';
 
 export function CtaBanner() {
   const containerRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-
-  const bullets = [
-    'Sin papeleos complicados',
-    config.disbursementTime
-      ? `Dinero en tu cuenta en ${config.disbursementTime}`
-      : 'Respuesta en minutos',
-    'Tasa clara, sin sorpresas',
-  ];
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
+    if (reduceMotion || !panelRef.current) return;
 
-    const root = containerRef.current;
-    if (!root) return;
+    const panel = panelRef.current;
+    const eyebrow = panel.querySelector('[data-cta="eyebrow"]');
+    const heading = panel.querySelector('[data-cta="heading"]');
+    const subhead = panel.querySelector('[data-cta="subhead"]');
+    const actionBlock = panel.querySelector('[data-cta="action-block"]');
+    const sheen = panel.querySelector('.cta-sheen');
 
-    const panel = root.querySelector('[data-cta="panel"]');
-    const eyebrow = root.querySelector('[data-cta="eyebrow"]');
-    const subhead = root.querySelector('[data-cta="subhead"]');
-    const bulletEls = root.querySelectorAll('[data-cta="bullet"]');
-    const buttons = root.querySelectorAll('[data-cta="action"]');
-    const reassure = root.querySelector('[data-cta="reassure"]');
-    const sheen = root.querySelector('.cta-sheen');
-    const heading = headingRef.current;
+    const tl = gsap.timeline({
+      defaults: { ease: 'power3.out' },
+      scrollTrigger: { trigger: panel, start: 'top 85%' },
+    });
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        defaults: { ease: 'power3.out' },
-        scrollTrigger: { trigger: panel, start: 'top 82%' },
-      });
+    // 1. Panel entrance
+    tl.fromTo(
+      panel,
+      { y: 32, scale: 0.97, autoAlpha: 0 },
+      { y: 0, scale: 1, autoAlpha: 1, duration: 0.7 },
+      0,
+    );
 
-      // 1. The whole panel lifts and scales in
-      if (panel) {
-        tl.from(panel, { y: 48, scale: 0.94, autoAlpha: 0, duration: 0.8, ease: 'power3.out' }, 0);
-      }
+    // 2. Eyebrow, Heading & Subhead
+    if (eyebrow) tl.fromTo(eyebrow, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 0.2);
+    if (heading) tl.fromTo(heading, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 }, 0.3);
+    if (subhead) tl.fromTo(subhead, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 0.45);
 
-      // 2. Eyebrow
-      if (eyebrow) tl.from(eyebrow, { y: 16, autoAlpha: 0, duration: 0.45 }, 0.25);
+    // 3. Action Block
+    if (actionBlock) {
+      tl.fromTo(
+        actionBlock,
+        { y: 18, scale: 0.95, autoAlpha: 0 },
+        { y: 0, scale: 1, autoAlpha: 1, duration: 0.5, ease: 'back.out(1.4)' },
+        0.55,
+      );
+    }
 
-      // 3. Heading — assemble word by word
-      if (heading) {
-        const split = SplitText.create(heading, { type: 'words', aria: 'hidden' });
-        tl.from(split.words, { y: 28, autoAlpha: 0, stagger: 0.06, duration: 0.6 }, 0.3);
-        // emphasis pop on the highlighted word ("claridad.")
-        const accent = heading.querySelector('.text-orange');
-        if (accent) {
-          tl.fromTo(
-            accent,
-            { scale: 0.7, autoAlpha: 0 },
-            { scale: 1, autoAlpha: 1, duration: 0.5, ease: 'back.out(2)' },
-            '>-0.1',
-          );
-        }
-      }
-
-      // 4. Subhead
-      if (subhead) tl.from(subhead, { y: 14, autoAlpha: 0, duration: 0.45 }, 0.55);
-
-      // 5. Bullets cascade with their check icons
-      if (bulletEls.length) {
-        tl.from(bulletEls, { x: -14, autoAlpha: 0, stagger: 0.1, duration: 0.45 }, 0.65);
-      }
-
-      // 6. Buttons spring in
-      if (buttons.length) {
-        tl.from(buttons, { y: 22, scale: 0.92, autoAlpha: 0, stagger: 0.12, duration: 0.5, ease: 'back.out(1.5)' }, 0.8);
-      }
-      if (reassure) tl.from(reassure, { autoAlpha: 0, duration: 0.4 }, 1.05);
-
-      // 7. One-shot sheen sweep across the panel ring
-      if (sheen) {
-        gsap.set(sheen, { xPercent: -270 });
-        tl.to(sheen, { xPercent: 270, duration: 0.9, ease: 'power2.inOut' }, 1.1);
-      }
-    }, containerRef);
-
-    return () => ctx.revert();
+    // 4. One-shot Sheen Sweep
+    if (sheen) {
+      gsap.set(sheen, { xPercent: -270 });
+      tl.to(sheen, { xPercent: 270, duration: 0.9, ease: 'power2.inOut' }, 0.75);
+    }
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} aria-labelledby="cta-heading" className="bg-navy-deep text-white py-16 lg:py-24 relative z-10 -mt-2 overflow-hidden">
-      <div className="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
-      {/* ambient green light bloom behind the panel */}
-      <div className="absolute left-1/4 top-12 -translate-x-1/2 w-72 h-72 cta-glow cta-glow--green pointer-events-none" aria-hidden="true" />
+    <section
+      ref={containerRef}
+      id="cta"
+      aria-labelledby="cta-heading"
+      className="bg-navy-deep text-white py-16 lg:py-24 relative z-10 -mt-2 overflow-hidden"
+    >
+      {/* Background Dot-Grid Texture */}
+      <div
+        className="absolute inset-0 opacity-10 pointer-events-none"
+        aria-hidden="true"
+        style={{
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.16) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
+        }}
+      />
+
+      {/* Ambient Green Light Bloom */}
+      <div
+        className="absolute left-1/3 top-10 -translate-x-1/2 w-80 h-80 cta-glow cta-glow--green pointer-events-none"
+        aria-hidden="true"
+      />
+
       <div className="mx-auto max-w-container px-6 relative pb-6 lg:pb-10">
-        <div data-cta="panel" className="relative flex flex-col lg:flex-row items-stretch gap-6 lg:gap-10 rounded-2xl bg-white/[0.04] ring-1 ring-white/10 p-6 sm:p-8 lg:p-10 backdrop-blur-sm">
+        <div
+          ref={panelRef}
+          data-cta="panel"
+          className="relative flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 rounded-3xl bg-white/[0.05] ring-1 ring-white/12 p-8 sm:p-10 lg:p-14 backdrop-blur-xl shadow-2xl overflow-hidden"
+        >
           <span className="cta-sheen" aria-hidden="true" />
-          <div className="flex-1 min-w-0 relative">
-            <p data-cta="eyebrow" className="text-xs font-semibold uppercase tracking-widest text-green-bright mb-2">Comienza ahora</p>
-            <h2 ref={headingRef} id="cta-heading" className="text-2xl lg:text-3xl font-display tracking-tight">
-              Empieza tu solicitud con <span className="text-orange">claridad.</span>
-            </h2>
-            <p data-cta="subhead" className="text-white/80 mt-2">
-              Simula primero o solicita directo. Tú decides el ritmo.
+
+          {/* Left Column: Pure, Saturated Value Anchor */}
+          <div className="flex-1 min-w-0 relative space-y-3 text-left">
+            <p
+              data-cta="eyebrow"
+              className="text-xs font-semibold uppercase tracking-widest text-green-bright"
+            >
+              Comienza ahora
             </p>
-            <ul className="mt-5 flex flex-col gap-2.5">
-              {bullets.map((b) => (
-                <li key={b} data-cta="bullet" className="flex items-center gap-2.5 text-white/90">
-                  <CheckCircleIcon size={20} className="text-green-bright shrink-0" />
-                  <span className="text-sm font-medium">{b}</span>
-                </li>
-              ))}
-            </ul>
+
+            <h2
+              id="cta-heading"
+              data-cta="heading"
+              className="text-3xl sm:text-4xl lg:text-[42px] font-display tracking-tight text-white leading-[1.15]"
+            >
+              Tu dinero en minutos, <br className="hidden sm:inline" />
+              <span className="text-orange">sin fiador ni trámites.</span>
+            </h2>
+
+            <p
+              data-cta="subhead"
+              className="text-white/80 text-sm sm:text-base leading-relaxed max-w-lg pt-1"
+            >
+              Solicita 100% en línea con tu cédula y recibe el desembolso directo en tu cuenta o billetera digital hoy mismo.
+            </p>
           </div>
-          <div className="flex flex-col justify-center items-stretch gap-3 lg:w-[260px] lg:shrink-0 lg:border-l lg:border-white/10 lg:pl-10 relative">
-            <div data-cta="action">
-              <ScrollButton variant="white" size="lg" target="#simula" className="w-full min-h-[52px]">
-                Simular mi crédito <span aria-hidden="true">→</span>
+
+          {/* Right Column: VARIANT B — Titanium Light Capsule */}
+          <div
+            data-cta="action-block"
+            className="flex flex-col justify-center items-stretch gap-3 w-full sm:w-[310px] lg:shrink-0 lg:border-l lg:border-white/10 lg:pl-10 relative"
+          >
+            {/* Primary: Brilliant Pure White Titanium Capsule with Double Rim */}
+            <ApplyButton
+              origin="cta_banner"
+              size="lg"
+              className="w-full min-h-[54px] h-14 bg-white text-navy-deep font-bold shadow-[0_12px_28px_-6px_rgba(255,255,255,0.2),0_8px_10px_-6px_rgba(0,0,0,0.4)] ring-1 ring-white/80 hover:bg-white/95 hover:scale-[1.01] active:scale-[0.98] transition-all text-base rounded-2xl border-0 flex items-center justify-center gap-2"
+            >
+              <span>Solicitar crédito</span>
+            </ApplyButton>
+
+            {/* Secondary: Minimalist Floating Trigger */}
+            <div className="text-center">
+              <ScrollButton
+                variant="ghost-dark"
+                target="#simula"
+                className="w-full min-h-[48px] h-12 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all flex items-center justify-center gap-1.5 border-0 rounded-xl"
+              >
+                <span>Simular cuota primero</span>
+                <span className="text-white/40 font-normal">↑</span>
               </ScrollButton>
             </div>
-            <div data-cta="action">
-              <ApplyButton variant="ghost-dark" size="lg" className="w-full min-h-[52px]">
-                Solicitar crédito <span aria-hidden="true">→</span>
-              </ApplyButton>
-            </div>
-            <p data-cta="reassure" className="text-xs text-white/50 text-center mt-1">Sin compromiso · No afecta tu historial</p>
           </div>
         </div>
       </div>

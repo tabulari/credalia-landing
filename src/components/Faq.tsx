@@ -30,7 +30,7 @@ export function Faq() {
         {
           y: 0,
           autoAlpha: 1,
-          duration: 0.6,
+          duration: 0.5,
           ease: 'power2.out',
           scrollTrigger: { trigger: leftCol, start: 'top 85%' },
         },
@@ -44,7 +44,7 @@ export function Faq() {
         {
           y: 0,
           autoAlpha: 1,
-          duration: 0.65,
+          duration: 0.55,
           ease: 'power2.out',
           scrollTrigger: { trigger: rightCol, start: 'top 85%' },
         },
@@ -57,92 +57,76 @@ export function Faq() {
       ref={containerRef}
       id="preguntas"
       aria-labelledby="faq-heading"
-      className="py-12 sm:py-14 lg:py-16 bg-white relative"
+      className="py-14 sm:py-16 lg:py-20 bg-white relative"
     >
       <div className="mx-auto max-w-container px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* ───────────────────────────────────────────────────────────── */}
-          {/* LEFT COLUMN: Sticky Trust Anchor & Human Concierge Card       */}
+          {/* LEFT COLUMN: Pure Sticky Editorial Anchor & Direct Bar        */}
           {/* ───────────────────────────────────────────────────────────── */}
-          <div data-faq="left" className="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
+          <div data-faq="left" className="lg:col-span-5 space-y-8 lg:sticky lg:top-28">
             <div className="space-y-2 text-left">
-              <p className="text-xs font-semibold uppercase tracking-widest text-green-ink">
+              <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-1.5">
                 Transparencia total
               </p>
               <h2
                 id="faq-heading"
-                className="text-3xl sm:text-4xl lg:text-5xl font-display tracking-tight text-navy leading-[1.12]"
+                className="text-2xl sm:text-3xl lg:text-4xl font-display tracking-tight text-navy"
               >
-                Claridad total sobre tu <span className="text-orange">crédito.</span>
+                Claridad total sobre tu crédito
               </h2>
-              <p className="text-base text-muted-foreground leading-relaxed pt-1">
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pt-1">
                 Todo lo que necesitas saber antes de solicitar, explicado con honestidad y sin tecnicismos bancarios.
               </p>
             </div>
 
-            {/* Human WhatsApp Concierge Card */}
-            <div className="rounded-2xl bg-gradient-to-br from-green-soft via-[#edf6e4] to-[#f4f9ef] border border-green/30 p-6 space-y-4 shadow-2xs">
-              <div className="flex items-center justify-between">
-                <div className="inline-flex items-center gap-2 text-xs font-bold text-[#075e54]">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#25D366] animate-pulse" />
-                  Asesores en línea ahora
-                </div>
-                <span className="text-[10px] font-semibold text-green-ink bg-white/80 px-2 py-0.5 rounded-full border border-green/20">
-                  Respuesta en &lt; 3 min
-                </span>
-              </div>
-
-              <div className="space-y-1 text-left">
-                <h3 className="text-base font-bold text-navy leading-snug">
-                  ¿Prefieres hablar con una persona?
+            {/* Clean Single-Action Direct Bar (Zero Badges, Zero Arrows, Zero Box Inception) */}
+            <div className="border-t border-border/70 pt-6 space-y-4 text-left">
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-navy">
+                  ¿Tienes una duda diferente?
                 </h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Nuestro equipo está en WhatsApp para resolver cualquier caso o duda particular en tiempo real.
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Nuestro equipo te atiende directamente por WhatsApp para revisar tu caso particular en minutos.
                 </p>
               </div>
 
               <WhatsAppLink
-                ctx="contact"
-                className="flex items-center justify-center gap-2 w-full min-h-[44px] py-2.5 px-4 rounded-xl bg-white hover:bg-white/90 text-navy font-bold text-sm shadow-2xs border border-border/70 transition-all hover:shadow-xs active:scale-[0.98]"
+                ctx="faq"
+                className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-5 py-3 rounded-xl bg-white hover:bg-bg-soft text-navy font-bold text-sm border border-border shadow-2xs hover:border-green/40 transition-all active:scale-[0.98]"
               >
-                <WhatsAppIcon size={17} className="text-[#25D366] shrink-0" />
+                <WhatsAppIcon size={18} className="text-[#25D366] shrink-0" />
                 <span>Hablar con un asesor</span>
-                <span aria-hidden="true" className="text-muted-2 ml-auto">→</span>
               </WhatsAppLink>
             </div>
           </div>
 
           {/* ───────────────────────────────────────────────────────────── */}
-          {/* RIGHT COLUMN: Balanced 5 Curated Core Questions               */}
+          {/* RIGHT COLUMN: Direct, Uncluttered Accordion (Zero Nesting)   */}
           {/* ───────────────────────────────────────────────────────────── */}
-          <div data-faq="right" className="lg:col-span-7 space-y-3.5">
-            <Accordion className="space-y-3.5 min-w-0">
+          <div data-faq="right" className="lg:col-span-7 space-y-3">
+            <Accordion className="space-y-3 min-w-0">
               {FAQS.map((faq, i) => (
                 <AccordionItem
                   key={i}
                   value={`faq-${i}`}
                   data-faq="item"
-                  className="rounded-2xl border border-border/80 bg-white hover:border-navy/20 hover:shadow-xs transition-all duration-200 overflow-hidden"
+                  className="rounded-2xl border border-border/80 bg-white hover:border-green/40 hover:shadow-2xs transition-all duration-200 overflow-hidden"
                 >
                   <AccordionTrigger className="px-5 sm:px-6 py-4 sm:py-5 text-left text-base font-bold text-navy hover:no-underline gap-4">
-                    <div className="flex flex-col items-start gap-1.5 text-left">
-                      <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-green-ink bg-green-soft px-2.5 py-0.5 rounded-md">
-                        {faq.tag}
-                      </span>
-                      <span className="leading-snug">{faq.q}</span>
-                    </div>
+                    <span className="leading-snug text-left">{faq.q}</span>
                   </AccordionTrigger>
 
-                  <AccordionContent className="px-5 sm:px-6 pb-5 pt-0 text-left space-y-2">
-                    {/* Nubank-Style Skimmable Key Takeaway */}
-                    <div className="rounded-lg bg-bg-soft/80 border border-border/50 p-2.5 text-xs font-semibold text-navy flex items-start gap-2">
-                      <span className="text-green text-sm shrink-0 font-bold">✓</span>
-                      <span>{faq.highlight}</span>
+                  <AccordionContent className="px-5 sm:px-6 pb-5 pt-0 text-left">
+                    {/* Direct, Honest Answer without Nested Containers */}
+                    <div className="space-y-1.5 border-t border-border/40 pt-3">
+                      <p className="text-sm sm:text-base font-bold text-navy leading-snug">
+                        {faq.verdict}
+                      </p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {faq.explanation}
+                      </p>
                     </div>
-                    {/* Human, Empathetic Detailed Answer */}
-                    <p className="text-sm text-muted-foreground leading-relaxed pl-1">
-                      {faq.a}
-                    </p>
                   </AccordionContent>
                 </AccordionItem>
               ))}
@@ -153,11 +137,11 @@ export function Faq() {
         {/* Static noscript fallback for crawlers & non-JS */}
         <noscript>
           <div className="max-w-3xl mx-auto flex flex-col gap-3 mt-8">
-            {FAQS.map(({ q, a, highlight }, i) => (
+            {FAQS.map(({ q, verdict, explanation }, i) => (
               <details key={i} className="border border-border rounded-xl p-4">
                 <summary className="text-sm font-bold text-navy cursor-pointer">{q}</summary>
-                <p className="mt-2 text-xs font-semibold text-green-ink">{highlight}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{a}</p>
+                <p className="mt-2 text-sm font-bold text-navy">{verdict}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{explanation}</p>
               </details>
             ))}
           </div>
