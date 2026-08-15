@@ -7,275 +7,652 @@ interface IconProps {
 
 export function ShieldCheckIcon({ size = 20, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M12 2 L20 5 V11 C20 16.5 16.5 20.5 12 22 C7.5 20.5 4 16.5 4 11 V5 Z" />
-      <path d="M9 12 l2 2 4-4.5" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="m9 12 2 2 4-4" />
     </svg>
   );
 }
 
 export function LockIcon({ size = 20, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <rect x="5" y="11" width="14" height="10" rx="2" />
-      <path d="M8 11 V7 a4 4 0 0 1 8 0 v4" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
     </svg>
   );
 }
 
-export function LockKeyholeIcon({ size = 26, className }: IconProps) {
+export function LockKeyholeIcon({ size = 24, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <rect x="5" y="11" width="14" height="10" rx="2" />
-      <path d="M8 11 V7 a4 4 0 0 1 8 0 v4" />
-      <circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="12" cy="16" r="1" />
+      <rect width="18" height="12" x="3" y="10" rx="2" />
+      <path d="M7 10V7a5 5 0 0 1 10 0v3" />
     </svg>
   );
 }
 
-export function CalendarIcon({ size = 14, className }: IconProps) {
+export function CalendarIcon({ size = 16, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <rect x="3" y="6" width="18" height="15" rx="2" />
-      <path d="M3 10 h18 M8 3 v6 M16 3 v6" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
     </svg>
   );
 }
 
-export function ClockIcon({ size = 14, className }: IconProps) {
+export function ClockIcon({ size = 16, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7 v5 l3.5 2" />
-    </svg>
-  );
-}
-
-export function HelpIcon({ size = 15, className }: IconProps) {
-  return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className}>
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
       <circle cx="12" cy="12" r="10" />
-      <path d="M9.5 9 a2.5 2.5 0 1 1 3.5 2.3 c-.8.4-1 .8-1 1.7 M12 17 h.01" />
+      <polyline points="12 6 12 12 16 14" />
     </svg>
   );
 }
 
-export function CheckIcon({ size = 17, className }: IconProps) {
+export function HelpIcon({ size = 16, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M5 12 l4 4 L19 7" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
     </svg>
   );
 }
 
-export function CloseIcon({ size = 22, className }: IconProps) {
+export function CheckIcon({ size = 18, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className}>
-      <path d="M6 6 l12 12 M18 6 l-12 12" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <polyline points="20 6 9 17 4 12" />
     </svg>
   );
 }
 
-export function PencilIcon({ size = 17, className }: IconProps) {
+export function CloseIcon({ size = 20, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M12 20 h9" />
-      <path d="M16.5 3.5 a2.1 2.1 0 0 1 3 3 L7 19 l-4 1 1-4 Z" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }
 
-export function LightningIcon({ size = 13, className }: IconProps) {
+export function PencilIcon({ size = 16, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M13 2 L4 14 h6 l-1 8 9-12 h-6 z" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+      <path d="m15 5 4 4" />
     </svg>
   );
 }
 
-export function HomeIcon({ size = 14, className }: IconProps) {
+export function LightningIcon({ size = 14, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M3 9 l9-7 9 7 v11 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 Z" />
-      <path d="M9 22 V12 h6 v10" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+    >
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
     </svg>
   );
 }
 
-export function DocumentIcon({ size = 22, className }: IconProps) {
+export function HomeIcon({ size = 16, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M14 2 H6 a2 2 0 0 0-2 2 v16 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2-2 V8 Z" />
-      <path d="M14 2 v6 h6 M16 13 H8 M16 17 H8 M10 9 H8" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
     </svg>
   );
 }
 
-export function DocumentCheckIcon({ size = 22, className }: IconProps) {
+export function DocumentIcon({ size = 20, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M14 2 H6 a2 2 0 0 0-2 2 v16 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2-2 V8 Z" />
-      <path d="M14 2 v6 h6" />
-      <path d="M9 15 l2 2 4-4.5" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
     </svg>
   );
 }
 
-export function SearchCheckIcon({ size = 22, className }: IconProps) {
+export function DocumentCheckIcon({ size = 20, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <path d="m9 15 2 2 4-4" />
+    </svg>
+  );
+}
+
+export function SearchCheckIcon({ size = 20, className }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
       <circle cx="11" cy="11" r="8" />
-      <path d="M21 21 l-4.35-4.35" />
-      <path d="M8 11 l2 2 4-4" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      <path d="m8 11 2 2 4-4" />
     </svg>
   );
 }
 
 export function VerifiedCircleIcon({ size = 16, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" className={className}>
-      <circle cx="12" cy="12" r="10" fill="var(--green)" />
-      <path d="M8 12 l2.5 2.5 L16 9" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-export function CredaliaLogo({ size = 48, className }: IconProps) {
-  return (
-    <svg 
-      aria-hidden="true" 
-      width={size} 
-      height={size} 
-      viewBox="0 0 512 512" 
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
       className={className}
-      style={{ height: 'auto', aspectRatio: '1 / 1' }}
     >
-      <path
-        style={{ fill: '#d6613c', strokeWidth: 0.781701 }}
-        d="m 256.37395,418.86896 c -3.61821,-1.04343 -8.45796,-3.56092 -10.93529,-5.68819 -1.19203,-1.02358 -8.93678,-10.08224 -17.21053,-20.13037 -33.11767,-40.21995 -85.64083,-103.17575 -94.95695,-113.81819 -3.19993,-3.6555 -5.4027,-7.10112 -7.0922,-11.0937 -3.97551,-9.39494 -4.89558,-14.07466 -4.47805,-22.7767 0.45389,-9.45986 2.36715,-16.38195 6.29188,-22.7638 2.708,-4.40339 18.19761,-23.56476 47.9426,-59.30719 18.58289,-22.32977 64.60444,-78.283339 65.82649,-80.032695 0.64935,-0.929532 3.16315,-3.191726 5.58622,-5.027082 10.68682,-8.094769 23.24025,-8.070424 33.83628,0.06562 3.06083,2.350238 25.07783,30.210587 25.07783,31.733557 0,0.61467 -5.17485,6.97181 -25.07582,30.8049 -38.59347,46.21896 -65.43288,78.99328 -66.78937,81.55833 -4.60991,8.71704 -7.03306,21.49503 -5.78724,30.5176 0.95081,6.88594 3.15804,14.72089 5.44875,19.34122 0.97235,1.9612 9.86932,12.83699 19.77104,24.16841 39.99934,45.77474 72.08141,83.53525 72.08141,84.83954 0,1.56813 -21.81778,28.82886 -25.40852,31.74725 -5.14771,4.18386 -9.78515,6.00932 -16.01986,6.306 -3.10042,0.14753 -6.74931,-0.0524 -8.10867,-0.44451 z"
-        id="path103"
-      />
-      <path
-        id="path101"
-        style={{ fill: '#387758', strokeWidth: 0.770073 }}
-        d="m 356.08255,68.127636 c -0.72608,-0.0015 -1.47617,0.04258 -2.07617,0.132613 -1.20001,0.180074 -0.3791,0.33109 1.82422,0.335255 2.20335,0.0046 3.18489,-0.14319 2.18164,-0.327806 -0.50163,-0.09214 -1.20361,-0.138604 -1.92969,-0.140062 z m -197.72461,0.925307 c -4.40166,-0.0708 -7.9203,1.135373 -12.5918,4.037969 -4.67966,2.907664 -6.52754,4.825979 -15.4668,16.044594 -5.58408,7.007906 -15.26395,19.054194 -21.50976,26.769794 -6.24579,7.71561 -22.619461,28.04471 -36.386721,45.17607 -13.767259,17.13141 -29.491351,36.66598 -34.941411,43.41042 -10.71652,13.26165 -12.22512,15.57316 -15.20117,23.28016 -3.06847,7.9463 -4.09948,15.37317 -3.26562,23.50515 0.79369,7.74011 1.60372,10.83491 4.76562,18.20512 1.97462,4.60273 9.28669,13.78518 60.332034,75.75588 61.387298,74.52624 60.209088,73.22359 67.587888,74.72776 11.36092,2.31592 21.02365,-1.96995 28.63477,-12.70097 2.13528,-3.01057 5.54436,-7.68264 7.57617,-10.38251 5.99122,-7.96105 9.48632,-13.28056 9.2539,-14.08819 -0.11955,-0.41542 -7.57949,-9.96105 -16.57617,-21.212 -22.44112,-28.06404 -35.06481,-44.0236 -53.79492,-68.00775 -5.82097,-7.45385 -10.78827,-13.55178 -11.03906,-13.55178 -0.91658,1e-5 -4.74178,-8.16085 -7.07226,-15.08798 -2.11154,-6.27646 -2.42951,-8.15567 -2.71094,-16.03567 -0.28971,-8.11183 -0.15716,-9.5119 1.45898,-15.32342 2.81962,-10.13917 4.97854,-14.70918 10.0918,-21.36696 2.62694,-3.42045 18.56775,-24.24108 35.42382,-46.26677 16.85606,-22.02572 34.0308,-44.35005 38.16602,-49.61041 l 7.51953,-9.56447 -3.51367,-4.99606 c -1.93194,-2.7483 -5.96372,-8.331638 -8.96094,-12.40744 -2.99725,-4.0758 -5.92039,-8.279803 -6.49414,-9.34097 -0.57375,-1.061175 -3.4188,-3.66914 -6.32226,-5.796199 -4.30408,-3.153163 -6.18569,-4.019388 -10.19141,-4.692091 -1.73928,-0.292088 -3.30426,-0.457678 -4.77148,-0.481277 z m 126.96484,70.777697 c -0.13486,0.16858 -0.24843,0.31337 -0.33984,0.43211 0.14003,-0.10899 0.2803,-0.21842 0.41992,-0.32782 -0.0273,-0.0341 -0.0548,-0.0684 -0.0801,-0.10429 z m 141.54883,0.74949 c 0.30947,0.56741 0.64565,1.1259 1.01953,1.66882 0.4359,0.63298 0.92325,1.24608 1.48047,1.82976 0.10167,0.10649 0.20608,0.21137 0.3125,0.31589 0.45543,0.41591 0.9292,0.81825 1.41992,1.20692 -0.97543,-1.16469 -2.18255,-2.59649 -3.66797,-4.35386 z m -194.11133,67.0124 c -0.89679,1.16617 -1.44349,1.93905 -1.42383,2.0309 v 0.002 l 0.002,0.002 v 0.002 h 0.002 v 0.002 h 0.002 l 0.002,0.002 h 0.002 0.002 0.002 0.002 c 0.0957,-0.0164 0.60463,-0.54547 1.36719,-1.40658 -2.9e-4,-0.20105 0.0128,-0.41169 0.041,-0.63177 z m 253.83985,8.29944 c 0.545,0.6476 0.87595,1.02067 0.91015,1.02067 0.22023,0 0.1933,-0.19159 -0.4082,-0.99384 -0.16009,-0.009 -0.32802,-0.0167 -0.50195,-0.0269 z m 9.44726,28.16893 -0.002,0.002 h -0.002 l -0.002,0.002 h -0.002 c -0.0811,0.0661 -0.13797,0.9209 -0.14453,2.38106 -0.004,1.56949 0.0602,2.53451 0.15234,2.61649 l 0.002,0.002 h 0.002 l 0.002,0.002 h 0.002 0.002 0.002 0.002 0.002 v -0.002 c 0.0331,-0.0173 0.073,-0.14193 0.11132,-0.38294 0.15934,-0.99514 0.16208,-2.81552 0.01,-4.04541 -0.0444,-0.35551 -0.0875,-0.53999 -0.125,-0.5692 l -0.002,-0.002 -0.002,-0.002 h -0.002 -0.002 v -0.002 h -0.002 z m -48.33789,82.35073 c -0.2109,0.22816 -0.42124,0.45611 -0.63281,0.68392 -1.26974,1.35938 -2.50695,2.73544 -3.72461,4.12142 -0.2438,0.33268 -0.37528,0.53481 -0.37891,0.57961 v 0.002 0.002 0.002 l 0.002,0.002 v 0.002 h 0.002 0.002 c 0.12468,0 2.02926,-2.18133 4.73047,-5.3924 z m -158.83789,27.65785 c 3.22407,3.97499 5.86151,7.17521 6.72656,8.16385 -0.20723,-0.30363 -0.44752,-0.59276 -0.66015,-0.89401 0.0362,-0.15036 -2.4045,-3.0562 -3.50391,-4.42687 -0.61494,-0.70185 -1.19703,-1.41781 -1.87109,-2.09349 -0.23012,-0.25028 -0.46019,-0.49978 -0.69141,-0.74948 z m 110.66211,32.39019 c -0.28922,0.34662 -0.58651,0.70312 -0.88867,1.06834 -0.0611,0.17122 -0.0301,0.0847 -0.11719,0.34121 -0.14767,0.43487 -0.32957,0.82598 -0.53906,1.17414 0.0594,-0.0416 0.11838,-0.0836 0.17773,-0.12516 0.12986,-0.15751 0.26115,-0.3168 0.39258,-0.4768 0.46877,-0.57072 0.92277,-1.12613 1.35547,-1.65989 -0.12697,-0.10856 -0.2513,-0.21387 -0.38086,-0.32184 z m -78.42188,8.0506 2.31446,2.88022 c 0.016,-0.0308 0.0312,-0.0619 0.0488,-0.091 z m 35.63282,27.2004 c -0.48405,-0.004 -0.99296,0.0448 -1.40821,0.14157 -0.83052,0.19352 -0.30868,0.35903 1.16016,0.36803 1.46882,0.01 2.15006,-0.14914 1.51172,-0.35164 -0.31918,-0.10123 -0.77962,-0.155 -1.26367,-0.15796 z"
-      />
-      <path
-        style={{ fill: '#042851', strokeWidth: 0.740797 }}
-        d="m 356.96913,415.0866 c -8.91982,-3.5226 -7.99419,-2.49277 -50.27034,-55.92806 -10.87485,-13.74534 -28.73621,-36.06199 -39.69188,-49.59257 -27.43603,-33.88425 -28.76784,-35.68502 -31.33473,-42.36827 -3.13571,-8.16429 -4.35428,-16.32244 -3.56587,-23.87307 1.3717,-13.13666 4.4556,-20.24507 14.08373,-32.46291 3.76262,-4.77465 11.4106,-14.65573 16.9955,-21.95794 5.5849,-7.3022 17.50296,-22.76572 26.48457,-34.36334 8.9816,-11.59762 18.22438,-23.54671 20.53952,-26.55349 30.59332,-39.733328 34.6755,-44.739713 38.51798,-47.238494 9.89409,-6.434147 20.67509,-6.370858 30.81853,0.180887 2.86934,1.853338 6.65601,6.149964 16.96272,19.247147 14.53275,18.46733 53.32468,67.55575 78.6994,99.58845 13.88723,17.53105 16.50793,21.22446 18.75715,26.43492 4.47469,10.36592 5.5697,21.62278 3.20206,32.9176 -2.4147,11.51943 -3.52016,13.26743 -27.21788,43.03939 -19.33009,24.28474 -40.26792,50.74101 -63.96333,80.82174 -20.40274,25.90073 -20.95188,26.52898 -25.64081,29.33416 -7.39575,4.42456 -16.46997,5.50131 -23.37632,2.77385 z"
-        id="path100"
-      />
+      <circle cx="12" cy="12" r="10" fill="var(--green)" />
+      <polyline points="16 9 10.5 15 8 12.5" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 export function MinusIcon({ size = 18, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className={className}>
-      <path d="M5 12 h14" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      className={className}
+    >
+      <line x1="5" y1="12" x2="19" y2="12" />
     </svg>
   );
 }
 
 export function PlusIcon({ size = 18, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className={className}>
-      <path d="M12 5 v14 M5 12 h14" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      className={className}
+    >
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
     </svg>
   );
 }
 
 export function HamburgerIcon({ size = 24, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className}>
-      <path d="M4 7 h16 M4 12 h16 M4 17 h16" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <line x1="4" y1="12" x2="20" y2="12" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="4" y1="18" x2="20" y2="18" />
     </svg>
   );
 }
 
-export function PersonIcon({ size = 22, className }: IconProps) {
+export function PersonIcon({ size = 20, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <circle cx="12" cy="8" r="4" />
-      <path d="M20 21 a8 8 0 0 0-16 0" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
     </svg>
   );
 }
 
-export function IdCardIcon({ size = 22, className }: IconProps) {
+export function IdCardIcon({ size = 20, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <rect x="2" y="5" width="20" height="14" rx="2" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect width="20" height="14" x="2" y="5" rx="2" />
       <circle cx="8" cy="12" r="2.5" />
-      <path d="M14 9 h4 M14 12 h4 M14 15 h3" />
+      <path d="M14 9h4M14 12h4M14 15h2" />
     </svg>
   );
 }
 
-export function CreditCardIcon({ size = 22, className }: IconProps) {
+export function CreditCardIcon({ size = 20, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <rect x="2" y="5" width="20" height="14" rx="2" />
-      <path d="M2 10 h20" />
-      <path d="M6 15 h4" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect width="20" height="14" x="2" y="5" rx="2" />
+      <line x1="2" y1="10" x2="22" y2="10" />
     </svg>
   );
 }
 
-export function CalculatorIcon({ size = 26, className }: IconProps) {
+export function CalculatorIcon({ size = 22, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <rect x="4" y="2" width="16" height="20" rx="2" />
-      <path d="M8 6 h8 M8 10 h2 M14 10 h2 M8 14 h2 M14 14 h2 M8 18 h2 M14 18 h2" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect width="16" height="20" x="4" y="2" rx="2" />
+      <line x1="8" y1="6" x2="16" y2="6" />
+      <line x1="16" y1="14" x2="16" y2="14" />
+      <line x1="16" y1="18" x2="16" y2="18" />
+      <line x1="12" y1="14" x2="12" y2="14" />
+      <line x1="12" y1="18" x2="12" y2="18" />
+      <line x1="8" y1="14" x2="8" y2="14" />
+      <line x1="8" y1="18" x2="8" y2="18" />
+      <line x1="8" y1="10" x2="8" y2="10" />
+      <line x1="12" y1="10" x2="12" y2="10" />
+      <line x1="16" y1="10" x2="16" y2="10" />
     </svg>
   );
 }
 
-export function DocUploadIcon({ size = 26, className }: IconProps) {
+export function DocUploadIcon({ size = 22, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M14 2 H6 a2 2 0 0 0-2 2 v16 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2-2 V8 Z" />
-      <path d="M14 2 v6 h6" />
-      <path d="M12 18 v-6 M9 15 l3-3 3 3" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <path d="M12 18v-6" />
+      <path d="m9 15 3-3 3 3" />
     </svg>
   );
 }
 
-export function RefreshCheckIcon({ size = 26, className }: IconProps) {
+export function RefreshCheckIcon({ size = 22, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M21 12 a9 9 0 0 1-15.4 6.4" />
-      <path d="M3 12 a9 9 0 0 1 15.4-6.4" />
-      <path d="M21 3 v6 h-6 M3 21 v-6 h6" />
-      <path d="M9 12 l2 2 4-4" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+      <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+      <path d="M16 21h5v-5" />
+      <polyline points="9 12 11 14 15 10" />
     </svg>
   );
 }
 
-export function BankIcon({ size = 26, className }: IconProps) {
+export function BankIcon({ size = 22, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M3 21 h18 M3 10 h18" />
-      <path d="M5 10 v8 M9 10 v8 M15 10 v8 M19 10 v8" />
-      <path d="M3 10 L12 3 L21 10" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <line x1="3" y1="22" x2="21" y2="22" />
+      <line x1="6" y1="18" x2="6" y2="11" />
+      <line x1="10" y1="18" x2="10" y2="11" />
+      <line x1="14" y1="18" x2="14" y2="11" />
+      <line x1="18" y1="18" x2="18" y2="11" />
+      <polygon points="12 2 20 7 4 7 12 2" />
     </svg>
   );
 }
 
-export function AlertCircleIcon({ size = 40, className }: IconProps) {
+export function AlertCircleIcon({ size = 36, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className}>
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
       <circle cx="12" cy="12" r="10" />
-      <path d="M12 8 v5 M12 17 h.01" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
     </svg>
   );
 }
 
 export function ReturnArrowIcon({ size = 20, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M3 12 a9 9 0 1 0 9-9" />
-      <path d="M3 4 v4 h4" />
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <polyline points="9 14 4 9 9 4" />
+      <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
+    </svg>
+  );
+}
+
+export function CheckCircleIcon({ size = 20, className }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  );
+}
+
+export function WhatsAppIcon({ size = 20, className }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+    >
+      <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm0 18.15c-1.49 0-2.95-.4-4.22-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.16 8.16 0 0 1-1.25-4.38c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.23 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.86.84-.86 2.05 0 1.21.88 2.38 1 2.55.12.17 1.74 2.66 4.22 3.73.59.25 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.17-.48-.29z" />
+    </svg>
+  );
+}
+
+export function SparklesIcon({ size = 20, className }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+      <path d="M5 3v4" />
+      <path d="M19 17v4" />
+      <path d="M3 5h4" />
+      <path d="M17 19h4" />
+    </svg>
+  );
+}
+
+export function UserIcon({ size = 20, className }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
+export function BoltIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
     </svg>
   );
 }
@@ -295,13 +672,12 @@ export function BrandLogo({
 }) {
   const width = Math.round((height * 1551) / 406);
 
-  // Default brand colors
-  let fill7 = '#778893'; // gray ("alia")
-  let fill6 = '#dd6a44'; // orange (middle diamond)
-  let fill4 = '#42775f'; // green (leftmost diamond)
-  let fill3 = '#365964'; // teal (dot/accent)
-  let fill2_diamond = '#0d2c51'; // dark blue diamond (rightmost)
-  let fill2_text = '#0d2c51'; // dark blue text ("Cred")
+  let fill7 = '#778893';
+  let fill6 = '#dd6a44';
+  let fill4 = '#42775f';
+  let fill3 = '#365964';
+  let fill2_diamond = '#0d2c51';
+  let fill2_text = '#0d2c51';
 
   if (monochrome) {
     fill7 = 'currentColor';
@@ -311,16 +687,11 @@ export function BrandLogo({
     fill2_diamond = 'currentColor';
     fill2_text = 'currentColor';
   } else if (variant === 'footer') {
-    // In footer (dark blue background):
-    // 1. first diamond (leftmost, fill4) is green like before
     fill4 = '#42775f';
-    // 2. text is white
     fill2_text = '#ffffff';
     fill7 = '#ffffff';
     fill3 = '#ffffff';
-    // 3. Keep middle diamond (orange, fill6) as orange
     fill6 = '#dd6a44';
-    // 4. Make the solid diamond (rightmost, closest to text, fill2_diamond) white
     fill2_diamond = '#ffffff';
   }
 
@@ -355,13 +726,11 @@ export function BrandLogo({
             fill={fill3}
             d="m 1154.5201,501.49953 -0.014,2.27539 c 0.01,0.002 0.017,0.005 0.025,0.008 z m 14.0079,1 -0.037,6.55273 c 0.012,0.006 0.023,0.01 0.035,0.0156 z m -295.44145,11.84765 -2.33008,0.0547 -4.25781,0.0977 -0.14063,19.16211 c 0.21203,0.0202 0.42519,0.0413 0.64063,0.0625 v -18.60938 l 4.00781,-0.40625 2.93164,-0.29687 c -0.28313,-0.0219 -0.56632,-0.0442 -0.84961,-0.0645 z m -20.55469,1.94336 c -0.007,0.005 -0.0143,0.0104 -0.0215,0.0156 l -0.0957,14.80664 c 0.0666,0.0583 0.13383,0.11615 0.20118,0.17383 z m 301.84374,11.07618 -0.045,8.01367 c 0.1185,3.3e-4 0.237,-3.3e-4 0.3555,0 l -0.039,-7.91211 c -0.091,-0.0335 -0.1808,-0.0684 -0.2715,-0.10156 z m -288.16991,49.98632 c 0.007,0.8689 0.0145,1.68828 0.0234,2.45313 0.2562,0.0255 0.51332,0.0507 0.76953,0.0762 v -2.51562 c -0.26417,-0.005 -0.5288,-0.009 -0.79297,-0.0137 z m -13.33008,0.57032 c -0.1161,0.15164 -0.2328,0.30279 -0.34766,0.45507 0.11628,0.0131 0.2333,0.0263 0.34961,0.0391 z m 196.91799,22.19336 c 1.1476,0.13699 2.2957,0.2749 3.4433,0.4121 0.1915,-0.0225 0.3102,-0.0496 0.3477,-0.0762 v -0.002 -0.002 -0.002 -0.002 -0.002 -0.002 -0.002 -0.004 -0.002 -0.002 -0.002 -0.004 c -0.039,-0.0464 -0.3044,-0.0986 -0.8164,-0.15234 -0.8072,-0.0849 -1.8565,-0.13732 -2.9746,-0.15625 z"
           />
-          {/* Separated dark blue diamond (rightmost) */}
           <path
             id="path2_diamond"
             fill={fill2_diamond}
             d="m -164.30313,844.6664 c -3.96633,-1.2229 -8.71327,-5.6687 -39,-36.526 -19.63831,-20.0082 -35.2261,-36.7068 -36.20778,-38.788 -2.0336,-4.31115 -2.24129,-9.87002 -0.57638,-15.427 1.33027,-4.44003 4.27732,-7.73334 44.57938,-49.81709 14.01841,-14.63814 26.93668,-27.26255 29,-28.34033 4.67096,-2.43989 12.5047,-2.54082 17.3133,-0.22307 5.45728,2.63041 69.481698,70.43637 72.102528,76.36119 2.43283,5.49981 2.13179,14.8255 -0.65237,20.2095 -0.94629,1.8299 -16.82624,18.5756 -35.288798,37.2127 -30.982,31.2749 -33.95537,34.0006 -38.59258,35.3777 -5.96928,1.7727 -6.80781,1.7701 -12.6773,-0.04 z"
           />
-          {/* Separated brand text "Cred" */}
           <path
             id="path2_text"
             fill={fill2_text}
@@ -373,11 +742,31 @@ export function BrandLogo({
   );
 }
 
-export function CheckCircleIcon({ size = 20, className }: IconProps) {
+export function CredaliaLogo({ size = 48, className }: IconProps) {
   return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <circle cx="12" cy="12" r="10" />
-      <path d="M8 12 l2.5 2.5 L16 9" />
+    <svg 
+      aria-hidden="true" 
+      width={size} 
+      height={size} 
+      viewBox="0 0 512 512" 
+      className={className}
+      style={{ height: 'auto', aspectRatio: '1 / 1' }}
+    >
+      <path
+        style={{ fill: '#d6613c', strokeWidth: 0.781701 }}
+        d="m 256.37395,418.86896 c -3.61821,-1.04343 -8.45796,-3.56092 -10.93529,-5.68819 -1.19203,-1.02358 -8.93678,-10.08224 -17.21053,-20.13037 -33.11767,-40.21995 -85.64083,-103.17575 -94.95695,-113.81819 -3.19993,-3.6555 -5.4027,-7.10112 -7.0922,-11.0937 -3.97551,-9.39494 -4.89558,-14.07466 -4.47805,-22.7767 0.45389,-9.45986 2.36715,-16.38195 6.29188,-22.7638 2.708,-4.40339 18.19761,-23.56476 47.9426,-59.30719 18.58289,-22.32977 64.60444,-78.283339 65.82649,-80.032695 0.64935,-0.929532 3.16315,-3.191726 5.58622,-5.027082 10.68682,-8.094769 23.24025,-8.070424 33.83628,0.06562 3.06083,2.350238 25.07783,30.210587 25.07783,31.733557 0,0.61467 -5.17485,6.97181 -25.07582,30.8049 -38.59347,46.21896 -65.43288,78.99328 -66.78937,81.55833 -4.60991,8.71704 -7.03306,21.49503 -5.78724,30.5176 0.95081,6.88594 3.15804,14.72089 5.44875,19.34122 0.97235,1.9612 9.86932,12.83699 19.77104,24.16841 39.99934,45.77474 72.08141,83.53525 72.08141,84.83954 0,1.56813 -21.81778,28.82886 -25.40852,31.74725 -5.14771,4.18386 -9.78515,6.00932 -16.01986,6.306 -3.10042,0.14753 -6.74931,-0.0524 -8.10867,-0.44451 z"
+        id="path103"
+      />
+      <path
+        id="path101"
+        style={{ fill: '#387758', strokeWidth: 0.770073 }}
+        d="m 356.08255,68.127636 c -0.72608,-0.0015 -1.47617,0.04258 -2.07617,0.132613 -1.20001,0.180074 -0.3791,0.33109 1.82422,0.335255 2.20335,0.0046 3.18489,-0.14319 2.18164,-0.327806 -0.50163,-0.09214 -1.20361,-0.138604 -1.92969,-0.140062 z m -197.72461,0.925307 c -4.40166,-0.0708 -7.9203,1.135373 -12.5918,4.037969 -4.67966,2.907664 -6.52754,4.825979 -15.4668,16.044594 -5.58408,7.007906 -15.26395,19.054194 -21.50976,26.769794 -6.24579,7.71561 -22.619461,28.04471 -36.386721,45.17607 -13.767259,17.13141 -29.491351,36.66598 -34.941411,43.41042 -10.71652,13.26165 -12.22512,15.57316 -15.20117,23.28016 -3.06847,7.9463 -4.09948,15.37317 -3.26562,23.50515 0.79369,7.74011 1.60372,10.83491 4.76562,18.20512 1.97462,4.60273 9.28669,13.78518 60.332034,75.75588 61.387298,74.52624 60.209088,73.22359 67.587888,74.72776 11.36092,2.31592 21.02365,-1.96995 28.63477,-12.70097 2.13528,-3.01057 5.54436,-7.68264 7.57617,-10.38251 5.99122,-7.96105 9.48632,-13.28056 9.2539,-14.08819 -0.11955,-0.41542 -7.57949,-9.96105 -16.57617,-21.212 -22.44112,-28.06404 -35.06481,-44.0236 -53.79492,-68.00775 -5.82097,-7.45385 -10.78827,-13.55178 -11.03906,-13.55178 -0.91658,1e-5 -4.74178,-8.16085 -7.07226,-15.08798 -2.11154,-6.27646 -2.42951,-8.15567 -2.71094,-16.03567 -0.28971,-8.11183 -0.15716,-9.5119 1.45898,-15.32342 2.81962,-10.13917 4.97854,-14.70918 10.0918,-21.36696 2.62694,-3.42045 18.56775,-24.24108 35.42382,-46.26677 16.85606,-22.02572 34.0308,-44.35005 38.16602,-49.61041 l 7.51953,-9.56447 -3.51367,-4.99606 c -1.93194,-2.7483 -5.96372,-8.331638 -8.96094,-12.40744 -2.99725,-4.0758 -5.92039,-8.279803 -6.49414,-9.34097 -0.57375,-1.061175 -3.4188,-3.66914 -6.32226,-5.796199 -4.30408,-3.153163 -6.18569,-4.019388 -10.19141,-4.692091 -1.73928,-0.292088 -3.30426,-0.457678 -4.77148,-0.481277 z m 126.96484,70.777697 c -0.13486,0.16858 -0.24843,0.31337 -0.33984,0.43211 0.14003,-0.10899 0.2803,-0.21842 0.41992,-0.32782 -0.0273,-0.0341 -0.0548,-0.0684 -0.0801,-0.10429 z m 141.54883,0.74949 c 0.30947,0.56741 0.64565,1.1259 1.01953,1.66882 0.4359,0.63298 0.92325,1.24608 1.48047,1.82976 0.10167,0.10649 0.20608,0.21137 0.3125,0.31589 0.45543,0.41591 0.9292,0.81825 1.41992,1.20692 -0.97543,-1.16469 -2.18255,-2.59649 -3.66797,-4.35386 z m -194.11133,67.0124 c -0.89679,1.16617 -1.44349,1.93905 -1.42383,2.0309 v 0.002 l 0.002,0.002 v 0.002 h 0.002 v 0.002 h 0.002 l 0.002,0.002 h 0.002 0.002 0.002 0.002 c 0.0957,-0.0164 0.60463,-0.54547 1.36719,-1.40658 -2.9e-4,-0.20105 0.0128,-0.41169 0.041,-0.63177 z m 253.83985,8.29944 c 0.545,0.6476 0.87595,1.02067 0.91015,1.02067 0.22023,0 0.1933,-0.19159 -0.4082,-0.99384 -0.16009,-0.009 -0.32802,-0.0167 -0.50195,-0.0269 z m 9.44726,28.16893 -0.002,0.002 h -0.002 l -0.002,0.002 h -0.002 c -0.0811,0.0661 -0.13797,0.9209 -0.14453,2.38106 -0.004,1.56949 0.0602,2.53451 0.15234,2.61649 l 0.002,0.002 h 0.002 l 0.002,0.002 h 0.002 0.002 0.002 0.002 0.002 v -0.002 c 0.0331,-0.0173 0.073,-0.14193 0.11132,-0.38294 0.15934,-0.99514 0.16208,-2.81552 0.01,-4.04541 -0.0444,-0.35551 -0.0875,-0.53999 -0.125,-0.5692 l -0.002,-0.002 -0.002,-0.002 h -0.002 -0.002 v -0.002 h -0.002 z m -48.33789,82.35073 c -0.2109,0.22816 -0.42124,0.45611 -0.63281,0.68392 -1.26974,1.35938 -2.50695,2.73544 -3.72461,4.12142 -0.2438,0.33268 -0.37528,0.53481 -0.37891,0.57961 v 0.002 0.002 0.002 l 0.002,0.002 v 0.002 h 0.002 0.002 c 0.12468,0 2.02926,-2.18133 4.73047,-5.3924 z m -158.83789,27.65785 c 3.22407,3.97499 5.86151,7.17521 6.72656,8.16385 -0.20723,-0.30363 -0.44752,-0.59276 -0.66015,-0.89401 0.0362,-0.15036 -2.4045,-3.0562 -3.50391,-4.42687 -0.61494,-0.70185 -1.19703,-1.41781 -1.87109,-2.09349 -0.23012,-0.25028 -0.46019,-0.49978 -0.69141,-0.74948 z m 110.66211,32.39019 c -0.28922,0.34662 -0.58651,0.70312 -0.88867,1.06834 -0.0611,0.17122 -0.0301,0.0847 -0.11719,0.34121 -0.14767,0.43487 -0.32957,0.82598 -0.53906,1.17414 0.0594,-0.0416 0.11838,-0.0836 0.17773,-0.12516 0.12986,-0.15751 0.26115,-0.3168 0.39258,-0.4768 0.46877,-0.57072 0.92277,-1.12613 1.35547,-1.65989 -0.12697,-0.10856 -0.2513,-0.21387 -0.38086,-0.32184 z m -78.42188,8.0506 2.31446,2.88022 c 0.016,-0.0308 0.0312,-0.0619 0.0488,-0.091 z m 35.63282,27.2004 c -0.48405,-0.004 -0.99296,0.0448 -1.40821,0.14157 -0.83052,0.19352 -0.30868,0.35903 1.16016,0.36803 1.46882,0.01 2.15006,-0.14914 1.51172,-0.35164 -0.31918,-0.10123 -0.77962,-0.155 -1.26367,-0.15796 z"
+      />
+      <path
+        style={{ fill: '#042851', strokeWidth: 0.740797 }}
+        d="m 356.96913,415.0866 c -8.91982,-3.5226 -7.99419,-2.49277 -50.27034,-55.92806 -10.87485,-13.74534 -28.73621,-36.06199 -39.69188,-49.59257 -27.43603,-33.88425 -28.76784,-35.68502 -31.33473,-42.36827 -3.13571,-8.16429 -4.35428,-16.32244 -3.56587,-23.87307 1.3717,-13.13666 4.4556,-20.24507 14.08373,-32.46291 3.76262,-4.77465 11.4106,-14.65573 16.9955,-21.95794 5.5849,-7.3022 17.50296,-22.76572 26.48457,-34.36334 8.9816,-11.59762 18.22438,-23.54671 20.53952,-26.55349 30.59332,-39.733328 34.6755,-44.739713 38.51798,-47.238494 9.89409,-6.434147 20.67509,-6.370858 30.81853,0.180887 2.86934,1.853338 6.65601,6.149964 16.96272,19.247147 14.53275,18.46733 53.32468,67.55575 78.6994,99.58845 13.88723,17.53105 16.50793,21.22446 18.75715,26.43492 4.47469,10.36592 5.5697,21.62278 3.20206,32.9176 -2.4147,11.51943 -3.52016,13.26743 -27.21788,43.03939 -19.33009,24.28474 -40.26792,50.74101 -63.96333,80.82174 -20.40274,25.90073 -20.95188,26.52898 -25.64081,29.33416 -7.39575,4.42456 -16.46997,5.50131 -23.37632,2.77385 z"
+        id="path100"
+      />
     </svg>
   );
 }
