@@ -305,24 +305,23 @@ export function PhoneChat() {
                   <div className="t">10:32 <span className="checks">✓✓</span></div>
                 </div>
                 <div data-phone="wa-btns" className="wa-buttons">
-                  <button
-                    type="button"
-                    tabIndex={-1}
+                  <span
+                    aria-hidden="true"
                     onClick={() => openApply('direct')}
                     className="wa-btn"
                   >
                     Iniciar solicitud
-                  </button>
-                  <a
-                    href={buildWhatsAppUrl('hero', sim)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    tabIndex={-1}
-                    onClick={() => track('whatsapp_click', { ctx: 'hero' })}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    onClick={() => {
+                      track('whatsapp_click', { ctx: 'hero' });
+                      window.open(buildWhatsAppUrl('hero', sim), '_blank', 'noopener,noreferrer');
+                    }}
                     className="wa-btn wa-btn--secondary"
                   >
                     Chatear por WhatsApp
-                  </a>
+                  </span>
                 </div>
               </div>
             </div>

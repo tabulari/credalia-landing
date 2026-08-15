@@ -16,6 +16,8 @@ export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
   const h1Ref = useRef<HTMLHeadingElement>(null);
 
+  const amountLabel = `$${fmtCOP(config.simulator.amountMax).replace(',00', '')}`;
+
   useGSAP(() => {
     const mm = gsap.matchMedia();
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -36,19 +38,23 @@ export function Hero() {
       if (badge) tl.from(badge, { y: 20, autoAlpha: 0, duration: 0.6 }, 0);
 
       if (h1) {
-        const split = SplitText.create(h1, { type: 'chars, words', aria: 'hidden' });
-        tl.from(split.chars, {
-          y: 60,
+        const split = SplitText.create(h1, { type: 'words', aria: 'hidden' });
+        // Animate the phrase words, leaving the amount span for its own pop.
+        const words = split.words.filter(
+          (w) => !w.closest('[data-hero="amount"]'),
+        );
+        tl.from(words, {
+          y: 44,
           autoAlpha: 0,
-          stagger: 0.025,
-          duration: 0.7,
+          stagger: 0.06,
+          duration: 0.65,
         }, 0.1);
       }
 
-      if (amount) tl.from(amount, { scale: 0.85, autoAlpha: 0, duration: 0.6, ease: 'back.out(1.4)' }, 0.35);
-      if (subhead) tl.from(subhead, { y: 15, autoAlpha: 0, duration: 0.5 }, 0.5);
-      if (ctas) tl.from(ctas as Element, { y: 20, autoAlpha: 0, duration: 0.5 }, 0.65);
-      if (whatsapp) tl.from(whatsapp, { autoAlpha: 0, duration: 0.4 }, 0.85);
+      if (amount) tl.from(amount, { scale: 0.82, autoAlpha: 0, duration: 0.6, ease: 'back.out(1.4)' }, 0.42);
+      if (subhead) tl.from(subhead, { y: 15, autoAlpha: 0, duration: 0.5 }, 0.55);
+      if (ctas) tl.from(ctas as Element, { y: 20, autoAlpha: 0, duration: 0.5 }, 0.7);
+      if (whatsapp) tl.from(whatsapp, { autoAlpha: 0, duration: 0.4 }, 0.9);
 
       if (phone) {
         const phoneEl = phone.querySelector('.phone');
@@ -68,17 +74,25 @@ export function Hero() {
     <section ref={containerRef} aria-labelledby="hero-heading" className="pt-12 pb-8 lg:pt-16 lg:pb-12 overflow-hidden hero-atmosphere">
       <div className="mx-auto max-w-container px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
         <div className="flex flex-col gap-3 lg:gap-4 relative z-10">
-          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-1">Crédito digital</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink">
+            Crédito digital para todos
+          </p>
           <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
             <ShieldCheckIcon size={20} className="text-green-ink" />
             {config.disbursementTime
               ? `100% en línea · Dinero en ${config.disbursementTime}`
               : '100% en línea'}
           </span>
-          <h1 ref={h1Ref} id="hero-heading" className="text-5xl lg:text-7xl font-display tracking-tight text-navy leading-tight">
+          <h1
+            ref={h1Ref}
+            id="hero-heading"
+            className="font-display tracking-tight text-navy leading-[1.08] [text-wrap:balance] text-[2.6rem] sm:text-6xl lg:text-7xl"
+          >
             Crédito digital hasta{' '}
+            <span data-hero="amount" className="font-sans font-extrabold text-orange whitespace-nowrap text-[1.16em]">
+              {amountLabel}
+            </span>
           </h1>
-          <span data-hero="amount" className="block text-6xl lg:text-8xl tracking-tight font-extrabold text-orange leading-none">{`$${fmtCOP(config.simulator.amountMax).replace(',00','')}`}</span>
           <p data-hero="subhead" className="text-lg font-normal text-muted-foreground">
             Respuesta en minutos. Tasa clara. Sin papeles.
           </p>
@@ -95,7 +109,6 @@ export function Hero() {
 
             {config.regulatorVerified && (
               <>
-                <span className="hidden sm:inline text-border" aria-hidden="true">·</span>
                 <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-2">
                   <ShieldCheckIcon size={16} className="text-muted-2" />
                   Vigilados por <b>{config.regulatorShortName}</b>

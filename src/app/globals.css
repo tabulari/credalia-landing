@@ -18,12 +18,44 @@
     --green-soft-ink: #137038;
     --green-tint: #e7faf4;
     --ink: #14213d;
-    --muted-2: #677085;
+    --muted-2: #677085; /* tertiary / labels — AA 4.5:1 on white & soft */
     --bg-soft: #f7f9fa;
     --border-2: #eef1f4;
     --error: #c5392c;
     --hint-ink: #9a4a16;
     --hint-bg: #fff4ed;
+
+    /* Semantic surface tokens */
+    --surface-primary: #ffffff;
+    --surface-secondary: #f7f9fa;
+    --surface-tertiary: #f0f4f8;
+    --surface-dark: #0d2a5e;
+    --surface-dark-card: #11213f;
+
+    /* Semantic text tokens */
+    --text-primary: #14213d;
+    --text-secondary: #5d6b82;
+    --text-muted: #677085;
+    --text-inverse: #ffffff;
+
+    /* Semantic brand tokens */
+    --brand-primary: #0d2a5e;
+    --brand-accent: #1e9e55;
+    --brand-orange: #f5601b;
+
+    /* Semantic status tokens */
+    --status-success: #1e9e55;
+    --status-success-bg: #e7faf4;
+    --status-success-text: #137038;
+    --status-warning: #d97706;
+    --status-warning-bg: #fef3c7;
+    --status-warning-text: #92400e;
+    --status-error: #c5392c;
+    --status-error-bg: #fde8e8;
+    --status-error-text: #9b1c1c;
+    --status-info: #0284c7;
+    --status-info-bg: #e0f2fe;
+    --status-info-text: #075985;
 
     /* ShadCN semantic tokens */
     --background: #ffffff;
@@ -125,6 +157,18 @@
     animation: overlay-out 0.15s ease-in;
   }
 
+  /* Financial and layout utilities */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  .table-clip {
+    overflow-x: clip;
+  }
+
   /* Tailwind v3 ring utility: box-shadow with var() doesn't resolve in the
      computed style in some Chromium versions, so the ring is invisible.
      This fallback gives every button, [role=radio], and accordion trigger a
@@ -222,6 +266,103 @@ a:focus-visible {
   transform: rotate(45deg);
 }
 
+/* ===== legal pages (/legal/<doc>) ===== */
+.legal-page {
+  background: var(--bg-soft);
+  min-height: 100vh;
+}
+.legal-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 64px 24px 96px;
+}
+.legal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--muted-foreground);
+  margin-bottom: 34px;
+  transition: color 0.15s;
+}
+.legal-back:hover { color: var(--navy); }
+.legal-eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  margin: 0 0 8px;
+}
+.legal-wrap h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+}
+.legal-meta {
+  font-size: 0.875rem;
+  color: var(--muted-2);
+  margin: 0 0 32px;
+}
+.legal-draft {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  background: #fff7ed;
+  border: 1px solid #fcd9b6;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 38px;
+}
+.legal-draft svg {
+  color: var(--orange);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.legal-draft p {
+  margin: 0;
+  font-size: 0.90625rem;
+  line-height: 1.55;
+  color: #8a5520;
+}
+.legal-draft b { color: #7a4513; }
+.legal-body h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--navy-ink);
+  margin: 34px 0 10px;
+}
+.legal-body p {
+  font-size: 0.96875rem;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+  margin: 0 0 14px;
+}
+.legal-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin: 14px 0 8px;
+}
+.legal-skeleton span {
+  height: 13px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--border-2), #f3f5f8, var(--border-2));
+  background-size: 200% 100%;
+}
+.legal-skeleton span:nth-child(4) { width: 72%; }
+.legal-foot {
+  margin-top: 48px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border);
+  font-size: 0.84375rem;
+  color: var(--muted-2);
+}
+.legal-foot a { color: var(--navy); font-weight: 700; }
+
 /* ===== keyframes ===== */
 @keyframes popIn {
   from { transform: scale(0.4); opacity: 0; }
@@ -311,23 +452,6 @@ a:focus-visible {
 }
 .flash { animation: flash 0.28s ease-out; }
 
-/* ===== payment bar slide animation ===== */
-[data-slot="payment-bar"] {
-  transform: translateY(130%);
-  transition: transform 0.32s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-[data-slot="payment-bar"].show {
-  transform: none;
-}
-body.has-payment-bar {
-  padding-bottom: 5.125rem;
-}
-@media (max-width: 760px) {
-  body.has-payment-bar {
-    padding-bottom: 4.625rem;
-  }
-}
-
 /* ===== CTA banner ambient glow (static depth, no perpetual motion) ===== */
 .cta-glow {
   position: absolute;
@@ -356,6 +480,40 @@ body.has-payment-bar {
   background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.12), transparent);
 }
 
+/* ===== 3D Card & Tactile Utilities ===== */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.tactile-card {
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+.card-hologram {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(30, 158, 85, 0.2) 70%,
+    rgba(245, 96, 27, 0.15) 100%
+  );
+}
+
+@keyframes pulse-live {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.6; }
+}
+.animate-pulse-live {
+  animation: pulse-live 2s infinite ease-in-out;
+}
+
 /* ===== reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
@@ -367,6 +525,5 @@ body.has-payment-bar {
   .animate-overlay-out { animation: none !important; }
   .btn-spinner { animation: none !important; }
   .flash { animation: none !important; }
-  [data-slot="payment-bar"] { transition: none !important; }
   body::before { display: none; }
 }

@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { config } from '@/lib/config';
 import { WhatsAppLink } from './WhatsAppLink';
+import { BrandLogo } from './icons';
 
 export function Footer() {
   return (
@@ -9,15 +9,7 @@ export function Footer() {
       <div className="mx-auto max-w-container px-6 pt-14 pb-12 lg:pt-16 lg:pb-14 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-x-8 gap-y-10 overflow-hidden">
         <div className="col-span-2 md:col-span-4 lg:col-span-1">
           <a href="#top" aria-label={`${config.brandName} — inicio`} className="flex items-center gap-2 mb-3 min-h-[44px] py-1.5 text-white">
-            <Image
-              src="/brand_Logo.svg"
-              alt=""
-              aria-hidden="true"
-              width={0}
-              height={0}
-              sizes="100vw"
-              className="h-auto w-[168px] brightness-0 invert"
-            />
+            <BrandLogo variant="footer" height={46} className="h-auto" />
           </a>
            <p className="text-sm text-white/65 mb-4 max-w-[32ch]">
              Crédito digital simple, ágil y seguro. Tasa clara, 100% en línea y sin papeles.
@@ -25,11 +17,17 @@ export function Footer() {
          </div>
 
 
+        <nav aria-label="Plataforma" className="flex flex-col gap-0.5">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-1">Plataforma</h3>
+          <Link href="/mi-credito" className="text-sm text-white/70 hover:text-white transition-colors flex items-center min-h-[44px] py-1">Mi Crédito Activo</Link>
+          <Link href="/s/demo-token" className="text-sm text-white/70 hover:text-white transition-colors flex items-center min-h-[44px] py-1">Estado de Solicitud</Link>
+          <Link href="/backoffice" className="text-sm font-semibold text-green-bright hover:underline transition-colors flex items-center min-h-[44px] py-1">Operator Backoffice</Link>
+        </nav>
         <nav aria-label="Empresa" className="flex flex-col gap-0.5">
           <h3 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-1">Empresa</h3>
           <Link href="/legal/terminos" className="text-sm text-white/70 hover:text-white transition-colors flex items-center min-h-[44px] py-1">Términos y condiciones</Link>
           <Link href="/legal/privacidad" className="text-sm text-white/70 hover:text-white transition-colors flex items-center min-h-[44px] py-1">Privacidad</Link>
-          <a href="#seguridad" className="text-sm text-white/70 hover:text-white transition-colors flex items-center min-h-[44px] py-1">Seguridad</a>
+          <Link href="/legal/seguridad" className="text-sm text-white/70 hover:text-white transition-colors flex items-center min-h-[44px] py-1">Seguridad</Link>
         </nav>
         <nav aria-label="Ayuda" className="flex flex-col gap-0.5">
           <h3 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-1">Ayuda</h3>

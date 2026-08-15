@@ -92,7 +92,7 @@ export function CtaBanner() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} aria-labelledby="cta-heading" className="bg-navy-deep text-white py-16 lg:py-24 relative overflow-hidden">
+    <section ref={containerRef} aria-labelledby="cta-heading" className="bg-navy-deep text-white py-16 lg:py-24 relative z-10 -mt-2 overflow-hidden">
       <div className="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
       {/* ambient green light bloom behind the panel */}
       <div className="absolute left-1/4 top-12 -translate-x-1/2 w-72 h-72 cta-glow cta-glow--green pointer-events-none" aria-hidden="true" />

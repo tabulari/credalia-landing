@@ -1,138 +1,127 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { cn } from '@/lib/utils';
-import { PersonIcon, IdCardIcon, CreditCardIcon, DocumentIcon, CheckIcon } from './icons';
+import { PersonIcon, IdCardIcon, CreditCardIcon, DocumentIcon } from './icons';
 
-const REQS = [
-  { icon: <PersonIcon size={18} className="text-green" />, label: 'Ser mayor de edad' },
-  { icon: <IdCardIcon size={18} className="text-green" />, label: 'Cédula colombiana vigente' },
-  { icon: <CreditCardIcon size={18} className="text-green" />, label: 'Cuenta bancaria a tu nombre' },
-  { icon: <DocumentIcon size={18} className="text-green" />, label: 'Un soporte de ingresos' },
-];
-
-function AnimatedCheck() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="shrink-0" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" stroke="var(--green)" strokeWidth="1.5" className="opacity-30" />
-      <path
-        d="M8 12 l2.5 2.5 L16 9"
-        stroke="var(--green)"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        data-req="checkmark"
-        style={{ strokeDasharray: 14, strokeDashoffset: 14 }}
-      />
-    </svg>
-  );
+interface RequirementItem {
+  id: string;
+  icon: React.ReactNode;
+  title: string;
+  detail: string;
 }
+
+const REQUIREMENTS_DATA: RequirementItem[] = [
+  {
+    id: 'age',
+    icon: <PersonIcon size={22} className="text-green" />,
+    title: 'Tener más de 18 años',
+    detail: 'Vivir en Colombia.',
+  },
+  {
+    id: 'id',
+    icon: <IdCardIcon size={22} className="text-green" />,
+    title: 'Cédula de ciudadanía',
+    detail: 'Física o digital, que esté vigente.',
+  },
+  {
+    id: 'bank',
+    icon: <CreditCardIcon size={22} className="text-green" />,
+    title: 'Tu cuenta o Nequi',
+    detail: 'A tu nombre, para enviarte el dinero.',
+  },
+  {
+    id: 'income',
+    icon: <DocumentIcon size={22} className="text-green" />,
+    title: 'Soporte de ingresos',
+    detail: 'Un extracto o colilla reciente.',
+  },
+];
 
 export function Requirements() {
   const containerRef = useRef<HTMLElement>(null);
-  const [countDone, setCountDone] = useState(false);
 
   useGSAP(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) {
-      // No animation, but the content must still be in its resting (visible)
-      // state: draw the checkmarks and show the completed counter chip.
-      const marks = containerRef.current?.querySelectorAll('[data-req="checkmark"]');
-      marks?.forEach((cm) => gsap.set(cm, { strokeDashoffset: 0 }));
-      setCountDone(true);
-      return;
-    }
+    if (reduceMotion) return;
 
     const heading = containerRef.current?.querySelector('[data-req="heading"]');
-    const items = containerRef.current?.querySelectorAll('[data-req="item"]');
-    const checkmarks = containerRef.current?.querySelectorAll('[data-req="checkmark"]');
+    const cards = containerRef.current?.querySelectorAll('[data-req="card"]');
 
     if (heading) {
-      gsap.fromTo(heading, { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: 'power2.out',
-        scrollTrigger: { trigger: heading, start: 'top 85%' } });
-    }
-    if (items && items.length) {
-      gsap.fromTo(items, {
-        x: -20,
-        autoAlpha: 0,
-      }, {
-        x: 0,
-        autoAlpha: 1,
-        stagger: 0.1,
-        duration: 0.5,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: containerRef.current, start: 'top 80%' },
-      });
-    }
-
-    if (checkmarks && checkmarks.length) {
-      checkmarks.forEach((cm, i) => {
-        gsap.to(cm, {
-          strokeDashoffset: 0,
-          duration: 0.4,
-          delay: 0.2 + i * 0.12,
+      gsap.fromTo(
+        heading,
+        { y: 24, autoAlpha: 0 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.6,
           ease: 'power2.out',
-          scrollTrigger: { trigger: containerRef.current, start: 'top 80%' },
-        });
-      });
+          scrollTrigger: { trigger: heading, start: 'top 85%' },
+        },
+      );
     }
 
-    const counterEl = containerRef.current?.querySelector('[data-req="counter"]');
-    if (counterEl) {
-      const obj = { val: 0 };
-      gsap.to(obj, {
-        val: 4,
-        duration: 1.2,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: counterEl, start: 'top 90%' },
-        onUpdate: () => {
-          counterEl.textContent = `${Math.round(obj.val)} requisitos simples`;
+    if (cards && cards.length) {
+      gsap.fromTo(
+        cards,
+        { y: 24, autoAlpha: 0, scale: 0.98 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          scale: 1,
+          stagger: 0.08,
+          duration: 0.5,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: containerRef.current, start: 'top 78%' },
         },
-        onComplete: () => {
-          setCountDone(true);
-        },
-      });
+      );
     }
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} aria-labelledby="req-heading" className="py-16 lg:py-24 bg-white">
+    <section
+      ref={containerRef}
+      id="requisitos-band"
+      aria-labelledby="req-heading"
+      className="py-12 sm:py-14 lg:py-16 bg-white relative overflow-hidden"
+    >
       <div className="mx-auto max-w-container px-6">
-        <div className="mx-auto max-w-lg">
-          <div data-req="heading" className="mb-8 text-center">
-            <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-2">Requisitos</p>
-            <h2 id="req-heading" className="text-2xl lg:text-3xl font-display tracking-tight text-navy">
-              Solo necesitas 4 cosas
-            </h2>
-          </div>
+        {/* Header Block */}
+        <div data-req="heading" className="max-w-2xl mx-auto text-center mb-8 lg:mb-10 space-y-1.5">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-1">Requisitos</p>
+          <h2
+            id="req-heading"
+            className="text-3xl sm:text-4xl lg:text-5xl font-display tracking-tight text-navy leading-[1.12]"
+          >
+            Solo necesitas <span className="text-orange">4 cosas</span>
+          </h2>
+          <p className="text-base sm:text-lg text-muted-foreground font-normal leading-relaxed max-w-lg mx-auto">
+            Sin fiador ni papeleos. Puedes pedirlo desde tu celular en 5 minutos.
+          </p>
+        </div>
 
-          <ul role="list" className="flex flex-col gap-2">
-            {REQS.map((r) => (
-              <li
-                key={r.label}
-                data-req="item"
-                className="flex items-center gap-3 px-4 py-3 rounded-lg border border-border bg-card hover:-translate-y-0.5 hover:shadow-sm transition-all duration-300"
-              >
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-tint text-green shrink-0">
-                  {r.icon}
-                </span>
-                <span className="flex-1 text-sm font-medium text-foreground">{r.label}</span>
-                <AnimatedCheck />
-              </li>
-            ))}
-          </ul>
+        {/* 2x2 Clean Human Requirements Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+          {REQUIREMENTS_DATA.map((item) => (
+            <div
+              key={item.id}
+              data-req="card"
+              className="group rounded-2xl border border-border bg-card p-6 shadow-xs hover:shadow-md hover:border-green/40 hover:-translate-y-0.5 transition-all duration-200"
+            >
+              <div className="w-11 h-11 rounded-xl bg-green-tint border border-green/20 flex items-center justify-center mb-4 group-hover:scale-105 group-hover:bg-green group-hover:text-white transition-all duration-200">
+                <span className="group-hover:brightness-200 transition-all">{item.icon}</span>
+              </div>
 
-          <div className="mt-6 text-center">
-            <span data-req="counter" className={cn(
-              'inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-4 py-1.5 transition-opacity duration-500',
-              countDone ? 'opacity-100' : 'opacity-80',
-            )}>
-              {countDone && <CheckIcon size={16} className="text-green" />}
-              {countDone ? '4 requisitos simples' : ''}
-            </span>
-          </div>
+              <h3 className="text-base sm:text-lg font-bold text-navy mb-1 group-hover:text-green-ink transition-colors">
+                {item.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {item.detail}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
