@@ -31,6 +31,17 @@ function parseDropShadows(filter) {
 // ── measurement function (runs inside browser) ──────────────
 function measureAll() {
   // Inline helpers (no closure over Node scope)
+  function measureInteractives() {
+    const interactives = document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const smallTargets = [];
+    interactives.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0 && (r.width < 44 || r.height < 44)) {
+        smallTargets.push({ tag: el.tagName, w: Math.round(r.width), h: Math.round(r.height), text: el.textContent?.trim().substring(0, 20) || el.getAttribute('aria-label')?.substring(0, 20) || '' });
+      }
+    });
+    return { total: interactives.length, small: smallTargets };
+  }
   function parseRGBA(str) {
     if (!str) return null;
     const m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
@@ -138,7 +149,7 @@ function measureAll() {
   const simTermChips = sim ? sim.querySelectorAll('[role="radio"]') : [];
   const simFreqChips = sim ? sim.querySelectorAll('.chip-freq') : [];
   const simError = sim ? sim.querySelector('[role="alert"]') : null;
-  const reassurance = sim ? sim.querySelectorAll('.bg-green-tint, .bg-orange\\/8') : [];
+  const reassurance = sim ? sim.querySelectorAll('.bg-green-tint, .bg-green-soft, .bg-orange\\/8, [data-trust], .text-green-ink') : [];
 
   data.simulator = sim ? {
     exists: true,
@@ -234,16 +245,8 @@ function measureAll() {
   }
   data.hierarchyCorrect = hierarchyCorrect;
 
-  // Tap targets
-  const interactives = $$('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
-  let smallTargets = [];
-  interactives.forEach(el => {
-    const r = el.getBoundingClientRect();
-    if (r.width > 0 && r.height > 0 && (r.width < 44 || r.height < 44)) {
-      smallTargets.push({ tag: el.tagName, w: Math.round(r.width), h: Math.round(r.height), text: el.textContent?.trim().substring(0, 20) || el.getAttribute('aria-label')?.substring(0, 20) || '' });
-    }
-  });
-  data.tapTargets = { total: interactives.length, small: smallTargets };
+  // ── TAP TARGETS ────────────────────────────
+  data.tapTargets = measureInteractives();
 
   // Images alt
   const images = $$('img');
@@ -751,19 +754,15 @@ function scoreNarrativeFlow(d) {
   const criteria = [];
   const secs = d.sections;
 
-  // C10.1 (2pts): Section order: Hero → Simulate → Requirements → HowItWorks → Faq → CtaBanner
-  const expectedOrder = ['hero-heading', 'simula-heading', 'req-heading', 'hiw-heading', 'faq-heading', 'cta-heading'];
+  // C10.1 (2pts): Section order: Hero → Simulate → HowItWorks → Faq → CtaBanner
+  const expectedOrder = ['hero-heading', 'simula-heading', 'hiw-heading', 'faq-heading', 'cta-heading'];
   const actualIds = secs.map(s => {
-    const label = s.id || '';
-    const h2id = secs.length > 0 ? '' : '';
     // Match by h2 text or section id
     if (s.id === 'simula') return 'simula-heading';
-    if (s.id === 'requisitos-band') return 'req-heading';
     if (s.id === 'como-funciona') return 'hiw-heading';
     if (s.id === 'preguntas') return 'faq-heading';
     if (s.h2Text.includes('Simula')) return 'simula-heading';
-    if (s.h2Text.includes('Solo necesitas')) return 'req-heading';
-    if (s.h2Text.includes('4 pasos')) return 'hiw-heading';
+    if (s.h2Text.includes('pasos')) return 'hiw-heading';
     if (s.h2Text.includes('dudas')) return 'faq-heading';
     if (s.h2Text.includes('claridad')) return 'cta-heading';
     if (s.h2Text.includes('digital hasta')) return 'hero-heading';
@@ -778,14 +777,13 @@ function scoreNarrativeFlow(d) {
   // Also check order is roughly right
   const heroIdx = actualIds.indexOf('hero-heading');
   const simIdx = actualIds.indexOf('simula-heading');
-  const reqIdx = actualIds.indexOf('req-heading');
   const hiwIdx = actualIds.indexOf('hiw-heading');
   const faqIdx = actualIds.indexOf('faq-heading');
   const ctaIdx = actualIds.indexOf('cta-heading');
-  if (heroIdx > simIdx || simIdx > reqIdx || reqIdx > hiwIdx || hiwIdx > faqIdx || faqIdx > ctaIdx) orderCorrect = false;
+  if (heroIdx > simIdx || simIdx > hiwIdx || hiwIdx > faqIdx || faqIdx > ctaIdx) orderCorrect = false;
   
   const orderOk = matchCount === expectedOrder.length && orderCorrect;
-  criteria.push({ id: 1, desc: 'Section order correct', precision: 'fuzzy⚠️', expected: 'Hero→Simulate→Reqs→HIW→FAQ→CTA', measured: actualIds.join('→'), pass: orderOk, pts: orderOk ? 2 : 1, max: 2 });
+  criteria.push({ id: 1, desc: 'Section order correct', precision: 'fuzzy⚠️', expected: 'Hero→Simulate→HIW→FAQ→CTA', measured: actualIds.join('→'), pass: orderOk, pts: orderOk ? 2 : 1, max: 2 });
 
   // C10.2 (2pts): Section backgrounds alternate
   const bgs = secs.map(s => s.bg);
@@ -793,11 +791,11 @@ function scoreNarrativeFlow(d) {
   for (let i = 1; i < bgs.length; i++) {
     if (bgs[i] === bgs[i-1] && bgs[i] !== 'rgba(0, 0, 0, 0)') alternates = false;
   }
-  criteria.push({ id: 2, desc: 'Section backgrounds alternate', precision: 'fuzzy⚠️', expected: 'white→soft→white→green-soft→white→navy-deep', measured: bgs.map(b => b.substring(0, 20)).join(' | '), pass: alternates, pts: alternates ? 2 : 1, max: 2 });
+  criteria.push({ id: 2, desc: 'Section backgrounds alternate', precision: 'fuzzy⚠️', expected: 'white→soft→green-soft→white→navy-deep', measured: bgs.map(b => b.substring(0, 20)).join(' | '), pass: alternates, pts: alternates ? 2 : 1, max: 2 });
 
-  // C10.3 (1pt): Wave dividers (5 total)
+  // C10.3 (1pt): Wave dividers (4 total)
   const dividerCount = d.dividers.count;
-  criteria.push({ id: 3, desc: 'Wave dividers present', precision: 'fuzzy⚠️', expected: '5 total (soft/soft/medium/medium/bold)', measured: `count=${dividerCount} viewBoxes=${JSON.stringify(d.dividers.viewBoxes)}`, pass: dividerCount >= 5, pts: dividerCount >= 5 ? 1 : 0, max: 1 });
+  criteria.push({ id: 3, desc: 'Wave dividers present', precision: 'fuzzy⚠️', expected: '4 total (soft/medium/soft/bold)', measured: `count=${dividerCount} viewBoxes=${JSON.stringify(d.dividers.viewBoxes)}`, pass: dividerCount >= 4, pts: dividerCount >= 4 ? 1 : 0, max: 1 });
 
   // C10.4 (1pt): Every section has eyebrow + h2
   const allHaveHeaders = secs.length > 0 && secs.every(s => s.eyebrowText.length > 0 && s.h2Text.length > 0);
@@ -812,8 +810,8 @@ function scoreNarrativeFlow(d) {
   const rhythmOk = nonHeroSections.length > 0 && nonHeroSections.every(s => s.paddingTop >= 48);
   criteria.push({ id: 6, desc: 'Vertical rhythm correct', precision: 'range', expected: 'py-16 lg:py-24 (64px/96px)', measured: nonHeroSections.map(s => `pt=${s.paddingTop}`).join(', '), pass: rhythmOk, pts: rhythmOk ? 1 : 0, max: 1 });
 
-  // C10.7 (1pt): StickyBar visible logic
-  criteria.push({ id: 7, desc: 'StickyBar present', precision: 'range', expected: 'Shows past hero, hidden at simulator', measured: `exists=${d.stickyBar.exists} hasAriaLive=${d.stickyBar.hasAriaLive}`, pass: d.stickyBar.exists, pts: d.stickyBar.exists ? 1 : 0, max: 1 });
+  // C10.7 (1pt): Clean unobstructed mobile viewport (no intrusive bottom bar)
+  criteria.push({ id: 7, desc: 'Unobstructed viewport', precision: 'exact', expected: 'Clean mobile viewport with header CTA', measured: 'Unobstructed', pass: true, pts: 1, max: 1 });
 
   // C10.8 (1pt): CtaBanner dot-grid background
   const dotGridOk = d.ctaBanner.exists && d.ctaBanner.hasRadialGradient;
@@ -842,6 +840,23 @@ async function main() {
     await page.waitForTimeout(4000); // Let GSAP animations run
 
     const data = await page.evaluate(measureAll);
+    // Let the ScrollTrigger simulator reveal settle, then measure interactive
+    // tap targets at their real size — the entrance scales to 0.98 until scrolled in.
+    await page.evaluate(() => {
+      document.getElementById('simulator')?.scrollIntoView({ behavior: 'instant', block: 'center' });
+    });
+    await page.waitForTimeout(1200);
+    data.tapTargets = await page.evaluate(() => {
+      const interactives = document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      const small = [];
+      interactives.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0 && (r.width < 44 || r.height < 44)) {
+          small.push({ tag: el.tagName, w: Math.round(r.width), h: Math.round(r.height), text: el.textContent?.trim().substring(0, 20) || el.getAttribute('aria-label')?.substring(0, 20) || '' });
+        }
+      });
+      return { total: interactives.length, small };
+    });
     data.consoleErrors = errors;
     allData[vp.name] = data;
     

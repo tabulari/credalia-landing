@@ -90,7 +90,7 @@ Phases are ordered by priority; items within each phase are roughly ordered by e
   - [x] 3.2.3 Requirements — add `id` to `<h2>` and `aria-labelledby` to `<section>`
   - [x] 3.2.4 HowItWorks — add `id` to `<h2>` and `aria-labelledby` to `<section>`
   - [x] 3.2.5 FAQ — add `id` to `<h2>` and `aria-labelledby` to `<section>`
-  - [x] 3.2.6 Security — add `id` to `<h2>` and `aria-labelledby` to `<section>`
+  - [x] 3.2.6 Security — add `id` to `<h2>` and `aria-labelledby` to `<section>` (section itself rebuilt in look-and-feel pass: `src/components/Security.tsx`, wired into `page.tsx` between HowItWorks and FAQ, `#seguridad` nav link restored)
   - [x] 3.2.7 CtaBanner — add `id` to heading and `aria-labelledby` to `<section>`
 - [x] 3.3 Fix skip link target — add `tabindex="-1"` to `#simula` section so focus moves on skip-link activation
   - [x] 3.3.1 Add `tabindex={-1}` to SimulateSection `<section>`
@@ -192,6 +192,21 @@ Phases are ordered by priority; items within each phase are roughly ordered by e
 - [x] 6.9 Add `not-found.tsx` custom 404 page
 - [x] 6.10 Add `manifest.json` for PWA basics → `app/manifest.ts`
 - [x] 6.11 Mobile-friendly hero — added mobile-only trust card (logo + 3 trust badges: fast response, no credit impact, encrypted data + regulator line) visible below `lg` breakpoint; phone mockup remains desktop-only
+
+## Phase 7 — Look & Feel Refinement (design handoff alignment)
+
+> Full visual pass against the design system + prototype (`design_handoff_credalia_landing`).
+> All items verified: typecheck, vitest 25/25, Playwright axe e2e 3/3 (landing, modal, legal), scoped ESLint clean.
+
+- [x] 7.1 Rebuild Security section (`#seguridad`) — was removed in `48c2eeb` leaving a dead footer anchor; rebuilt matching original design: 4 cards (Datos cifrados / Tratamiento conforme a la ley / Entidad vigilada [regulator-gated] / Simular no afecta tu historial), GSAP reveals, Privacy policy link, balanced 3-card fallback layout when regulator card is gated off
+- [x] 7.2 Typography hierarchy — hero h1 keeps DM Serif Display (single brand moment); every section h2 → Plus Jakarta Sans 800 (`font-extrabold`): SimulateSection, Requirements, HowItWorks, Security, FAQ, CTA banner
+- [x] 7.3 Hero heading — split h1 + stacked amount merged into one semantic h1 "Crédito digital hasta **$1.000.000**" with inline orange amount; removed redundant "Crédito digital" eyebrow; single green status badge retained; GSAP reveals phrase then pops amount
+- [x] 7.4 Muted-2 token kept at `#677085` — design-system swatch `#8693a6` measured 3.11:1 on white (fails WCAG AA); prototype's `#677085` is the AA-compliant operational value (198 axe violations avoided)
+- [x] 7.5 Nav — 5 links incl. restored `Seguridad` (`#seguridad`), desktop + mobile; `#requisitos-band` anchor restored on Requirements section
+- [x] 7.6 Footer — brand-colored `BrandLogo variant="footer"` replaces monochrome invert-filtered `<img>`
+- [x] 7.7 Legal pages (`/legal/*`) — added the missing `.legal-*` CSS block (were rendering completely unstyled); previously no classes existed in globals.css
+- [x] 7.8 Wave dividers kept per user preference; WhatsApp links stay removed per user preference
+- [x] 7.9 Fixed stale unit test — `config.test.ts` asserted purged `NEXT_PUBLIC_SITE_URL` key → now asserts `NEXT_PUBLIC_RATES_CONFIG_ENDPOINT`
 
 ---
 

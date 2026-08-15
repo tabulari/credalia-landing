@@ -31,8 +31,10 @@ describe("production placeholder guard", () => {
       [...PLACEHOLDER_KEYS].sort(),
     );
     const env = allRealEnv();
-    env.NEXT_PUBLIC_SITE_URL = "";
-    expect(findUnresolvedPlaceholders(env)).toContain("NEXT_PUBLIC_SITE_URL");
+    env.NEXT_PUBLIC_RATES_CONFIG_ENDPOINT = "";
+    expect(findUnresolvedPlaceholders(env)).toContain(
+      "NEXT_PUBLIC_RATES_CONFIG_ENDPOINT",
+    );
   });
 
   it("passes when every placeholder is replaced with a real value", () => {
