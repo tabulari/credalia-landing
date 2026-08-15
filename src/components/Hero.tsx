@@ -1,179 +1,74 @@
 'use client';
 
-import { useRef } from 'react';
-import Image from 'next/image';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
-import { SplitText } from 'gsap/SplitText';
-import { config } from '@/lib/config';
-import { fmtCOP } from '@/lib/credit';
-import { ApplyButton } from './ApplyButton';
 import { ScrollButton } from './ScrollButton';
+import { ApplyButton } from './ApplyButton';
 import { PhoneChat } from './PhoneChat';
-import { ShieldCheckIcon, LockIcon, ClockIcon } from './icons';
+import { ShieldCheckIcon, LockIcon } from './icons';
 
 export function Hero() {
-  const containerRef = useRef<HTMLElement>(null);
-  const h1Ref = useRef<HTMLHeadingElement>(null);
-
-  const amountLabel = `$${fmtCOP(config.simulator.amountMax).replace(',00', '')}`;
-
-  useGSAP(() => {
-    const mm = gsap.matchMedia();
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-      const badge = containerRef.current?.querySelector('[data-hero="badge"]');
-      const h1 = h1Ref.current;
-      const amount = containerRef.current?.querySelector('[data-hero="amount"]');
-      const subhead = containerRef.current?.querySelector('[data-hero="subhead"]');
-      const ctas = containerRef.current?.querySelector('[data-hero="ctas"]');
-      const whatsapp = containerRef.current?.querySelector('[data-hero="whatsapp"]');
-      const phone = containerRef.current?.querySelector('[data-hero="phone"]');
-      const trustCard = containerRef.current?.querySelector('[data-hero="trust-card"]');
-
-      if (badge) tl.from(badge, { y: 20, autoAlpha: 0, duration: 0.6 }, 0);
-
-      if (h1) {
-        const split = SplitText.create(h1, { type: 'words', aria: 'hidden' });
-        // Animate the phrase words, leaving the amount span for its own pop.
-        const words = split.words.filter(
-          (w) => !w.closest('[data-hero="amount"]'),
-        );
-        tl.from(words, {
-          y: 44,
-          autoAlpha: 0,
-          stagger: 0.06,
-          duration: 0.65,
-        }, 0.1);
-      }
-
-      if (amount) tl.from(amount, { scale: 0.82, autoAlpha: 0, duration: 0.6, ease: 'back.out(1.4)' }, 0.42);
-      if (subhead) tl.from(subhead, { y: 15, autoAlpha: 0, duration: 0.5 }, 0.55);
-      if (ctas) tl.from(ctas as Element, { y: 20, autoAlpha: 0, duration: 0.5 }, 0.7);
-      if (whatsapp) tl.from(whatsapp, { autoAlpha: 0, duration: 0.4 }, 0.9);
-
-      if (phone) {
-        const phoneEl = phone.querySelector('.phone');
-        if (phoneEl) tl.from(phoneEl, { y: 50, autoAlpha: 0, rotateY: -8, scale: 0.94, duration: 0.7, ease: 'power3.out' }, 0.15);
-      }
-
-      if (trustCard) {
-        const items = trustCard.querySelectorAll('[data-hero="trust-item"]');
-        tl.from(items, { y: 15, autoAlpha: 0, stagger: 0.08, duration: 0.4 }, 0.7);
-      }
-    }, containerRef);
-
-    return () => { mm.revert(); ctx.revert(); };
-  }, { scope: containerRef });
-
   return (
-    <section ref={containerRef} aria-labelledby="hero-heading" className="pt-12 pb-8 lg:pt-16 lg:pb-12 overflow-hidden hero-atmosphere">
-      <div className="mx-auto max-w-container px-6 grid stack:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
-        <div className="flex flex-col gap-3 lg:gap-4 relative z-10">
-          <p className="text-xs font-semibold uppercase tracking-widest text-green-ink">
-            Crédito digital para todos
-          </p>
-          <span data-hero="badge" className="inline-flex items-center gap-2 text-sm font-semibold text-green-ink bg-green-tint rounded-full px-3 py-1.5 w-fit">
-            <ShieldCheckIcon size={20} className="text-green-ink" />
-            {config.disbursementTime
-              ? `100% en línea · Dinero en ${config.disbursementTime}`
-              : '100% en línea'}
-          </span>
+    <section
+      aria-labelledby="hero-heading"
+      className="pt-10 pb-12 sm:pt-14 sm:pb-16 lg:pt-16 lg:pb-20 overflow-hidden bg-white"
+    >
+      <div className="mx-auto max-w-container px-6 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        {/* ───────────────────────────────────────────────────────────── */}
+        {/* LEFT COLUMN: Original High-Converting Value Proposition       */}
+        {/* ───────────────────────────────────────────────────────────── */}
+        <div className="lg:col-span-6 flex flex-col items-start text-left space-y-6 z-10">
+          {/* Display H1 with Electric Institutional Orange Highlight */}
           <h1
-            ref={h1Ref}
             id="hero-heading"
-            className="font-display tracking-tight text-navy leading-[1.08] [text-wrap:balance] text-[2.6rem] sm:text-6xl lg:text-7xl"
+            className="text-4xl sm:text-5xl lg:text-6xl font-display tracking-tight text-navy leading-[1.12]"
           >
-            Crédito digital hasta{' '}
-            <span data-hero="amount" className="font-sans font-extrabold text-orange whitespace-nowrap text-[1.16em]">
-              {amountLabel}
-            </span>
+            Crédito digital <br className="hidden sm:inline" />
+            hasta <span className="text-orange">$1.000.000</span>
           </h1>
-          <p data-hero="subhead" className="text-lg font-normal text-muted-foreground">
+
+          {/* 3-Beat Subtitle */}
+          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl font-normal">
             Respuesta en minutos. Tasa clara. Sin papeles.
           </p>
-          <div data-hero="ctas" data-slot="hero-ctas" className="flex flex-wrap gap-4">
-            <ScrollButton variant="default" size="lg" target="#simula">
-              Simular mi crédito <span aria-hidden="true">→</span>
+
+          {/* Action Buttons - Clean, Zero Arrows */}
+          <div className="flex flex-wrap items-center gap-3.5 w-full sm:w-auto pt-1">
+            <ScrollButton
+              variant="default"
+              size="lg"
+              target="#simula"
+              className="w-full sm:w-auto min-h-[48px] px-8 rounded-xl font-bold bg-navy text-white hover:bg-navy-deep shadow-md hover:shadow-lg transition-all active:scale-[0.98]"
+            >
+              Simular mi crédito
             </ScrollButton>
-            <ApplyButton variant="outline" size="lg">
-              Solicitar crédito <span aria-hidden="true">→</span>
+
+            <ApplyButton
+              variant="outline"
+              size="lg"
+              className="w-full sm:w-auto min-h-[48px] px-7 rounded-xl font-bold border-border/80 hover:bg-bg-soft text-navy transition-all active:scale-[0.98]"
+            >
+              Solicitar crédito
             </ApplyButton>
           </div>
-           <div data-hero="whatsapp" className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-1">
-             {/* WhatsApp link removed */}
 
-            {config.regulatorVerified && (
-              <>
-                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-2">
-                  <ShieldCheckIcon size={16} className="text-muted-2" />
-                  Vigilados por <b>{config.regulatorShortName}</b>
-                </span>
-                <span className="hidden sm:inline text-border" aria-hidden="true">·</span>
-                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-2">
-                  <LockIcon size={16} className="text-muted-2" />
-                  Datos <b>cifrados</b>
-                </span>
-              </>
-            )}
+          {/* Institutional Trust Badges */}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-xs font-semibold text-muted-2">
+            <span className="inline-flex items-center gap-1.5">
+              <ShieldCheckIcon size={16} className="text-green shrink-0" />
+              Estudio 100% digital y gratuito
+            </span>
+            <span className="hidden sm:inline text-border" aria-hidden="true">·</span>
+            <span className="inline-flex items-center gap-1.5">
+              <LockIcon size={16} className="text-green shrink-0" />
+              Datos cifrados y protegidos
+            </span>
           </div>
         </div>
 
-        <div data-hero="phone" className="relative hidden stack:flex items-center justify-center" style={{ perspective: '1200px' }}>
-          <div style={{ transformStyle: 'preserve-3d' }}>
-            <PhoneChat />
-          </div>
-        </div>
-
-        <div data-hero="trust-card" className="stack:hidden bg-card border border-border rounded-xl p-4 shadow-sm mt-2 relative z-10">
-          <div className="flex items-center gap-2.5 mb-3">
-            <Image
-              src="/credalia-logo.svg"
-              alt=""
-              aria-hidden="true"
-              width={0}
-              height={0}
-              sizes="100vw"
-              className="h-7 w-7 shrink-0"
-            />
-            <div>
-              <p className="text-sm font-extrabold text-navy">{config.brandName}</p>
-              <p className="text-xs text-muted-2">Crédito digital 100% en línea</p>
-            </div>
-          </div>
-          <div className="flex flex-col gap-3">
-            <div data-hero="trust-item" className="flex items-center gap-2.5">
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-tint text-green shrink-0">
-                <ClockIcon size={18} />
-              </span>
-              <span className="text-sm font-medium text-navy-ink">
-                {config.disbursementTime
-                  ? `Dinero en tu cuenta en ${config.disbursementTime}`
-                  : 'Respuesta en minutos'}
-              </span>
-            </div>
-            <div data-hero="trust-item" className="flex items-center gap-2.5">
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-tint text-green shrink-0">
-                <ShieldCheckIcon size={18} />
-              </span>
-              <span className="text-sm font-medium text-navy-ink">Sin afectar tu historial</span>
-            </div>
-            <div data-hero="trust-item" className="flex items-center gap-2.5">
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-tint text-green shrink-0">
-                <LockIcon size={18} />
-              </span>
-              <span className="text-sm font-medium text-navy-ink">Datos cifrados de extremo a extremo</span>
-            </div>
-          </div>
-          {config.regulatorVerified && (
-            <p className="mt-2 text-xs text-muted-2 border-t border-border pt-2">
-              Vigilado por la {config.regulatorName}
-            </p>
-          )}
+        {/* ───────────────────────────────────────────────────────────── */}
+        {/* RIGHT COLUMN: Interactive 3D Phone with Mouse Tilt            */}
+        {/* ───────────────────────────────────────────────────────────── */}
+        <div className="lg:col-span-6 flex items-center justify-center relative">
+          <PhoneChat />
         </div>
       </div>
     </section>

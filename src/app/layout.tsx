@@ -26,7 +26,7 @@ const display = DM_Serif_Display({
 
 const MAX_AMOUNT_DISPLAY = `$${fmtCOP(config.simulator.amountMax).replace(',00','')}`;
 const DESCRIPTION =
-  `Crédito digital en Colombia hasta ${MAX_AMOUNT_DISPLAY}. Respuesta en minutos, tasa clara y sin papeles. Simula tu crédito sin afectar tu historial y solicita 100% en línea.`;
+  `Crédito digital en Colombia hasta ${MAX_AMOUNT_DISPLAY}. Respuesta en minutos, tasa clara y sin papeles. Simula tu cuota y solicita 100% en línea.`;
 const OG_TITLE = `${config.brandName} — Crédito digital hasta ${MAX_AMOUNT_DISPLAY}`;
 const BRAND_ASSET_VERSION = '3ef966e';
 
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     url: new URL("/", config.siteUrl).href,
     title: OG_TITLE,
     description:
-      "Respuesta en minutos. Tasa clara. Sin papeles. Simula tu crédito sin afectar tu historial y solicita 100% en línea.",
+      "Respuesta en minutos. Tasa clara. Sin papeles. Simula tu crédito y solicita 100% en línea.",
     images: [
       { url: "/og-image.webp", width: 1200, height: 630, alt: OG_TITLE, type: "image/webp" },
       { url: "/og-image.png", width: 1200, height: 630, alt: OG_TITLE, type: "image/png" },

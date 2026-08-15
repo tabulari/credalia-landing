@@ -1,7 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
-import Image from 'next/image';
+import { useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { config } from '@/lib/config';
@@ -18,8 +17,6 @@ const phoneSim = calculatePayment(
   'monthly',
 );
 
-const SCROLL_AFTER = [0, 0, 60, 120, 170, 240, 300, 360, 420, 480, 540];
-
 function startMouseTilt(
   shell: HTMLElement,
   wrapper: HTMLElement,
@@ -28,17 +25,17 @@ function startMouseTilt(
   const isDesktop = window.matchMedia('(min-width: 980px)').matches;
   if (reduceMotion || !isDesktop) return () => {};
 
-  gsap.set(shell, { x: 0, y: 0, rotateX: 0, rotateY: 0, transformPerspective: 1000, transformOrigin: 'center center' });
+  gsap.set(shell, { x: 0, y: 0, rotateX: 0, rotateY: 0, transformPerspective: 1200, transformOrigin: 'center center' });
 
-  const PROXIMITY = 120;
-  const MAX_ROT_Y = 3;
-  const MAX_ROT_X = 2;
+  const PROXIMITY = 140;
+  const MAX_ROT_Y = 4;
+  const MAX_ROT_X = 3;
   const clampY = gsap.utils.clamp(-MAX_ROT_Y, MAX_ROT_Y);
   const clampX = gsap.utils.clamp(-MAX_ROT_X, MAX_ROT_X);
   let wasInZone = false;
 
   const applyTilt = (rotY: number, rotX: number) => {
-    gsap.to(shell, { rotateY: rotY, rotateX: rotX, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to(shell, { rotateY: rotY, rotateX: rotX, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
   };
 
   const onMove = (e: MouseEvent) => {
@@ -60,7 +57,7 @@ function startMouseTilt(
     wasInZone = true;
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-    applyTilt(clampY(x * 3), clampX(-y * 2));
+    applyTilt(clampY(x * 4), clampX(-y * 3));
   };
 
   const onLeave = () => {
@@ -92,6 +89,36 @@ export function PhoneChat() {
   const { openApply } = useSiteUi();
   const { sim } = useSimulator();
 
+  // Dynamic live device clock & message timestamps
+  const [deviceTime, setDeviceTime] = useState<string>('10:33');
+  const [msgTimes, setMsgTimes] = useState({
+    t0: '10:30',
+    t1: '10:31',
+    t2: '10:32',
+  });
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const formatTime = (d: Date) =>
+        d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+      setDeviceTime(formatTime(now));
+
+      const m0 = new Date(now.getTime() - 2 * 60000);
+      const m1 = new Date(now.getTime() - 1 * 60000);
+      setMsgTimes({
+        t0: formatTime(m0),
+        t1: formatTime(m1),
+        t2: formatTime(now),
+      });
+    };
+
+    updateTime();
+    const timer = setInterval(updateTime, 30000);
+    return () => clearInterval(timer);
+  }, []);
+
   useGSAP(() => {
     if (typeof window === 'undefined') return;
 
@@ -101,84 +128,43 @@ export function PhoneChat() {
     const chatBody = chatBodyRef.current;
     if (!shell || !chatBody) return;
 
-    const bubbles = Array.from(chatBody.querySelectorAll('[data-phone^="b"]'));
-    const typing = chatBody.querySelector('[data-phone="typing"]');
-    const waBtns = chatBody.querySelector('[data-phone="wa-btns"]');
+    const bubbles = Array.from(chatBody.querySelectorAll('[data-wa-bubble]'));
+    const waBtns = chatBody.querySelector('[data-wa-btns]');
 
     if (reduceMotion) {
-      bubbles.forEach(b => gsap.set(b, { autoAlpha: 1, x: 0, scale: 1 }));
-      if (typing) gsap.set(typing, { autoAlpha: 0 });
+      bubbles.forEach(b => gsap.set(b, { autoAlpha: 1, y: 0 }));
       if (waBtns) gsap.set(waBtns, { autoAlpha: 1, y: 0 });
       chatBody.scrollTop = chatBody.scrollHeight;
       return;
     }
 
-    gsap.set(bubbles, { autoAlpha: 0 });
-    gsap.set(bubbles.filter((_, i) => [0, 2, 6].includes(i)), { x: -12 });
-    gsap.set(bubbles.filter((_, i) => [1, 3, 7].includes(i)), { x: 12 });
-    gsap.set(bubbles[4] || [], { scale: 0.92 });
-    if (typing) gsap.set(typing, { autoAlpha: 0 });
+    gsap.set(bubbles, { autoAlpha: 0, y: 10 });
     if (waBtns) gsap.set(waBtns, { autoAlpha: 0, y: 10 });
 
-    const tl = gsap.timeline({ delay: 1.0 });
+    const tl = gsap.timeline({ delay: 0.1 });
 
-    const showTyping = (pos: string) => {
-      if (!typing) return;
-      tl.to(typing, { autoAlpha: 1, duration: 0.15 }, pos);
-    };
-    const hideTyping = () => {
-      if (typing) tl.to(typing, { autoAlpha: 0, duration: 0.15 });
-    };
-    const scrollTo = (idx: number) => {
-      const target = SCROLL_AFTER[Math.min(idx, SCROLL_AFTER.length - 1)];
-      if (chatBody) tl.to(chatBody, { scrollTop: target, duration: 0.3, ease: 'power2.out' }, '-=0.15');
-    };
-
-    const b = (idx: number) => bubbles[idx];
-    if (!b(0)) return;
-
-    tl.to(b(0), { x: 0, autoAlpha: 1, duration: 0.4, ease: 'power2.out' }, 0);
-
-    showTyping('+=0.3');
-    tl.to({}, { duration: 0.6 });
-    hideTyping();
-    tl.to(b(1), { x: 0, autoAlpha: 1, duration: 0.4, ease: 'power2.out' });
-    scrollTo(2);
-
-    tl.to(b(2), { x: 0, autoAlpha: 1, duration: 0.35, ease: 'power2.out' }, '+=0.15');
-    scrollTo(3);
-
-    showTyping('+=0.2');
-    tl.to({}, { duration: 0.5 });
-    hideTyping();
-    tl.to(b(3), { x: 0, autoAlpha: 1, duration: 0.4, ease: 'power2.out' });
-    scrollTo(4);
-
-    showTyping('+=0.15');
-    tl.to({}, { duration: 0.4 });
-    hideTyping();
-    tl.to(b(4), { scale: 1, autoAlpha: 1, duration: 0.5, ease: 'back.out(1.4)' });
-    scrollTo(5);
-
-    tl.to(b(5), { autoAlpha: 1, duration: 0.3 }, '+=0.08');
-    scrollTo(6);
-
-    tl.to(b(6), { x: 0, autoAlpha: 1, duration: 0.35, ease: 'power2.out' }, '+=0.2');
-    scrollTo(7);
-
-    showTyping('+=0.15');
-    tl.to({}, { duration: 0.3 });
-    hideTyping();
-    tl.to(b(7), { x: 0, autoAlpha: 1, duration: 0.35, ease: 'power2.out' });
-    scrollTo(8);
-
-    if (typing) tl.set(typing, { autoAlpha: 0 }, '+=0.2');
+    // Smooth sequence revealing the full conversation under 1.2s
+    tl.to(bubbles, {
+      autoAlpha: 1,
+      y: 0,
+      stagger: 0.14,
+      duration: 0.35,
+      ease: 'power2.out',
+      onUpdate: () => {
+        chatBody.scrollTop = chatBody.scrollHeight;
+      },
+    });
 
     if (waBtns) {
-      const btns = waBtns.querySelectorAll('.wa-btn');
-      tl.to(waBtns, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, '+=0.15');
-      tl.from(btns, { y: 6, stagger: 0.1, duration: 0.3, ease: 'power2.out' }, '<');
-      tl.to(chatBody, { scrollTop: chatBody.scrollHeight, duration: 0.5, ease: 'power2.out' }, '-=0.2');
+      tl.to(waBtns, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.3,
+        ease: 'power2.out',
+        onComplete: () => {
+          chatBody.scrollTop = chatBody.scrollHeight;
+        },
+      }, '-=0.1');
     }
 
     tl.call(() => {
@@ -189,7 +175,7 @@ export function PhoneChat() {
         const heroSection = containerRef.current.closest('section[aria-labelledby="hero-heading"]');
         if (heroSection && isDesktop) {
           gsap.to(shell, {
-            y: -30,
+            y: -25,
             ease: 'none',
             scrollTrigger: {
               trigger: heroSection,
@@ -200,7 +186,7 @@ export function PhoneChat() {
           });
         }
       }
-    }, undefined, '+=0.5');
+    });
 
     return () => {
       mouseCleanupRef.current?.();
@@ -208,138 +194,254 @@ export function PhoneChat() {
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="phone-wrapper" aria-hidden="true">
+    <div ref={containerRef} className="phone-wrapper select-none" aria-hidden="true">
       <div ref={shellRef} className="phone" data-phone="shell">
         <div className="phone-body">
           <div className="phone-shine" aria-hidden="true" />
           <div className="phone-screen">
+            
+            {/* Dynamic Island */}
             <div className="phone-island" aria-hidden="true" />
-            <div className="status-bar">
-              <span>10:33</span>
-              <span className="status-icons">
-                <svg width="17" height="11" viewBox="0 0 17 11" fill="#fff">
-                  <rect x="0" y="7" width="3" height="4" rx="1" />
-                  <rect x="4.5" y="4.5" width="3" height="6.5" rx="1" />
-                  <rect x="9" y="2" width="3" height="9" rx="1" />
-                  <rect x="13.5" y="0" width="3" height="11" rx="1" />
+
+            {/* 1. WhatsApp Status Bar with Live Device Clock */}
+            <div className="wa-status-bar">
+              <span className="tabular-nums">{deviceTime}</span>
+              <div className="wa-status-icons">
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="currentColor">
+                  <rect x="0" y="7" width="2.5" height="3" rx="0.5" />
+                  <rect x="3.8" y="5" width="2.5" height="5" rx="0.5" />
+                  <rect x="7.6" y="2.5" width="2.5" height="7.5" rx="0.5" />
+                  <rect x="11.4" y="0" width="2.5" height="10" rx="0.5" />
                 </svg>
-                <svg width="16" height="11" viewBox="0 0 16 11" fill="#fff">
+                <svg width="13" height="10" viewBox="0 0 16 12" fill="currentColor">
                   <path d="M8 2.2C10.5 2.2 12.7 3.2 14.3 4.8L13 6.1C11.7 4.8 10 4 8 4S4.3 4.8 3 6.1L1.7 4.8C3.3 3.2 5.5 2.2 8 2.2Z" />
                   <path d="M8 5.6C9.2 5.6 10.3 6.1 11.1 6.9L8 10 4.9 6.9C5.7 6.1 6.8 5.6 8 5.6Z" />
                 </svg>
-                <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
-                  <rect x="1" y="1" width="20" height="10" rx="3" stroke="#fff" strokeWidth="1" opacity=".4" />
-                  <rect x="2.5" y="2.5" width="15" height="7" rx="1.5" fill="#fff" />
-                  <rect x="22" y="4" width="1.5" height="4" rx="1" fill="#fff" opacity=".5" />
-                </svg>
-              </span>
-            </div>
-            <div className="chat-header">
-              <span className="back">‹</span>
-              <div className="avatar">
-                <Image src="/credalia-logo.svg" alt="" aria-hidden="true" width={0} height={0} sizes="100vw" className="h-5 w-5" />
+                <div className="w-4.5 h-2.5 rounded-[3px] border border-white p-[1px] flex items-center">
+                  <div className="w-full h-full bg-white rounded-[1px]" />
+                </div>
               </div>
-              <div className="header-info">
-                <div className="who">
+            </div>
+
+            {/* 2. WhatsApp Header */}
+            <div className="wa-header">
+              <div className="wa-back-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+              </div>
+
+              {/* Official Credalia Vector Logo in circle */}
+              <div className="wa-avatar">
+                <svg viewBox="0 0 512 512" className="w-full h-full">
+                  <defs>
+                    <mask id="phone-chat-green-mask">
+                      <rect width="512" height="512" fill="white" />
+                      <g transform="translate(230, 256) rotate(45)">
+                        <rect x="-100" y="-100" width="200" height="200" rx="44" fill="black" stroke="black" strokeWidth="32" strokeLinejoin="round" />
+                      </g>
+                    </mask>
+                    <mask id="phone-chat-orange-mask">
+                      <rect width="512" height="512" fill="white" />
+                      <g transform="translate(326, 256) rotate(45)">
+                        <rect x="-100" y="-100" width="200" height="200" rx="44" fill="black" stroke="black" strokeWidth="32" strokeLinejoin="round" />
+                      </g>
+                    </mask>
+                  </defs>
+                  <g transform="translate(18, 0)">
+                    <g mask="url(#phone-chat-green-mask)">
+                      <g transform="translate(134, 256) rotate(45)">
+                        <rect x="-100" y="-100" width="200" height="200" rx="44" fill="#387758" />
+                      </g>
+                    </g>
+                    <g mask="url(#phone-chat-orange-mask)">
+                      <g transform="translate(230, 256) rotate(45)">
+                        <rect x="-100" y="-100" width="200" height="200" rx="44" fill="#dd6a44" />
+                      </g>
+                    </g>
+                    <g transform="translate(326, 256) rotate(45)">
+                      <rect x="-100" y="-100" width="200" height="200" rx="44" fill="#0d2c51" />
+                    </g>
+                  </g>
+                </svg>
+              </div>
+
+              <div className="wa-info">
+                <div className="wa-name">
                   {config.brandName}
-                  <svg className="verified" viewBox="0 0 24 24">
-                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.5 14.5l-4-4 1.4-1.4 2.6 2.6 6.6-6.6 1.4 1.4-8 8z" fill="#53bdeb"/>
+                  <svg className="w-3.5 h-3.5 text-white shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.5 14.5l-4-4 1.4-1.4 2.6 2.6 6.6-6.6 1.4 1.4-8 8z" />
                   </svg>
                 </div>
-                <div className="online">en línea</div>
+                <div className="wa-online">en línea</div>
               </div>
-              <div className="header-actions">
-                <svg viewBox="0 0 24 24" fill="#fff">
-                  <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 10-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1114 9.5 4.5 4.5 0 019.5 14z"/>
+
+              <div className="wa-actions">
+                {/* Video Call */}
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" />
                 </svg>
-                <svg viewBox="0 0 24 24" fill="#fff">
-                  <path d="M12 7a2 2 0 102 2 2 2 0 00-2-2zm0 8a2 2 0 102 2 2 2 0 00-2-2zm0-4a2 2 0 102 2 2 2 0 00-2-2z"/>
+                {/* Audio Call */}
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.44-5.15-3.75-6.59-6.59l1.97-1.57c.28-.28.37-.67.25-1.02A11.36 11.36 0 019 4.31c0-.55-.45-1-1-1H4.5c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.93c0-.55-.45-1-.99-1z" />
+                </svg>
+                {/* 3 Dots Menu */}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
                 </svg>
               </div>
             </div>
-            <div className="chat-wallpaper">
-              <div ref={chatBodyRef} className="chat-body">
-                <div data-phone="typing" className="typing-indicator">
-                  <span /><span /><span />
-                </div>
-                <div data-phone="b0" className="bubble them">
-                  ¡Hola! Soy Laura, necesito {fmtCOP(phoneSim.amount).replace('$', '$')} para una emergencia. ¿En qué me pueden ayudar?
-                  <div className="t">10:30</div>
-                </div>
-                <div data-phone="b1" className="bubble me">
-                  ¡Hola Laura! 👋 Con gusto te ayudamos. ¿Cuál monto necesitas?
-                  <div className="t">10:30 <span className="checks">✓✓</span></div>
-                </div>
-                <div data-phone="b2" className="bubble them">
-                  Necesito {fmtCOP(phoneSim.amount)}
-                  <div className="t">10:30</div>
-                </div>
-                <div data-phone="b3" className="bubble me">
-                  Perfecto Laura. Te comparto tu simulación personalizada…
-                  <div className="t">10:31 <span className="checks">✓✓</span></div>
-                </div>
-                <div data-phone="b4" className="bubble me" style={{ maxWidth: '88%' }}>
-                  <div className="sim-title">Tu simulación</div>
-                  <div className="sim-row">💲 Monto: {fmtCOP(phoneSim.amount)}</div>
-                  <div className="sim-row">📅 Plazo: {phoneSim.term} meses</div>
-                  <div className="sim-row">💳 Cuota: {fmtCOP(phoneSim.payment)}{phoneSim.unit}</div>
-                  <div className="t">10:31 <span className="checks">✓✓</span></div>
-                </div>
-                <div data-phone="b5" className="bubble note" style={{ maxWidth: '88%' }}>
-                  <div className="ph">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5d6b82" strokeWidth="2">
-                      <circle cx="12" cy="12" r="9" />
-                      <path d="M12 11 v5 M12 8 h.01" strokeLinecap="round" />
-                    </svg>
-                    Simulación, no aprobación
+
+            {/* 3. WhatsApp Wallpaper & Chat Stream */}
+            <div className="wa-wallpaper">
+              
+              {/* Subtle WhatsApp Doodles Overlay */}
+              <svg className="absolute inset-0 w-full h-full opacity-[0.04] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                <pattern id="wa-chat-doodles" width="120" height="120" patternUnits="userSpaceOnUse">
+                  <path d="M20 25h14v8c0 3-2 5-5 5h-4c-3 0-5-2-5-5v-8zm14 2h4c2 0 3 1 3 3s-1 3-3 3h-4v-6z" fill="none" stroke="#111B21" strokeWidth="1.5" />
+                  <path d="M75 20h20c3 0 5 2 5 5v10c0 3-2 5-5 5h-10l-6 4v-4h-4c-3 0-5-2-5-5V25c0-3 2-5 5-5z" fill="none" stroke="#111B21" strokeWidth="1.5" />
+                  <circle cx="35" cy="80" r="10" fill="none" stroke="#111B21" strokeWidth="1.5" />
+                  <circle cx="32" cy="78" r="1" fill="#111B21" />
+                  <circle cx="38" cy="78" r="1" fill="#111B21" />
+                  <path d="M31 83c1.5 2 6.5 2 8 0" fill="none" stroke="#111B21" strokeWidth="1.2" strokeLinecap="round" />
+                  <path d="M85 80l2 6 6 2-6 2-2 6-2-6-6-2 6-2z" fill="none" stroke="#111B21" strokeWidth="1.2" />
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#wa-chat-doodles)" />
+              </svg>
+
+              <div ref={chatBodyRef} className="wa-chat-body">
+                {/* Date Badge */}
+                <div className="wa-date-pill">HOY</div>
+
+                {/* ── GROUP 1: Laura (Outgoing Message with Tail) ──── */}
+                <div data-wa-bubble className="wa-bubble wa-bubble-me wa-has-tail">
+                  ¡Hola! Necesito {fmtCOP(phoneSim.amount)} para una emergencia.
+                  <div className="wa-meta">
+                    <span className="tabular-nums">{msgTimes.t0}</span>
+                    <span className="whatsapp-ticks" aria-hidden="true" />
                   </div>
-                  La decisión final depende de la validación. Simular no afecta tu historial.
-                  <div className="t">10:31 <span className="checks">✓✓</span></div>
                 </div>
-                <div data-phone="b6" className="bubble them">
+
+                {/* ── GROUP 2: Credalia (Incoming Sequence) ────────── */}
+                {/* 2.1 First Message with Left Tail */}
+                <div data-wa-bubble className="wa-bubble wa-bubble-them wa-has-tail mt-1">
+                  ¡Hola Laura! Te comparto el cálculo preliminar para tu crédito:
+                  <div className="wa-meta">
+                    <span className="tabular-nums">{msgTimes.t0}</span>
+                  </div>
+                </div>
+
+                {/* 2.2 Consecutive Simulation Card (No tail, Clean Typography) */}
+                <div data-wa-bubble className="wa-card">
+                  <div className="wa-card-header">
+                    Resumen de tu crédito
+                  </div>
+                  <div className="wa-card-row"><strong>Monto:</strong> {fmtCOP(phoneSim.amount)}</div>
+                  <div className="wa-card-row"><strong>Plazo:</strong> {phoneSim.term} meses</div>
+                  <div className="wa-card-row"><strong>Cuota:</strong> {fmtCOP(phoneSim.payment)} / mes</div>
+                  <div className="wa-card-row text-[10px] text-[#667781] pt-0.5 border-t border-[#f0f2f5] mt-1">
+                    Tasa: 2,6% m.v. (36,07% E.A.)
+                  </div>
+                  <div className="wa-meta">
+                    <span className="tabular-nums">{msgTimes.t1}</span>
+                  </div>
+                </div>
+
+                {/* 2.3 Consecutive Disclaimer Note (No tail, Subtle) */}
+                <div data-wa-bubble className="wa-note">
+                  <div className="font-medium text-[#856404]">
+                    *Valores estimados sujetos a verificación digital.
+                  </div>
+                  <div className="wa-meta">
+                    <span className="tabular-nums">{msgTimes.t1}</span>
+                  </div>
+                </div>
+
+                {/* ── GROUP 3: Laura (Outgoing with Tail) ──────────── */}
+                <div data-wa-bubble className="wa-bubble wa-bubble-me wa-has-tail mt-1">
                   ¿Cómo inicio mi solicitud?
-                  <div className="t">10:32</div>
+                  <div className="wa-meta">
+                    <span className="tabular-nums">{msgTimes.t2}</span>
+                    <span className="whatsapp-ticks" aria-hidden="true" />
+                  </div>
                 </div>
-                <div data-phone="b7" className="bubble me">
-                  Te guío paso a paso desde aquí 👇
-                  <div className="t">10:32 <span className="checks">✓✓</span></div>
+
+                {/* ── GROUP 4: Credalia (Incoming with Tail) ───────── */}
+                <div data-wa-bubble className="wa-bubble wa-bubble-them wa-has-tail mt-1">
+                  Elige cómo prefieres continuar:
+                  <div className="wa-meta">
+                    <span className="tabular-nums">{msgTimes.t2}</span>
+                  </div>
                 </div>
-                <div data-phone="wa-btns" className="wa-buttons">
-                  <span
-                    aria-hidden="true"
+
+                {/* ── GROUP 5: Interactive Action Buttons ──────────── */}
+                <div data-wa-btns className="wa-btn-group">
+                  <button
+                    type="button"
                     onClick={() => openApply('direct')}
-                    className="wa-btn"
+                    className="wa-cta-btn wa-cta-btn-primary"
                   >
-                    Iniciar solicitud
-                  </span>
-                  <span
-                    aria-hidden="true"
+                    Iniciar solicitud digital
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => {
                       track('whatsapp_click', { ctx: 'hero' });
                       window.open(buildWhatsAppUrl('hero', sim), '_blank', 'noopener,noreferrer');
                     }}
-                    className="wa-btn wa-btn--secondary"
+                    className="wa-cta-btn"
                   >
-                    Chatear por WhatsApp
-                  </span>
+                    Hablar con un asesor
+                  </button>
                 </div>
+
               </div>
             </div>
-            <div className="chat-input">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#5d6b82">
-                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
-              </svg>
-              <div className="field">Escribe un mensaje</div>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#5d6b82">
-                <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5a2.5 2.5 0 015 0v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6h-1.5v9.5a2.5 2.5 0 005 0V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6H16.5z"/>
-              </svg>
-              <span className="send">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff">
-                  <path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+
+            {/* ───────────────────────────────────────────────────────────── */}
+            {/* 4. ANDROID WHATSAPP BOTTOM INPUT DOCK                         */}
+            {/* ───────────────────────────────────────────────────────────── */}
+            <div className="wa-input-dock">
+              {/* 1. Main Text Input Box (White Rounded Capsule) */}
+              <div className="wa-input-capsule">
+                <div className="wa-input-left">
+                  {/* Leftmost Icon: Gray Simple Smiley Emoji Button */}
+                  <div className="wa-emoji-btn" aria-hidden="true">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                      <line x1="9" y1="9" x2="9.01" y2="9" strokeWidth="2.5" />
+                      <line x1="15" y1="9" x2="15.01" y2="9" strokeWidth="2.5" />
+                    </svg>
+                  </div>
+                  {/* Center Area: Text Placeholder */}
+                  <span className="wa-input-placeholder">Escribe un mensaje</span>
+                </div>
+
+                {/* Rightmost Icons (Grouped closely inside the white box) */}
+                <div className="wa-input-right-icons" aria-hidden="true">
+                  {/* Gray Paperclip Icon tilted at an angle */}
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'rotate(-45deg)' }}>
+                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                  </svg>
+                  {/* Gray Camera Icon */}
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                    <circle cx="12" cy="13" r="4" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* 2. Voice Note Button (Separate solid teal/cyan-green circle) */}
+              <div className="wa-mic-fab" aria-label="Nota de voz">
+                {/* Sharp White Microphone Icon */}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                  <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                 </svg>
-              </span>
+              </div>
             </div>
-            <div className="phone-home" />
+
           </div>
         </div>
         <div className="phone-glow" aria-hidden="true" />

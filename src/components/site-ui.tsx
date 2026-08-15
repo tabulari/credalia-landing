@@ -15,7 +15,7 @@ import { track } from "@/lib/analytics";
  * nudge that appears after "Editar monto".
  */
 
-export type ApplyOrigin = "direct" | "simulator" | "resume" | "hiw";
+export type ApplyOrigin = "direct" | "simulator" | "resume" | "hiw" | "cta_banner";
 
 interface SiteUi {
   applyOpen: boolean;
