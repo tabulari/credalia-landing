@@ -116,6 +116,14 @@ export function fmtCOP(n: number): string {
   return Math.round(n).toLocaleString("es-CO").replace(/\s/g, ".");
 }
 
+export function formatCurrencyCOP(n: number): string {
+  return new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
+    maximumFractionDigits: 0,
+  }).format(Math.round(n));
+}
+
 export function fmtPct(decimal: number, dec: number): string {
   return (decimal * 100).toFixed(dec).replace(".", ",");
 }

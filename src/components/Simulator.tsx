@@ -11,7 +11,6 @@ import { AmountInput } from './simulator/AmountInput';
 import { SimulationResults } from './simulator/SimulationResults';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
-import { ShieldCheckIcon } from './icons';
 
 const FREQUENCIES: { value: Frequency; label: string }[] = [
   { value: 'monthly', label: 'Mensual' },
@@ -75,15 +74,20 @@ export function Simulator() {
   }, [srText]);
 
   return (
-    <form ref={simRef} id="simulator" aria-label="Simulador de crédito" onSubmit={(e) => e.preventDefault()} className="bg-card border border-green/20 border-t-[3px] border-t-green/40 rounded-xl p-5 sm:p-8 shadow-[0_0_0_1px_rgba(30,158,85,0.08),0_6px_24px_rgba(13,42,94,0.07)]">
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-2.5">
-        <h3 className="text-xl font-bold text-navy">Simulador de crédito</h3>
-        <span className="border-l-2 border-green pl-3 text-xs font-semibold text-green-ink">
-          <ShieldCheckIcon size={14} className="text-green mr-1 inline -mt-0.5" />
-          Sin afectar tu historial
-        </span>
+    <form
+      ref={simRef}
+      id="simulator"
+      aria-label="Simulador de crédito"
+      onSubmit={(e) => e.preventDefault()}
+      className="bg-card border border-green/20 border-t-[3px] border-t-green/40 rounded-2xl p-5 sm:p-8 shadow-[0_0_0_1px_rgba(30,158,85,0.08),0_12px_32px_rgba(13,42,94,0.07)] space-y-6"
+    >
+      {/* Clean Header: Focused on Essential Intent */}
+      <div className="pb-2 border-b border-border/60">
+        <h3 className="text-xl font-bold text-navy tracking-tight">Simula tu crédito</h3>
+        <p className="text-xs text-muted-foreground">Calcula tu cuota con tasas fijas y transparentes</p>
       </div>
 
+      {/* Amount Input with Stepper & Slider */}
       <AmountInput
         amount={amount}
         amountMin={amountMin}
@@ -99,12 +103,13 @@ export function Simulator() {
         markInteract={markInteract}
       />
 
-      <div className="mt-6">
-        <p className="text-sm font-semibold text-navy mb-2.5" id="plazoLabel">
+      {/* Term Selector */}
+      <div>
+        <p className="text-sm font-bold text-navy mb-2.5" id="plazoLabel">
           Elige el plazo
         </p>
         <ChipRadioGroup
-          className="flex flex-wrap gap-2.5"
+          className="flex flex-wrap gap-2"
           ariaLabelledBy="plazoLabel"
           checkBefore
           options={terms}
@@ -113,12 +118,13 @@ export function Simulator() {
         />
       </div>
 
-      <div className="mt-5">
-        <p className="text-sm font-semibold text-navy mb-2.5" id="freqLabel">
+      {/* Payment Frequency Selector */}
+      <div>
+        <p className="text-sm font-bold text-navy mb-2.5" id="freqLabel">
           Frecuencia de pago
         </p>
         <ChipRadioGroup
-          className="flex gap-3"
+          className="flex gap-2.5 max-w-xs"
           ariaLabelledBy="freqLabel"
           chipClassName="chip-freq"
           options={FREQUENCIES}
@@ -131,9 +137,11 @@ export function Simulator() {
         {debouncedSr}
       </div>
 
+      {/* Distilled Fintech Results Card */}
       <SimulationResults sim={sim} frequency={frequency} />
 
-      <div className="mt-5">
+      {/* Action CTA & Single Quiet Trust Line */}
+      <div className="pt-2 space-y-2.5">
         <p
           className={cn('text-sm text-error font-medium transition-all', sim.valid ? 'h-0 overflow-hidden' : 'h-auto mb-2')}
           role="alert"
@@ -141,9 +149,12 @@ export function Simulator() {
         >
           {sim.valid ? '' : sim.message}
         </p>
-        <ApplyButton origin="simulator" variant="default" size="block" disabled={!sim.valid}>
-          Solicitar este crédito <span aria-hidden="true">→</span>
+        <ApplyButton origin="simulator" variant="default" size="block" disabled={!sim.valid} className="min-h-[50px] shadow-sm text-base">
+          Solicitar este crédito ahora <span aria-hidden="true">→</span>
         </ApplyButton>
+        <p className="text-xs text-center text-muted-2">
+          🔒 Sin fiador · Libre de consultas a Datacrédito · Desembolso en minutos a tu cuenta
+        </p>
       </div>
     </form>
   );

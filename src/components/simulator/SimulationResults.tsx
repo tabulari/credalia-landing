@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { fmtCOP, fmtPct, type Frequency } from '@/lib/credit';
-import { CalendarIcon, LightningIcon, HomeIcon, ClockIcon } from '../icons';
+import { SparklesIcon } from '../icons';
 
 interface SimData {
   payment: number;
@@ -14,7 +14,7 @@ interface SimData {
   unit: string;
 }
 
-export function SimulationResults({ sim, frequency }: { sim: SimData; frequency: Frequency }) {
+export function SimulationResults({ sim }: { sim: SimData; frequency: Frequency }) {
   const paymentRef = useRef<HTMLDivElement>(null);
   const prevPayment = useRef(sim.payment);
 
@@ -33,66 +33,55 @@ export function SimulationResults({ sim, frequency }: { sim: SimData; frequency:
     return () => clearTimeout(t);
   }, [sim.payment]);
 
-  const rateLabel = frequency === 'biweekly' ? '% q.' : '% m. v.';
-  const eaRateLabel = frequency === 'biweekly' ? 'q.' : 'm. v.';
+  const interestCost = Math.max(0, sim.totalCost - sim.amount);
 
   return (
-    <div className="mt-8 pt-6 border-t border-[var(--border-2)]">
-      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
-        <div className="flex-shrink-0">
-          <p className="text-xs font-semibold text-muted-2 mb-1">Tu cuota estimada</p>
-          <div ref={paymentRef} className="font-extrabold text-navy leading-none tabular-nums" style={{ letterSpacing: '-0.03em' }}>
-            <span className="text-2xl">$</span><span className="text-4xl sm:text-5xl">{fmtCOP(sim.payment)}</span> <span className="text-base font-semibold text-muted-2">{sim.unit}</span>
+    <div className="mt-6 pt-6 border-t border-border/80 space-y-3">
+      {/* High-Clarity Result Box (Fintech Standard) */}
+      <div className="rounded-xl bg-gradient-to-br from-green-tint/70 to-emerald-50/40 border border-green/30 p-4 sm:p-6 shadow-2xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-center">
+          {/* Primary Quota Block */}
+          <div className="space-y-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-green-ink block">
+              Tu cuota estimada
+            </span>
+            <div
+              ref={paymentRef}
+              className="font-extrabold text-navy leading-none tabular-nums text-3xl sm:text-4xl lg:text-[42px] tracking-tight"
+            >
+              <span>${fmtCOP(sim.payment)}</span>{' '}
+              <span className="text-sm sm:text-base font-semibold text-muted-2">
+                {sim.unit}
+              </span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 pt-1 text-xs font-semibold text-green-ink">
+              <SparklesIcon size={13} className="text-green" />
+              <span>Respuesta y desembolso en minutos</span>
+            </div>
           </div>
-          <span className="inline-flex items-center gap-1.5 mt-3 text-green-ink font-bold text-sm">
-            <LightningIcon size={13} className="text-green" />
-            Respuesta rápida
-          </span>
-        </div>
 
-        <div className="flex-1 grid grid-cols-2 gap-x-5 gap-y-4 content-start">
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-2 mb-0.5">
-                <CalendarIcon size={14} className="text-muted-2" />
-                Monto solicitado
-              </div>
-              <div className="text-base font-bold text-navy-ink tabular-nums">{`$${fmtCOP(sim.amount)}`}</div>
+          {/* Key Financial Breakdown (Total + Interests + Rate) */}
+          <div className="space-y-2.5 sm:border-l sm:border-green/20 sm:pl-5">
+            <div className="flex items-center justify-between text-xs sm:text-sm">
+              <span className="text-muted-foreground font-medium">Total con intereses:</span>
+              <span className="font-bold text-navy tabular-nums">${fmtCOP(sim.totalCost)} COP</span>
             </div>
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-2 mb-0.5">
-                <CalendarIcon size={14} className="text-muted-2" />
-                Plazo seleccionado
-              </div>
-              <div className="text-base font-bold text-navy-ink tabular-nums">{`${sim.term} meses`}</div>
+            <div className="flex items-center justify-between text-xs sm:text-sm">
+              <span className="text-muted-foreground font-medium">Interés estimado:</span>
+              <span className="font-semibold text-navy tabular-nums">${fmtCOP(interestCost)} COP</span>
             </div>
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-2 mb-0.5">
-                <HomeIcon size={14} className="text-muted-2" />
-                Tasa estimada
-              </div>
-              <div className="text-base font-bold text-navy-ink tabular-nums">{fmtPct(sim.periodRate, 1) + rateLabel}</div>
+            <div className="pt-1.5 border-t border-green/20 flex items-center justify-between text-[11px] sm:text-xs text-muted-2">
+              <span className="text-green-ink font-medium">Tasa fija: {fmtPct(sim.periodRate, 1)}% m.v.</span>
+              <span className="font-medium text-navy">TEA: {fmtPct(sim.ea, 2)}% E.A.</span>
             </div>
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-2 mb-0.5">
-                <ClockIcon size={14} className="text-muted-2" />
-                Costo total estimado
-              </div>
-              <div className="text-base font-bold text-navy-ink tabular-nums">{`$${fmtCOP(sim.totalCost)}`}</div>
-            </div>
-
-          <p className="col-span-2 text-sm text-muted-2 leading-snug">
-            Tasa estimada{' '}
-            <span className="font-semibold text-navy-ink">{`${fmtPct(sim.periodRate, 1)}% ${eaRateLabel}`}</span>{' '}
-            ⇄ equivalente a{' '}
-            <span className="font-semibold text-navy-ink">{fmtPct(sim.ea, 2) + '%'}</span>{' '}
-            E.A.
-          </p>
-
-          <p className="col-span-2 text-xs leading-relaxed text-muted-2 italic">
-            Esta simulación es aproximada y no representa aprobación ni oferta definitiva. Las condiciones finales dependen de la validación de tu solicitud.
-          </p>
+          </div>
         </div>
       </div>
+
+      {/* SFC Compliance Quiet 1-Line Disclaimer */}
+      <p className="text-[11px] leading-relaxed text-muted-2 text-center pt-1">
+        * Cálculo informativo. Valores finales sujetos a validación de identidad.
+      </p>
     </div>
   );
 }
