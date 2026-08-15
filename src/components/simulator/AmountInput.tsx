@@ -79,20 +79,10 @@ export function AmountInput({
     <div className="space-y-4">
       {/* Amount Input Control */}
       <div>
-        <div className="flex items-center justify-between mb-2">
+        <div className="mb-2">
           <label htmlFor="amount-input" className="text-sm font-bold text-navy">
             ¿Cuánto dinero necesitas?
           </label>
-          <button
-            type="button"
-            onClick={() => {
-              inputRef.current?.focus();
-              inputRef.current?.select();
-            }}
-            className="text-xs font-semibold text-green-ink hover:underline hidden sm:inline-flex items-center min-h-[44px] h-[44px] px-2 rounded-sm"
-          >
-            Ingresar monto exacto
-          </button>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 bg-white rounded-xl p-2 border-2 border-border focus-within:border-green transition-colors shadow-2xs">
@@ -101,7 +91,7 @@ export function AmountInput({
             aria-label="Disminuir monto"
             onClick={() => bump(-1)}
             disabled={amount <= amountMin}
-            className="flex-shrink-0 flex items-center justify-center w-11 h-11 min-h-[44px] min-w-[44px] rounded-lg bg-bg-soft hover:bg-green-soft text-navy disabled:opacity-35 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-green"
+            className="flex-shrink-0 flex items-center justify-center w-12 h-12 min-h-[48px] min-w-[48px] rounded-lg bg-bg-soft hover:bg-green-soft text-navy disabled:opacity-35 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-green"
           >
             <MinusIcon size={18} />
           </button>
@@ -119,7 +109,7 @@ export function AmountInput({
               aria-describedby="amountHint"
               onChange={handleInputChange}
               onBlur={handleInputBlur}
-              className="w-full h-11 min-h-[44px] text-2xl sm:text-3xl font-extrabold text-navy outline-none bg-transparent tabular-nums tracking-tight"
+              className="w-full h-12 min-h-[48px] text-2xl sm:text-3xl font-extrabold text-navy outline-none bg-transparent tabular-nums tracking-tight"
             />
             <span className="text-xs font-bold text-muted-2 uppercase tracking-wider shrink-0">COP</span>
           </div>
@@ -129,7 +119,7 @@ export function AmountInput({
             aria-label="Aumentar monto"
             onClick={() => bump(1)}
             disabled={amount >= amountMax}
-            className="flex-shrink-0 flex items-center justify-center w-11 h-11 min-h-[44px] min-w-[44px] rounded-lg bg-bg-soft hover:bg-green-soft text-navy disabled:opacity-35 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-green"
+            className="flex-shrink-0 flex items-center justify-center w-12 h-12 min-h-[48px] min-w-[48px] rounded-lg bg-bg-soft hover:bg-green-soft text-navy disabled:opacity-35 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-green"
           >
             <PlusIcon size={18} />
           </button>
@@ -157,7 +147,7 @@ export function AmountInput({
                   setAmount(clampRoundAmount(preset, amountMin, amountMax, amountStep), true);
                   setInputText(fmtCOP(clampRoundAmount(preset, amountMin, amountMax, amountStep)));
                 }}
-                className={`inline-flex items-center justify-center px-4 h-11 min-h-[44px] text-xs font-bold rounded-lg border transition-all tabular-nums ${
+                className={`inline-flex items-center justify-center px-4 h-12 min-h-[48px] text-xs font-bold rounded-lg border transition-all tabular-nums ${
                   amount === preset
                     ? 'bg-green-tint border-green text-green-ink shadow-2xs'
                     : 'bg-white border-border text-navy hover:bg-bg-soft'
@@ -181,7 +171,7 @@ export function AmountInput({
           aria-valuenow={amount}
           aria-valuetext={`$${fmtCOP(amount)} COP`}
           onChange={handleSliderChange}
-          className="w-full h-12 min-h-[48px] py-[19px] box-border bg-clip-content rounded-full appearance-none cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-green [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-green [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-green [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+          className="w-full h-12 min-h-[48px] py-[19px] box-border bg-clip-content rounded-full appearance-none cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-green [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-[2.5px] [&::-webkit-slider-thumb]:border-green [&::-webkit-slider-thumb]:shadow-[0_2px_8px_rgba(0,0,0,0.18)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:active:scale-125 [&::-webkit-slider-thumb]:transition-transform [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-[2.5px] [&::-moz-range-thumb]:border-green [&::-moz-range-thumb]:shadow-[0_2px_8px_rgba(0,0,0,0.18)] [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:hover:scale-110 [&::-moz-range-thumb]:active:scale-125 [&::-moz-range-thumb]:transition-transform"
           style={{ backgroundImage: `linear-gradient(to right, var(--green) 0% ${pct}%, var(--border) ${pct}% 100%)` }}
         />
         <div className="flex justify-between text-xs text-muted-2 tabular-nums px-1">

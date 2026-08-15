@@ -81,12 +81,6 @@ export function Simulator() {
       onSubmit={(e) => e.preventDefault()}
       className="bg-card border border-green/20 border-t-[3px] border-t-green/40 rounded-2xl p-5 sm:p-8 shadow-[0_0_0_1px_rgba(30,158,85,0.08),0_12px_32px_rgba(13,42,94,0.07)] space-y-6"
     >
-      {/* Clean Header: Focused on Essential Intent */}
-      <div className="pb-2 border-b border-border/60">
-        <h3 className="text-xl font-bold text-navy tracking-tight">Simula tu crédito</h3>
-        <p className="text-xs text-muted-foreground">Calcula tu cuota con tasas fijas y transparentes</p>
-      </div>
-
       {/* Amount Input with Stepper & Slider */}
       <AmountInput
         amount={amount}
@@ -149,11 +143,11 @@ export function Simulator() {
         >
           {sim.valid ? '' : sim.message}
         </p>
-        <ApplyButton origin="simulator" variant="default" size="block" disabled={!sim.valid} className="min-h-[50px] shadow-sm text-base">
-          Solicitar este crédito ahora <span aria-hidden="true">→</span>
+        <ApplyButton origin="simulator" variant="default" size="block" disabled={!sim.valid} className="w-full min-h-[52px] h-[52px] shadow-md hover:shadow-lg transition-all text-base font-bold">
+          Solicitar crédito
         </ApplyButton>
         <p className="text-xs text-center text-muted-2">
-          🔒 Sin fiador · Libre de consultas a Datacrédito · Desembolso en minutos a tu cuenta
+          🔒 Sin fiador · Estudio 100% digital y gratuito · Desembolso directo a tu cuenta
         </p>
       </div>
     </form>

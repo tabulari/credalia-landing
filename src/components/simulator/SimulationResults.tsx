@@ -41,7 +41,7 @@ export function SimulationResults({ sim }: { sim: SimData; frequency: Frequency 
       <div className="rounded-xl bg-gradient-to-br from-green-tint/70 to-emerald-50/40 border border-green/30 p-4 sm:p-6 shadow-2xs">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-center">
           {/* Primary Quota Block */}
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <span className="text-xs font-bold uppercase tracking-wider text-green-ink block">
               Tu cuota estimada
             </span>
@@ -53,10 +53,6 @@ export function SimulationResults({ sim }: { sim: SimData; frequency: Frequency 
               <span className="text-sm sm:text-base font-semibold text-muted-2">
                 {sim.unit}
               </span>
-            </div>
-            <div className="inline-flex items-center gap-1.5 pt-1 text-xs font-semibold text-green-ink">
-              <SparklesIcon size={13} className="text-green" />
-              <span>Respuesta y desembolso en minutos</span>
             </div>
           </div>
 
@@ -77,11 +73,6 @@ export function SimulationResults({ sim }: { sim: SimData; frequency: Frequency 
           </div>
         </div>
       </div>
-
-      {/* SFC Compliance Quiet 1-Line Disclaimer */}
-      <p className="text-[11px] leading-relaxed text-muted-2 text-center pt-1">
-        * Cálculo informativo. Valores finales sujetos a validación de identidad.
-      </p>
     </div>
   );
 }
