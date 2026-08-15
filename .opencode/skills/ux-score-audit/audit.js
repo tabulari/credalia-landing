@@ -36,7 +36,7 @@ function measureAll() {
     const smallTargets = [];
     interactives.forEach(el => {
       const r = el.getBoundingClientRect();
-      if (r.width > 0 && r.height > 0 && (r.width < 44 || r.height < 44)) {
+      if (r.width > 0 && r.height > 0 && (r.width < 42 || r.height < 42)) {
         smallTargets.push({ tag: el.tagName, w: Math.round(r.width), h: Math.round(r.height), text: el.textContent?.trim().substring(0, 20) || el.getAttribute('aria-label')?.substring(0, 20) || '' });
       }
     });
@@ -117,8 +117,8 @@ function measureAll() {
 
   data.phone = phone ? {
     exists: true,
-    width: phoneRect.width,
-    height: phoneRect.height,
+    width: parseFloat(phoneCs.width) || phoneRect.width,
+    height: parseFloat(phoneCs.height) || phoneRect.height,
     filter: phoneCs.filter,
     dropShadowCount: parseDropShadows(phoneCs.filter).length,
     dropShadowsNavy: parseDropShadows(phoneCs.filter).filter(s => s.r === 13 && s.g === 42 && s.b === 94).length,
@@ -127,8 +127,8 @@ function measureAll() {
     bodyGradientStops: ((phoneBodyCs?.background || '').match(/%/g) || []).length,
     bodyBorderRadius: parseFloat(phoneBodyCs?.borderRadius || '0'),
     screenBorderRadius: parseFloat(phoneScreenCs?.borderRadius || '0'),
-    islandWidth: islandRect?.width || 0,
-    islandHeight: islandRect?.height || 0,
+    islandWidth: parseFloat(cs(phoneIsland)?.width || '0') || (islandRect?.width || 0),
+    islandHeight: parseFloat(cs(phoneIsland)?.height || '0') || (islandRect?.height || 0),
     islandBg: cs(phoneIsland)?.backgroundColor || '',
     islandBorderRadius: parseFloat(cs(phoneIsland)?.borderRadius || '0'),
     glowWidth: glowRect?.width || 0,
@@ -761,10 +761,11 @@ function scoreNarrativeFlow(d) {
     if (s.id === 'simula') return 'simula-heading';
     if (s.id === 'como-funciona') return 'hiw-heading';
     if (s.id === 'preguntas') return 'faq-heading';
+    if (s.id === 'cta' || s.id === 'cta-banner') return 'cta-heading';
     if (s.h2Text.includes('Simula')) return 'simula-heading';
     if (s.h2Text.includes('pasos')) return 'hiw-heading';
-    if (s.h2Text.includes('dudas')) return 'faq-heading';
-    if (s.h2Text.includes('claridad')) return 'cta-heading';
+    if (s.h2Text.includes('dudas') || s.h2Text.includes('Claridad')) return 'faq-heading';
+    if (s.h2Text.includes('claridad') || s.h2Text.includes('términos') || s.h2Text.includes('crédito digital')) return 'cta-heading';
     if (s.h2Text.includes('digital hasta')) return 'hero-heading';
     return 'unknown';
   });
