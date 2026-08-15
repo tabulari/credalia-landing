@@ -10,7 +10,6 @@ import {
 import { capFreq } from './use-application-form';
 import { cn } from '@/lib/utils';
 import type { Values } from './use-application-form';
-import { CheckIcon } from '../icons';
 import { WhatsAppLink } from '../WhatsAppLink';
 
 type FieldHandlers = {
@@ -28,7 +27,7 @@ const fieldEl = (name: FieldName, label: string, handlers: FieldHandlers, props:
       onBlur={(e) => handlers.onFieldBlur(name, (e.target as HTMLInputElement).value)}
       aria-invalid={handlers.errors[name] ? true : undefined}
       aria-describedby={handlers.errors[name] ? `err-${name}` : undefined}
-      className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
+      className="h-11 min-h-[44px] w-full rounded-xl border border-border bg-white px-3.5 text-sm outline-none focus:border-green focus:ring-2 focus:ring-green/20 transition-colors shadow-2xs"
       {...props}
     />
     <span className="text-xs text-destructive min-h-4" id={`err-${name}`} role="alert">{handlers.errors[name] || ''}</span>
@@ -44,7 +43,7 @@ const selectEl = (name: FieldName, label: string, placeholder: string, options: 
       onChange={(e) => { handlers.onFieldChange(name, e.target.value); }}
       aria-invalid={handlers.errors[name] ? true : undefined}
       aria-describedby={handlers.errors[name] ? `err-${name}` : undefined}
-      className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
+      className="h-11 min-h-[44px] w-full rounded-xl border border-border bg-white px-3.5 text-sm outline-none focus:border-green focus:ring-2 focus:ring-green/20 transition-colors shadow-2xs cursor-pointer"
     >
       <option value="">{placeholder}</option>
       {options.map((o) => <option key={o}>{o}</option>)}
@@ -53,47 +52,98 @@ const selectEl = (name: FieldName, label: string, placeholder: string, options: 
   </label>
 );
 
-export function Step1({ values, applyOrigin, handlers, frozen }: {
+export function Step1({ values, handlers }: {
   values: Values;
   applyOrigin: string;
   handlers: FieldHandlers;
   frozen: { amount: number; term: number; payment: number; unit: string };
 }) {
+  const formatCedula = (val: string) => {
+    const digits = val.replace(/\D/g, '');
+    if (!digits) return '';
+    return fmtCOP(parseInt(digits, 10));
+  };
+
+  const formatPhone = (val: string) => {
+    const digits = val.replace(/\D/g, '').slice(0, 10);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+  };
+
   return (
     <section className="flex-1 flex flex-col gap-4">
-      {applyOrigin === 'simulator' && (
-        <div className="flex items-center gap-2 bg-green-tint border border-green/20 rounded-lg px-3 py-2 text-sm text-green-ink">
-          <CheckIcon size={17} className="text-green-ink" />
-          <span>Solicitando <b>{`$${fmtCOP(frozen.amount)}`}</b> a <b>{`${frozen.term} meses`}</b> · cuota <b>{`$${fmtCOP(frozen.payment)} ${frozen.unit}`}</b></span>
-        </div>
-      )}
-      <h2 className="text-xl font-extrabold text-navy">Cuéntanos quién eres</h2>
-      <p className="text-sm text-muted-foreground">Usaremos estos datos para contactarte sobre tu solicitud.</p>
-      <div className="flex flex-col gap-4">{fieldEl('fullName', 'Nombre completo', handlers, { type: 'text', autoComplete: 'name', placeholder: 'Ej. Laura Martínez', value: values.fullName })}</div>
-      <div className="grid grid-cols-2 gap-4">
-        {fieldEl('idNumber', 'Número de cédula', handlers, { type: 'text', inputMode: 'numeric', placeholder: 'Ej. 1.024.567.890', value: values.idNumber })}
-        {fieldEl('phone', 'Celular', handlers, { type: 'tel', inputMode: 'numeric', placeholder: 'Ej. 300 123 4567', value: values.phone })}
+      <div>
+        <h2 className="text-xl font-bold text-navy tracking-tight">Datos personales y de contacto</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+          Tus datos están protegidos bajo la Ley 1581 y solo se usan para validar tu solicitud.
+        </p>
       </div>
-       <div>{fieldEl('email', 'Correo electrónico', handlers, { type: 'email', autoComplete: 'email', placeholder: 'tucorreo@ejemplo.com', value: values.email })}</div>
-       <div className="mt-3 text-center">
-         <WhatsAppLink ctx="contact" className="text-xs text-muted-foreground hover:text-navy transition-colors underline underline-offset-2">
-           ¿Preferís escribirnos por WhatsApp?
-         </WhatsAppLink>
-       </div>
-     </section>
 
+      <div className="flex flex-col gap-3">
+        {fieldEl('fullName', 'Nombre completo', handlers, {
+          type: 'text',
+          autoComplete: 'name',
+          placeholder: 'Ej. Laura Martínez',
+          value: values.fullName,
+        })}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {fieldEl('idNumber', 'Número de cédula (C.C.)', handlers, {
+          type: 'text',
+          inputMode: 'numeric',
+          placeholder: 'Ej. 1.024.567.890',
+          value: values.idNumber,
+          onChange: (e) => handlers.onFieldChange('idNumber', formatCedula(e.target.value)),
+        })}
+        {fieldEl('phone', 'Celular Colombia (+57)', handlers, {
+          type: 'tel',
+          inputMode: 'numeric',
+          placeholder: 'Ej. 300 123 4567',
+          value: values.phone,
+          onChange: (e) => handlers.onFieldChange('phone', formatPhone(e.target.value)),
+        })}
+      </div>
+
+      <div>
+        {fieldEl('email', 'Correo electrónico', handlers, {
+          type: 'email',
+          autoComplete: 'email',
+          placeholder: 'tucorreo@ejemplo.com',
+          value: values.email,
+        })}
+      </div>
+
+      <div className="mt-2 text-center">
+        <WhatsAppLink ctx="contact" className="text-xs text-muted-foreground hover:text-green-ink transition-colors underline underline-offset-2">
+          ¿Prefieres solicitar por WhatsApp?
+        </WhatsAppLink>
+      </div>
+    </section>
   );
 }
 
 export function Step2({ values, handlers }: { values: Values; handlers: FieldHandlers }) {
   return (
     <section className="flex-1 flex flex-col gap-4">
-      <h2 className="text-xl font-extrabold text-navy">Tus ingresos</h2>
-      <p className="text-sm text-muted-foreground">Nos ayuda a evaluar condiciones justas para ti.</p>
-      {selectEl('employmentType', 'Tipo de empleo', 'Selecciona una opción', EMPLOYMENT_TYPES, handlers, values.employmentType)}
-      <div className="grid grid-cols-2 gap-4">
-        {fieldEl('income', 'Ingreso mensual', handlers, { type: 'text', inputMode: 'numeric', placeholder: '$ 0', value: values.income })}
-        {selectEl('bank', 'Banco para el desembolso', 'Selecciona tu banco', BANKS, handlers, values.bank)}
+      <div>
+        <h2 className="text-xl font-bold text-navy tracking-tight">Información de ingresos y desembolso</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+          Ingresa tus datos para transferir los fondos una vez aprobada tu solicitud.
+        </p>
+      </div>
+
+      {selectEl('employmentType', 'Tipo de actividad laboral', 'Selecciona tu actividad', EMPLOYMENT_TYPES, handlers, values.employmentType)}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {fieldEl('income', 'Ingreso mensual aproximado', handlers, {
+          type: 'text',
+          inputMode: 'numeric',
+          placeholder: '$ 0 COP',
+          value: values.income,
+        })}
+        {selectEl('bank', 'Cuenta o billetera para desembolso', 'Selecciona Nequi, DaviPlata o Banco', BANKS, handlers, values.bank)}
       </div>
     </section>
   );
@@ -108,30 +158,36 @@ export function Step3({ values, consent, consentError, setConsent, setConsentErr
   frozen: { amount: number; term: number; payment: number; unit: string; frequency: string; periodRate: number };
 }) {
   const reviewRows: [string, string, boolean?][] = [
-    ['Monto', `$${fmtCOP(frozen.amount)}`],
+    ['Monto solicitado', `$${fmtCOP(frozen.amount)} COP`],
     ['Cuota estimada', `$${fmtCOP(frozen.payment)} ${frozen.unit}`],
-    ['Plazo', `${frozen.term} meses`],
-    ['Frecuencia', capFreq(frozen.frequency as 'monthly' | 'biweekly')],
-    ['Nombre', values.fullName || '—', true],
-    ['Cédula', values.idNumber || '—'],
+    ['Plazo', `${frozen.term} meses (${capFreq(frozen.frequency as 'monthly' | 'biweekly')})`],
+    ['Nombre completo', values.fullName || '—', true],
+    ['Cédula de ciudadanía', values.idNumber || '—'],
     ['Celular', values.phone || '—'],
-    ['Correo', values.email || '—', true],
-    ['Tipo de empleo', values.employmentType || '—'],
-    ['Banco', values.bank || '—'],
+    ['Correo electrónico', values.email || '—', true],
+    ['Actividad laboral', values.employmentType || '—'],
+    ['Cuenta de desembolso', values.bank || '—'],
   ];
+
   return (
     <section className="flex-1 flex flex-col gap-4">
-      <h2 className="text-xl font-extrabold text-navy">Revisa y confirma</h2>
-      <p className="text-sm text-muted-foreground">Verifica que todo esté correcto antes de enviar.</p>
-      <div className="grid grid-cols-2 gap-3">
+      <div>
+        <h2 className="text-xl font-bold text-navy tracking-tight">Revisa y confirma tu solicitud</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+          Verifica que la información sea correcta antes de enviar.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2.5 p-3.5 bg-bg-soft rounded-xl border border-border/80 text-xs">
         {reviewRows.map(([k, v, full]) => (
-          <div key={k} className={cn('flex flex-col gap-0.5 p-3 rounded-lg bg-bg-soft', full && 'col-span-2')}>
-            <span className="text-xs text-muted-2 font-medium">{k}</span>
-            <span className="text-sm font-semibold text-foreground">{v}</span>
+          <div key={k} className={cn('flex flex-col gap-0.5', full && 'col-span-2')}>
+            <span className="text-muted-2 font-medium">{k}</span>
+            <span className="font-semibold text-navy text-xs sm:text-sm">{v}</span>
           </div>
         ))}
       </div>
-      <label className="flex gap-2.5 items-start text-sm">
+
+      <label className="flex gap-3 items-start text-xs sm:text-sm cursor-pointer p-1">
         <input
           type="checkbox"
           name="consent"
@@ -139,20 +195,20 @@ export function Step3({ values, consent, consentError, setConsent, setConsentErr
           aria-invalid={consentError ? true : undefined}
           aria-describedby={consentError ? 'consentError' : undefined}
           onChange={(e) => { setConsent(e.target.checked); if (e.target.checked) setConsentError(''); }}
-          className="mt-0.5 accent-navy"
+          className="mt-0.5 accent-green w-4 h-4 rounded"
         />
-        <span className="text-muted-foreground">
+        <span className="text-muted-foreground leading-snug">
           {CONSENT_TEXT.split('Política de Privacidad')[0]}
-          <a href="/legal/privacidad" target="_blank" rel="noopener noreferrer" className="text-navy font-semibold hover:underline">Política de Privacidad</a>
+          <a href="/legal/privacidad" target="_blank" rel="noopener noreferrer" className="text-green-ink font-semibold hover:underline">
+            Política de Privacidad
+          </a>
           {CONSENT_TEXT.split('Política de Privacidad')[1]}
         </span>
       </label>
+
       <span id="consentError" role="alert" className={cn('text-xs text-destructive', consentError ? 'visible' : 'hidden')}>
         {consentError}
       </span>
-      <p className="text-[11px] text-muted-2 mt-2">
-        Tus datos se guardan localmente en tu navegador para que puedas continuar después. Al cerrar esta ventana sin enviar, la información permanecerá almacenada en tu dispositivo.
-      </p>
     </section>
   );
 }

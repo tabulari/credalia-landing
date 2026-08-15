@@ -8,9 +8,17 @@ export function ApplicationSuccess({ radicado }: { radicado: string }) {
       <div className="w-[72px] h-[72px] rounded-full bg-green flex items-center justify-center mb-5 shadow-lg animate-[popIn_0.4s_cubic-bezier(0.2,1.4,0.4,1)] motion-reduce:animate-none">
         <CheckIcon size={40} className="text-white" />
       </div>
-      <h2 className="text-xl font-extrabold text-navy">¡Solicitud enviada!</h2>
-      <p className="text-sm text-muted-foreground mt-2 max-w-[380px]">Recibimos tu solicitud y la estamos evaluando. Te contactaremos por WhatsApp en los próximos minutos.</p>
-      <div className="mt-4 bg-bg-soft border border-border rounded-lg px-4 py-2.5 text-sm text-muted-foreground">Radicado <b className="text-navy font-extrabold">{radicado}</b></div>
+      <h2 className="text-xl font-extrabold text-navy">¡Solicitud enviada con éxito!</h2>
+      <p className="text-sm text-muted-foreground mt-2 max-w-[380px]">Recibimos tu solicitud y la estamos evaluando. Puedes hacer seguimiento en tiempo real desde tu espacio digital.</p>
+      <div className="mt-4 bg-bg-soft border border-border rounded-lg px-4 py-2.5 text-sm text-muted-foreground">Radicado <b className="text-navy font-extrabold tabular-nums">{radicado}</b></div>
+      
+      <a
+        href={`/s/${radicado}`}
+        className="mt-5 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-navy text-white text-sm font-bold hover:bg-navy-ink transition-colors shadow-md focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <span>Ir a mi espacio de crédito</span>
+        <span aria-hidden="true">→</span>
+      </a>
     </section>
   );
 }

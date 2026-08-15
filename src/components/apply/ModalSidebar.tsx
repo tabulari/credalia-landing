@@ -1,17 +1,22 @@
 'use client';
 
+import Image from 'next/image';
 import { fmtCOP, fmtPct, type Simulation } from '@/lib/credit';
+import { config } from '@/lib/config';
 import { capFreq } from './use-application-form';
 import { PencilIcon } from '../icons';
 
 export function ModalSidebar({ frozen, onEditMonto }: { frozen: Simulation; onEditMonto: () => void }) {
   return (
     <aside aria-label="Resumen de simulación" className="w-[240px] bg-navy-deep text-white p-6 flex flex-col shrink-0 max-[760px]:w-full max-[760px]:flex-row max-[760px]:flex-wrap max-[760px]:p-4 max-[760px]:gap-3">
-      <div aria-hidden="true" className="mb-4 max-[760px]:mb-0">
-        <svg width="34" height="24" viewBox="0 0 42 30">
-          <path d="M2 2 L11 2 L20 15 L11 28 L2 28 L11 15 Z" fill="var(--green-soft-ink)" />
-          <path d="M16 2 L25 2 L34 15 L25 28 L16 28 L25 15 Z" fill="#fff" />
-        </svg>
+      <div className="mb-4 max-[760px]:mb-0">
+        <Image
+          src="/credalia-logo-light.svg"
+          alt={config.brandName}
+          width={28}
+          height={28}
+          className="h-7 w-7 shrink-0"
+        />
       </div>
       <p className="text-sm font-semibold text-white/60 max-[760px]:hidden">Tu solicitud</p>
       <div className="text-2xl font-extrabold mt-1 max-[760px]:text-lg max-[760px]:mt-0">
