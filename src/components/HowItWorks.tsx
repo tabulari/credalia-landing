@@ -482,7 +482,7 @@ export function HowItWorks() {
                 <div className="flex items-center justify-between text-[11px]">
                   <div className="flex items-center gap-1.5 font-bold text-[#075e54]">
                     <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse" />
-                    Credalia Oficial ✓
+                    {config.brandName} Oficial ✓
                   </div>
                   <span className="text-[10px] text-muted-2">Ahora mismo</span>
                 </div>
