@@ -47,13 +47,15 @@ export function SectionDivider({
   const isDarkTo = to === '#0a2150' || to?.includes('0a2150') || to?.includes('042851');
 
   useGSAP(() => {
+    if (typeof window === 'undefined') return;
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion || !containerRef.current) return;
+    if (!isDesktop || reduceMotion || !containerRef.current) return;
 
     const primary = primaryWaveRef.current;
     const secondary = secondaryWaveRef.current;
 
-    // 01: Butter-smooth, calming harmonic fluid sine oscillations
+    // Butter-smooth, calming harmonic fluid sine oscillations on desktop
     if (primary) {
       gsap.to(primary, {
         x: flip ? -20 : 20,
@@ -83,7 +85,7 @@ export function SectionDivider({
   return (
     <div
       ref={containerRef}
-      className={`relative -mt-px -mb-px overflow-hidden pointer-events-none select-none z-10 ${className}`}
+      className={`hidden md:block relative -mt-px -mb-px overflow-hidden pointer-events-none select-none z-10 ${className}`}
       aria-hidden="true"
       style={from ? { backgroundColor: from } : undefined}
     >
