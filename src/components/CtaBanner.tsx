@@ -15,44 +15,39 @@ export function CtaBanner() {
     if (reduceMotion || !panelRef.current) return;
 
     const panel = panelRef.current;
-    const eyebrow = panel.querySelector('[data-cta="eyebrow"]');
     const heading = panel.querySelector('[data-cta="heading"]');
     const subhead = panel.querySelector('[data-cta="subhead"]');
     const actionBlock = panel.querySelector('[data-cta="action-block"]');
-    const sheen = panel.querySelector('.cta-sheen');
 
     const tl = gsap.timeline({
-      defaults: { ease: 'power3.out' },
-      scrollTrigger: { trigger: panel, start: 'top 85%' },
+      defaults: { ease: 'power2.out' },
+      scrollTrigger: {
+        trigger: panel,
+        start: 'top 85%',
+        once: true,
+      },
     });
 
-    // 1. Panel entrance
+    // 1. Panel entrance — subtle lift, no scale distortion
     tl.fromTo(
       panel,
-      { y: 32, scale: 0.97, autoAlpha: 0 },
-      { y: 0, scale: 1, autoAlpha: 1, duration: 0.7 },
+      { y: 16, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 0.4 },
       0,
     );
 
-    // 2. Eyebrow, Heading & Subhead
-    if (eyebrow) tl.fromTo(eyebrow, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 0.2);
-    if (heading) tl.fromTo(heading, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 }, 0.3);
-    if (subhead) tl.fromTo(subhead, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 0.45);
+    // 2. Heading & Subhead
+    if (heading) tl.fromTo(heading, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35 }, 0.1);
+    if (subhead) tl.fromTo(subhead, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35 }, 0.18);
 
-    // 3. Action Block
+    // 3. Action Block — clean, firm entrance without toy bounce
     if (actionBlock) {
       tl.fromTo(
         actionBlock,
-        { y: 18, scale: 0.95, autoAlpha: 0 },
-        { y: 0, scale: 1, autoAlpha: 1, duration: 0.5, ease: 'back.out(1.4)' },
-        0.55,
+        { y: 12, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.35 },
+        0.25,
       );
-    }
-
-    // 4. One-shot Sheen Sweep
-    if (sheen) {
-      gsap.set(sheen, { xPercent: -270 });
-      tl.to(sheen, { xPercent: 270, duration: 0.9, ease: 'power2.inOut' }, 0.75);
     }
   }, { scope: containerRef });
 
@@ -61,70 +56,53 @@ export function CtaBanner() {
       ref={containerRef}
       id="cta"
       aria-labelledby="cta-heading"
-      className="bg-navy-deep text-white py-16 lg:py-24 relative z-10 -mt-2 overflow-hidden"
+      onMouseMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+        e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+      }}
+      className="footer-texture footer-grid-drift bg-primary-dark text-white py-16 lg:py-24 relative z-10 -mt-2 overflow-hidden"
     >
-      {/* Background Dot-Grid Texture */}
-      <div
-        className="absolute inset-0 opacity-10 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.16) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
-        }}
-      />
-
-      {/* Ambient Green Light Bloom */}
-      <div
-        className="absolute left-1/3 top-10 -translate-x-1/2 w-80 h-80 cta-glow cta-glow--green pointer-events-none"
-        aria-hidden="true"
-      />
-
+      <div aria-hidden="true" className="footer-cursor-glow pointer-events-none absolute inset-0" />
       <div className="mx-auto max-w-container px-6 relative pb-6 lg:pb-10">
         <div
           ref={panelRef}
           data-cta="panel"
-          className="relative flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 rounded-3xl bg-white/[0.05] ring-1 ring-white/12 p-8 sm:p-10 lg:p-14 backdrop-blur-xl shadow-2xl overflow-hidden"
+          className="relative flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 p-6 sm:p-10 lg:p-16 rounded-3xl bg-white/[0.04] ring-1 ring-primary-brand/20 shadow-[0_0_80px_-10px_rgba(246,196,8,0.22),0_0_30px_-5px_rgba(246,196,8,0.12)]"
         >
-          <span className="cta-sheen" aria-hidden="true" />
-
           {/* Left Column: Pure, Saturated Value Anchor */}
-          <div className="flex-1 min-w-0 relative space-y-3 text-left">
-            <p
-              data-cta="eyebrow"
-              className="text-xs font-semibold uppercase tracking-widest text-green-bright"
-            >
-              Comienza ahora
-            </p>
-
+          <div className="flex-1 min-w-0 relative space-y-5 text-left">
             <h2
               id="cta-heading"
               data-cta="heading"
-              className="text-3xl sm:text-4xl lg:text-[42px] font-display tracking-tight text-white leading-[1.15]"
+              className="text-section font-display font-bold text-white"
             >
-              Tu dinero en minutos, <br className="hidden sm:inline" />
-              <span className="text-orange">sin fiador ni trámites.</span>
+              Plata lista para rodar,{' '}
+              <mark className="inline-block bg-background text-primary-dark px-2.5 py-0.5 rounded-lg shadow-xs">
+                sin filas ni enredos.
+              </mark>
             </h2>
 
             <p
               data-cta="subhead"
               className="text-white/80 text-sm sm:text-base leading-relaxed max-w-lg pt-1"
             >
-              Solicita 100% en línea con tu cédula y recibe el desembolso directo en tu cuenta o billetera digital hoy mismo.
+              Pide desde tu celular con tu cédula y te llega el dinero directo a tu Nequi o cuenta hoy mismo.
             </p>
           </div>
 
           {/* Right Column: VARIANT B — Titanium Light Capsule */}
           <div
             data-cta="action-block"
-            className="flex flex-col justify-center items-stretch gap-3 w-full sm:w-[310px] lg:shrink-0 lg:border-l lg:border-white/10 lg:pl-10 relative"
+            className="flex flex-col justify-center items-stretch gap-3 w-full sm:w-[310px] lg:shrink-0 lg:pl-10 relative"
           >
             {/* Primary: Brilliant Pure White Titanium Capsule with Double Rim */}
             <ApplyButton
               origin="cta_banner"
               size="lg"
-              className="w-full min-h-[54px] h-14 bg-white text-navy-deep font-bold shadow-[0_12px_28px_-6px_rgba(255,255,255,0.2),0_8px_10px_-6px_rgba(0,0,0,0.4)] ring-1 ring-white/80 hover:bg-white/95 hover:scale-[1.01] active:scale-[0.98] transition-all text-base rounded-2xl border-0 flex items-center justify-center gap-2"
+              className="w-full min-h-[54px] h-14 bg-green text-ink font-bold shadow-[0_12px_28px_-6px_rgba(246,216,96,0.35),0_8px_10px_-6px_rgba(17,17,16,0.4)] hover:bg-green-bright hover:scale-[1.01] active:scale-[0.98] transition-all text-base rounded-2xl border-0 flex items-center justify-center gap-2"
             >
-              <span>Solicitar crédito</span>
+              <span>Pedir mi crédito</span>
             </ApplyButton>
 
             {/* Secondary: Minimalist Floating Trigger */}
@@ -134,7 +112,7 @@ export function CtaBanner() {
                 target="#simula"
                 className="w-full min-h-[48px] h-12 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all flex items-center justify-center gap-1.5 border-0 rounded-xl"
               >
-                <span>Simular cuota primero</span>
+                <span>Ajustar mi cuota</span>
                 <span className="text-white/40 font-normal">↑</span>
               </ScrollButton>
             </div>

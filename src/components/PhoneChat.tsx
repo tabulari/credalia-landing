@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { config } from '@/lib/config';
@@ -10,12 +10,6 @@ import { useSimulator } from './simulator-store';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import { track } from '@/lib/analytics';
 import './phone-chat.css';
-
-const phoneSim = calculatePayment(
-  config.simulator.defaultAmount,
-  config.simulator.defaultTerm,
-  'monthly',
-);
 
 function startMouseTilt(
   shell: HTMLElement,
@@ -88,6 +82,18 @@ export function PhoneChat() {
   const mouseCleanupRef = useRef<(() => void) | null>(null);
   const { openApply } = useSiteUi();
   const { sim } = useSimulator();
+
+  // Derive the demo cuota from the store's live rate so it never shows a
+  // placeholder value that differs from the real SSR cuota above it.
+  const phoneSim = useMemo(
+    () => calculatePayment(
+      config.simulator.defaultAmount,
+      config.simulator.defaultTerm,
+      'monthly',
+      sim.monthlyRate,
+    ),
+    [sim.monthlyRate],
+  );
 
   // Dynamic live device clock & message timestamps
   const [deviceTime, setDeviceTime] = useState<string>('10:33');
@@ -231,7 +237,7 @@ export function PhoneChat() {
                 </svg>
               </div>
 
-              {/* Official Credalia Vector Logo in circle */}
+              {/* Official Plataxi Vector Logo in circle */}
               <div className="wa-avatar">
                 <svg viewBox="0 0 512 512" className="w-full h-full">
                   <defs>
@@ -322,7 +328,7 @@ export function PhoneChat() {
                   </div>
                 </div>
 
-                {/* ── GROUP 2: Credalia (Incoming Sequence) ────────── */}
+                {/* ── GROUP 2: Plataxi (Incoming Sequence) ────────── */}
                 {/* 2.1 First Message with Left Tail */}
                 <div data-wa-bubble className="wa-bubble wa-bubble-them wa-has-tail mt-1">
                   ¡Hola Laura! Te comparto el cálculo preliminar para tu crédito:
@@ -340,7 +346,7 @@ export function PhoneChat() {
                   <div className="wa-card-row"><strong>Plazo:</strong> {phoneSim.term} meses</div>
                   <div className="wa-card-row"><strong>Cuota:</strong> {fmtCOP(phoneSim.payment)} / mes</div>
                   <div className="wa-card-row text-[10px] text-[#667781] pt-0.5 border-t border-[#f0f2f5] mt-1">
-                    Tasa: 2,6% m.v. (36,07% E.A.)
+                    Tasa fija según tu perfil • Detalles en preguntas frecuentes
                   </div>
                   <div className="wa-meta">
                     <span className="tabular-nums">{msgTimes.t1}</span>
@@ -366,7 +372,7 @@ export function PhoneChat() {
                   </div>
                 </div>
 
-                {/* ── GROUP 4: Credalia (Incoming with Tail) ───────── */}
+                {/* ── GROUP 4: Plataxi (Incoming with Tail) ───────── */}
                 <div data-wa-bubble className="wa-bubble wa-bubble-them wa-has-tail mt-1">
                   Elige cómo prefieres continuar:
                   <div className="wa-meta">

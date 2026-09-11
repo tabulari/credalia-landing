@@ -1,75 +1,64 @@
-'use client';
-
+import Image from 'next/image';
 import { ScrollButton } from './ScrollButton';
-import { ApplyButton } from './ApplyButton';
-import { PhoneChat } from './PhoneChat';
-import { ShieldCheckIcon, LockIcon } from './icons';
+import { HeroAnim } from './HeroAnim';
+import { HeroActiveNotice } from './HeroActiveNotice';
 
 export function Hero() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="pt-10 pb-12 sm:pt-14 sm:pb-16 lg:pt-16 lg:pb-20 overflow-hidden bg-white"
+      className="relative w-full min-h-[500px] sm:min-h-[650px] lg:min-h-[800px] overflow-hidden flex items-center bg-primary-dark"
     >
-      <div className="mx-auto max-w-container px-6 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-        {/* ───────────────────────────────────────────────────────────── */}
-        {/* LEFT COLUMN: Original High-Converting Value Proposition       */}
-        {/* ───────────────────────────────────────────────────────────── */}
-        <div className="lg:col-span-6 flex flex-col items-start text-left space-y-6 z-10">
-          {/* Display H1 with Electric Institutional Orange Highlight */}
-          <h1
-            id="hero-heading"
-            className="text-4xl sm:text-5xl lg:text-6xl font-display tracking-tight text-navy leading-[1.12]"
-          >
-            Crédito digital <br className="hidden sm:inline" />
-            hasta <span className="text-orange">$1.000.000</span>
-          </h1>
+      <Image
+        src="/hero-updated.jpeg"
+        alt="Taxista colombiano con Plataxi"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
+        style={{ objectPosition: '75% center' }}
+      />
 
-          {/* 3-Beat Subtitle */}
-          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl font-normal">
-            Respuesta en minutos. Tasa clara. Sin papeles.
-          </p>
+      {/* Scrim: calibrated for WCAG AA compliance (4.5:1 paragraph, 3:1 h1) over bright taxi highlights */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-black/60 lg:bg-transparent lg:bg-gradient-to-r lg:from-black/85 lg:via-black/65 lg:to-black/20"
+      />
 
-          {/* Action Buttons - Clean, Zero Arrows */}
-          <div className="flex flex-wrap items-center gap-3.5 w-full sm:w-auto pt-1">
-            <ScrollButton
-              variant="default"
-              size="lg"
-              target="#simula"
-              className="w-full sm:w-auto min-h-[48px] px-8 rounded-xl font-bold bg-navy text-white hover:bg-navy-deep shadow-md hover:shadow-lg transition-all active:scale-[0.98]"
+      <div className="relative z-10 w-full mx-auto max-w-container px-6 py-10 sm:py-12 lg:py-16">
+        <HeroAnim>
+          <div className="max-w-2xl space-y-5 text-center sm:text-left">
+            <HeroActiveNotice />
+
+            {/* Headline — white pill on yellow taxi for contrast, weight reduced so h1 doesn't dominate h2 */}
+            <h1
+              id="hero-heading"
+              data-hero-anim
+              className="text-hero font-display font-semibold tracking-[-0.015em] text-white"
             >
-              Simular mi crédito
-            </ScrollButton>
+              Soluciona tu día,{' '}
+              <mark className="inline-block bg-background text-primary-dark px-2.5 py-0.5 rounded-lg shadow-xs">
+                crédito en minutos
+              </mark>
+            </h1>
 
-            <ApplyButton
-              variant="outline"
-              size="lg"
-              className="w-full sm:w-auto min-h-[48px] px-7 rounded-xl font-bold border-border/80 hover:bg-bg-soft text-navy transition-all active:scale-[0.98]"
-            >
-              Solicitar crédito
-            </ApplyButton>
+            <p data-hero-anim className="text-sm sm:text-base text-white leading-relaxed max-w-md mx-auto sm:mx-0">
+              Solo con tu cédula y tu celular. Elige el monto que necesitas hoy y págalo a tu ritmo con cuota fija diaria.
+            </p>
+
+            {/* Single focused CTA — inDrive: 48px mobile / 64px desktop, 20-26px radius, yellow on dark */}
+            <div data-hero-anim data-slot="hero-ctas" className="pt-1 flex justify-center sm:justify-start">
+              <ScrollButton
+                variant="default"
+                size="lg"
+                target="#simula"
+                className="w-full sm:w-auto min-h-[48px] lg:min-h-[56px] px-8 rounded-lg font-bold bg-primary-brand text-primary-dark hover:bg-primary-brand/90 transition-all active:scale-[0.98] shadow-md hover:shadow-lg"
+              >
+                Simular mi cuota
+              </ScrollButton>
+            </div>
           </div>
-
-          {/* Institutional Trust Badges */}
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-xs font-semibold text-muted-2">
-            <span className="inline-flex items-center gap-1.5">
-              <ShieldCheckIcon size={16} className="text-green shrink-0" />
-              Estudio 100% digital y gratuito
-            </span>
-            <span className="hidden sm:inline text-border" aria-hidden="true">·</span>
-            <span className="inline-flex items-center gap-1.5">
-              <LockIcon size={16} className="text-green shrink-0" />
-              Datos cifrados y protegidos
-            </span>
-          </div>
-        </div>
-
-        {/* ───────────────────────────────────────────────────────────── */}
-        {/* RIGHT COLUMN: Interactive 3D Phone with Mouse Tilt            */}
-        {/* ───────────────────────────────────────────────────────────── */}
-        <div className="lg:col-span-6 flex items-center justify-center relative">
-          <PhoneChat />
-        </div>
+        </HeroAnim>
       </div>
     </section>
   );

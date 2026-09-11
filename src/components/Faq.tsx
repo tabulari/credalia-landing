@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { FAQS } from '@/lib/faqs';
 import {
@@ -13,140 +14,190 @@ import {
 import { WhatsAppLink } from './WhatsAppLink';
 import { WhatsAppIcon } from './icons';
 
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 export function Faq() {
   const containerRef = useRef<HTMLElement>(null);
-
-  useGSAP(() => {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
-
-    const leftCol = containerRef.current?.querySelector('[data-faq="left"]');
-    const rightCol = containerRef.current?.querySelector('[data-faq="right"]');
-
-    if (leftCol) {
-      gsap.fromTo(
-        leftCol,
-        { y: 24, autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: leftCol, start: 'top 85%' },
-        },
-      );
+  // 10. Deep-link: #faq-2 abre y scrollea la pregunta
+  const [value, setValue] = useState<string[]>(() => {
+    if (typeof window !== 'undefined' && window.location.hash.startsWith('#faq-')) {
+      const h = window.location.hash.slice(1);
+      if (FAQS.some((_, i) => `faq-${i}` === h)) return [h];
     }
-
-    if (rightCol) {
-      gsap.fromTo(
-        rightCol,
-        { y: 28, autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.55,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: rightCol, start: 'top 85%' },
-        },
-      );
+    return ['faq-0'];
+  });
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash.startsWith('faq-') && FAQS.some((_, i) => `faq-${i}` === hash)) {
+      setValue((prev) => (prev.includes(hash) ? prev : [...prev, hash]));
+      setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     }
-  }, { scope: containerRef });
+    const onHashChange = () => {
+      const h = window.location.hash.slice(1);
+      if (h.startsWith('faq-') && FAQS.some((_, i) => `faq-${i}` === h)) {
+        setValue((prev) => (prev.includes(h) ? prev : [...prev, h]));
+      }
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  const handleValueChange = (newVal: string[]) => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768 && newVal.length > 1) {
+      setValue([newVal[newVal.length - 1]]);
+    } else {
+      setValue(newVal);
+    }
+  };
+
+  useGSAP(
+    () => {
+      if (!containerRef.current) return;
+      const mm = gsap.matchMedia();
+      mm.add('(prefers-reduced-motion: reduce)', () => {
+        const root = containerRef.current;
+        if (!root) return;
+        gsap.set(root.querySelectorAll('[data-faq="header"], [data-faq="item"]'), {
+          autoAlpha: 1,
+          y: 0,
+          clearProps: 'transform',
+        });
+      });
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        const root = containerRef.current;
+        if (!root) return;
+        const header = root.querySelector('[data-faq="header"]');
+        const items = root.querySelectorAll<HTMLElement>('[data-faq="item"]');
+        if (header) {
+          gsap.fromTo(
+            header,
+            { y: 14, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.35,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: root,
+                start: 'top 80%',
+                once: true,
+              },
+            },
+          );
+        }
+        if (items.length) {
+          gsap.fromTo(
+            items,
+            { y: 14, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              stagger: 0.06,
+              duration: 0.35,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: root,
+                start: 'top 80%',
+                once: true,
+              },
+            },
+          );
+        }
+      });
+      return () => mm.revert();
+    },
+    { scope: containerRef },
+  );
 
   return (
     <section
       ref={containerRef}
       id="preguntas"
       aria-labelledby="faq-heading"
-      className="py-14 sm:py-16 lg:py-20 bg-white relative"
+      className="mt-16 md:mt-32 relative"
     >
       <div className="mx-auto max-w-container px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          {/* ───────────────────────────────────────────────────────────── */}
-          {/* LEFT COLUMN: Pure Sticky Editorial Anchor & Direct Bar        */}
-          {/* ───────────────────────────────────────────────────────────── */}
-          <div data-faq="left" className="lg:col-span-5 space-y-8 lg:sticky lg:top-28">
-            <div className="space-y-2 text-left">
-              <p className="text-xs font-semibold uppercase tracking-widest text-green-ink mb-1.5">
-                Transparencia total
-              </p>
-              <h2
-                id="faq-heading"
-                className="text-2xl sm:text-3xl lg:text-4xl font-display tracking-tight text-navy"
-              >
-                Claridad total sobre tu crédito
-              </h2>
-              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pt-1">
-                Todo lo que necesitas saber antes de solicitar, explicado con honestidad y sin tecnicismos bancarios.
-              </p>
-            </div>
+        {/* Centred header + single stacked column, as in the reference. */}
+        <div data-faq="header" className="text-center max-w-2xl mx-auto space-y-2 mb-10 lg:mb-12">
+          <h2 id="faq-heading" className="text-section font-display font-bold text-navy">
+            Todo claro sobre tu crédito
+          </h2>
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pt-1">
+            Todo lo que necesitas saber antes de solicitar, explicado con honestidad y sin tecnicismos bancarios.
+          </p>
+        </div>
 
-            {/* Clean Single-Action Direct Bar (Zero Badges, Zero Arrows, Zero Box Inception) */}
-            <div className="border-t border-border/70 pt-6 space-y-4 text-left">
-              <div className="space-y-1">
-                <h3 className="text-base font-bold text-navy">
-                  ¿Tienes una duda diferente?
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Nuestro equipo te atiende directamente por WhatsApp para revisar tu caso particular en minutos.
-                </p>
-              </div>
-
-              <WhatsAppLink
-                ctx="faq"
-                className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-5 py-3 rounded-xl bg-white hover:bg-bg-soft text-navy font-bold text-sm border border-border shadow-2xs hover:border-green/40 transition-all active:scale-[0.98]"
+        <div className="max-w-3xl mx-auto">
+          <Accordion className="space-y-3" multiple value={value} onValueChange={handleValueChange}>
+            {FAQS.map((faq, i) => (
+              <AccordionItem
+                key={i}
+                id={`faq-${i}`}
+                value={`faq-${i}`}
+                data-faq="item"
+                className="rounded-lg bg-surface-card overflow-hidden"
               >
-                <WhatsAppIcon size={18} className="text-[#25D366] shrink-0" />
-                <span>Hablar con un asesor</span>
-              </WhatsAppLink>
-            </div>
+                <AccordionTrigger className="px-6 py-5 text-left text-base font-bold text-navy hover:no-underline gap-4 active:scale-[0.97] transition-transform">
+                  <span className="leading-snug text-left">{faq.q}</span>
+                </AccordionTrigger>
+
+                <AccordionContent className="px-6 pb-5 pt-0 text-left">
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed border-t border-border/40 pt-3">
+                    {faq.answer}
+                  </p>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+
+        {/* Still-have-a-question bar, now centred under the stack */}
+        <div className="max-w-3xl mx-auto mt-10 pt-8 border-t border-border/70 text-center space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-base font-bold text-navy">¿Tienes una duda diferente?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Nuestro equipo te atiende directamente por WhatsApp para revisar tu caso particular en minutos.
+            </p>
           </div>
 
-          {/* ───────────────────────────────────────────────────────────── */}
-          {/* RIGHT COLUMN: Direct, Uncluttered Accordion (Zero Nesting)   */}
-          {/* ───────────────────────────────────────────────────────────── */}
-          <div data-faq="right" className="lg:col-span-7 space-y-3">
-            <Accordion className="space-y-3 min-w-0">
-              {FAQS.map((faq, i) => (
-                <AccordionItem
-                  key={i}
-                  value={`faq-${i}`}
-                  data-faq="item"
-                  className="rounded-2xl border border-border/80 bg-white hover:border-green/40 hover:shadow-2xs transition-all duration-200 overflow-hidden"
-                >
-                  <AccordionTrigger className="px-5 sm:px-6 py-4 sm:py-5 text-left text-base font-bold text-navy hover:no-underline gap-4">
-                    <span className="leading-snug text-left">{faq.q}</span>
-                  </AccordionTrigger>
-
-                  <AccordionContent className="px-5 sm:px-6 pb-5 pt-0 text-left">
-                    {/* Direct, Honest Answer without Nested Containers */}
-                    <div className="space-y-1.5 border-t border-border/40 pt-3">
-                      <p className="text-sm sm:text-base font-bold text-navy leading-snug">
-                        {faq.verdict}
-                      </p>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {faq.explanation}
-                      </p>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+          <WhatsAppLink
+            ctx="faq"
+            className="inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-lg bg-surface-card text-navy font-bold text-sm transition-all active:scale-[0.98]"
+          >
+            <WhatsAppIcon size={18} className="text-[#25D366] shrink-0" />
+            <span>Hablar con un asesor</span>
+          </WhatsAppLink>
         </div>
 
         {/* Static noscript fallback for crawlers & non-JS */}
         <noscript>
           <div className="max-w-3xl mx-auto flex flex-col gap-3 mt-8">
-            {FAQS.map(({ q, verdict, explanation }, i) => (
+            {FAQS.map(({ q, answer }, i) => (
               <details key={i} className="border border-border rounded-xl p-4">
                 <summary className="text-sm font-bold text-navy cursor-pointer">{q}</summary>
-                <p className="mt-2 text-sm font-bold text-navy">{verdict}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{explanation}</p>
+                <p className="mt-2 text-sm text-muted-foreground">{answer}</p>
               </details>
             ))}
           </div>
         </noscript>
       </div>
+      {/* 2. FAQPage JSON-LD para indexación aunque JS falle — single source con FAQS */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: FAQS.map((f) => ({
+              '@type': 'Question',
+              name: f.q,
+              acceptedAnswer: { '@type': 'Answer', text: f.answer },
+            })),
+          }),
+        }}
+      />
     </section>
   );
 }

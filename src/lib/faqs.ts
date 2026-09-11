@@ -1,44 +1,46 @@
+import { config } from './config';
+import { fmtCOP } from './credit';
+
 export interface Faq {
   q: string;
-  verdict: string;
-  explanation: string;
-  icon: 'shield' | 'bolt' | 'document' | 'refresh' | 'star';
+  answer: string;
+  icon?: 'shield' | 'bolt' | 'document' | 'refresh' | 'star';
 }
 
 export const FAQS: Faq[] = [
   {
+    q: '¿Qué incluye mi cuota? ¿Hay intereses ocultos?',
+    answer: `Sin interés oculto. Tu cuota 1 a 3 meses ya incluye solo dos rubros fijos y claros: administración ($${fmtCOP(config.credit.adminFeeTotal)} total prorrateado por cuota) y fianza ($${fmtCOP(config.credit.guaranteeFeeTotal)} total). Eliges abono diario, semanal, quincenal o mensual y pagas cuota fija sin sorpresas.`,
+    icon: 'document',
+  },
+  {
     q: '¿Simular o solicitar me baja puntos o afecta en Datacrédito?',
-    verdict: 'No, simular no afecta tu historial ni baja tu puntaje en centrales de riesgo.',
-    explanation:
-      'Puedes cotizar diferentes montos y plazos con total libertad. La validación formal solo se realiza si decides enviar tu solicitud definitiva.',
+    answer:
+      'No. Simular es 100% libre y no baja tu puntaje. La consulta formal solo se realiza si decides enviar tu solicitud definitiva.',
     icon: 'shield',
   },
   {
     q: '¿Cuánto demora en llegar el dinero a mi cuenta o Nequi?',
-    verdict: 'La evaluación toma minutos y el desembolso es inmediato una vez aceptada la oferta.',
-    explanation:
-      'Transferimos los fondos directamente a tu cuenta bancaria, Nequi o DaviPlata tan pronto apruebes las condiciones.',
+    answer:
+      'En minutos. Tan pronto apruebas las condiciones en tu celular, te transferimos el dinero directo a tu Nequi, DaviPlata o cuenta bancaria.',
     icon: 'bolt',
   },
   {
-    q: '¿Qué requisitos necesito para solicitar? ¿Piden fiador?',
-    verdict: 'Solo necesitas tu cédula de ciudadanía vigente y soporte de ingresos. Cero fiadores.',
-    explanation:
-      'Todo el proceso es 100% digital desde tu celular, sin papeleos físicos, sin filas y sin trámites notariales.',
+    q: '¿Tengo que pagar algo antes de recibir el dinero?',
+    answer:
+      'Nunca. El estudio es 100% gratuito y no cobramos pólizas ni adelantos. Solo comienzas a pagar tus cuotas después de tener el dinero en tu cuenta.',
     icon: 'document',
   },
   {
     q: '¿Puedo pagar mi crédito antes de tiempo sin penalidades?',
-    verdict: 'Sí, puedes hacer abonos a capital o liquidar el crédito anticipadamente sin ningún cobro extra.',
-    explanation:
-      'Tienes total libertad para pagar cuando quieras, liquidando únicamente los intereses del tiempo que utilizaste el dinero.',
+    answer:
+      'Sí. Puedes liquidar de 1 a 3 meses cuando quieras sin penalidad. Pagas solo las cuotas causadas hasta ese día (administración prorrateada incluida) y te liberas de las cuotas restantes.',
     icon: 'refresh',
   },
   {
     q: '¿Puedo aplicar si no tengo historial crediticio bancario?',
-    verdict: 'Sí, puedes aplicar incluso si estás iniciando tu vida crediticia o no tienes historial previo.',
-    explanation:
-      'Evaluamos tu perfil de forma integral con modelos propios para darte la oportunidad de acceder y construir tu historial financiero.',
+    answer:
+      'Sí. No necesitas historial bancario tradicional; evaluamos tus ingresos y actividad como conductor para abrirte las puertas al crédito.',
     icon: 'star',
   },
 ];

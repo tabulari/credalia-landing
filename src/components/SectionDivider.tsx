@@ -1,117 +1,257 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useId } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 interface SectionDividerProps {
   from?: string;
   to?: string;
+  waveColor?: string;
   amplitude?: 'soft' | 'medium' | 'bold';
   flip?: boolean;
   className?: string;
 }
 
-// Oversized paths starting at -200 and extending to 1640 with deep bottom anchor (V140)
-// Guarantees zero side gaps and zero sub-pixel seam glitches across all screen sizes and zoom levels.
-const WAVES = {
+// Catenary aerodynamic horizon curves with deep bottom anchors to prevent sub-pixel seams
+const HORIZONS = {
   soft: {
-    viewBox: '0 0 1440 40',
-    d: 'M-200 120V24C160 14 460 14 720 24C980 34 1280 34 1640 24V120H-200Z',
-    dSecondary: 'M-200 120V28C220 18 520 20 840 28C1100 34 1360 30 1640 26V120H-200Z',
+    viewBox: '0 0 1440 50',
+    d: 'M -100 0 C 360 30, 1080 30, 1540 0 V 100 H -100 Z',
+    dSecondary: 'M -100 0 C 360 20, 1080 20, 1540 0 V 100 H -100 Z',
+    dStroke: 'M -100 0 C 360 30, 1080 30, 1540 0',
   },
   medium: {
-    viewBox: '0 0 1440 60',
-    d: 'M-200 140V30C160 8 460 8 720 30C980 52 1280 52 1640 30V140H-200Z',
-    dSecondary: 'M-200 140V38C220 16 520 12 840 36C1100 50 1360 44 1640 34V140H-200Z',
+    viewBox: '0 0 1440 70',
+    d: 'M -100 0 C 360 48, 1080 48, 1540 0 V 120 H -100 Z',
+    dSecondary: 'M -100 0 C 360 32, 1080 32, 1540 0 V 120 H -100 Z',
+    dStroke: 'M -100 0 C 360 48, 1080 48, 1540 0',
   },
   bold: {
-    viewBox: '0 0 1440 80',
-    d: 'M-200 160V42C160 18 460 18 720 40C980 62 1280 62 1640 38V160H-200Z',
-    dSecondary: 'M-200 160V50C220 28 520 26 840 48C1100 66 1360 62 1640 44V160H-200Z',
+    viewBox: '0 0 1440 90',
+    d: 'M -100 0 C 360 68, 1080 68, 1540 0 V 140 H -100 Z',
+    dSecondary: 'M -100 0 C 360 48, 1080 48, 1540 0 V 140 H -100 Z',
+    dStroke: 'M -100 0 C 360 68, 1080 68, 1540 0',
   },
 };
 
 export function SectionDivider({
-  from,
-  to = '#f7f9fa',
+  from = 'var(--background)',
+  to = 'var(--background)',
+  waveColor,
   amplitude = 'medium',
   flip = false,
   className = '',
 }: SectionDividerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const primaryWaveRef = useRef<SVGPathElement>(null);
-  const secondaryWaveRef = useRef<SVGPathElement>(null);
-  const { viewBox, d, dSecondary } = WAVES[amplitude];
+  const svgRef = useRef<SVGSVGElement>(null);
+  const primaryPathRef = useRef<SVGPathElement>(null);
+  const secondaryPathRef = useRef<SVGPathElement>(null);
+  const glowEdgeRef = useRef<SVGPathElement>(null);
+  const gradientRef = useRef<SVGLinearGradientElement>(null);
 
-  const isDarkTo = to === '#0a2150' || to?.includes('0a2150') || to?.includes('042851');
+  const reactId = useId();
+  const gradId = `viscoelastic-glow-${reactId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
+
+  const { viewBox, d, dSecondary, dStroke } = HORIZONS[amplitude];
+
+  const DARK_TOKEN = 'var(--color-primary-dark)';
+  const CREAM_TOKEN = 'var(--color-secondary-surface)';
+  const isDarkTo = to === DARK_TOKEN;
+  const fillColor = waveColor || to;
 
   useGSAP(() => {
-    if (typeof window === 'undefined') return;
-    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+    if (typeof window === 'undefined' || !containerRef.current) return;
+
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!isDesktop || reduceMotion || !containerRef.current) return;
+    if (reduceMotion) return;
 
-    const primary = primaryWaveRef.current;
-    const secondary = secondaryWaveRef.current;
+    let lastY = window.scrollY;
+    let lastTime = performance.now();
+    let inView = false;
+    let resetTimer: ReturnType<typeof setTimeout> | null = null;
 
-    // Butter-smooth, calming harmonic fluid sine oscillations on desktop
-    if (primary) {
-      gsap.to(primary, {
-        x: flip ? -20 : 20,
-        scaleY: 1.05,
-        duration: 5.2,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        transformOrigin: '50% 100%',
-      });
-    }
+    // High-performance quickTo setters for 120 FPS continuous tracking without GC pressure
+    const quickPrimaryScaleY = primaryPathRef.current
+      ? gsap.quickTo(primaryPathRef.current, 'scaleY', { duration: 0.22, ease: 'power2.out' })
+      : null;
+    const quickPrimaryY = primaryPathRef.current
+      ? gsap.quickTo(primaryPathRef.current, 'y', { duration: 0.22, ease: 'power2.out' })
+      : null;
 
-    if (secondary) {
-      gsap.to(secondary, {
-        x: flip ? 28 : -28,
-        scaleY: 1.08,
-        duration: 6.8,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        delay: 0.5,
-        transformOrigin: '50% 100%',
-      });
-    }
+    const quickSecondaryScaleY = secondaryPathRef.current
+      ? gsap.quickTo(secondaryPathRef.current, 'scaleY', { duration: 0.32, ease: 'power2.out' })
+      : null;
+    const quickSecondaryY = secondaryPathRef.current
+      ? gsap.quickTo(secondaryPathRef.current, 'y', { duration: 0.32, ease: 'power2.out' })
+      : null;
+
+    const quickGlowScaleY = glowEdgeRef.current
+      ? gsap.quickTo(glowEdgeRef.current, 'scaleY', { duration: 0.22, ease: 'power2.out' })
+      : null;
+    const quickGlowY = glowEdgeRef.current
+      ? gsap.quickTo(glowEdgeRef.current, 'y', { duration: 0.22, ease: 'power2.out' })
+      : null;
+
+    // IntersectionObserver guarantees we only compute physics when the divider is in viewport
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+      },
+      { threshold: 0, rootMargin: '120px 0px 120px 0px' }
+    );
+    observer.observe(containerRef.current);
+
+    const onScroll = () => {
+      if (!inView) {
+        lastY = window.scrollY;
+        lastTime = performance.now();
+        return;
+      }
+
+      const now = performance.now();
+      const dt = Math.max(10, now - lastTime);
+      const dy = window.scrollY - lastY;
+      lastY = window.scrollY;
+      lastTime = now;
+
+      // Normalised velocity: positive = scrolling down, negative = scrolling up
+      const velocity = dy / dt;
+      const clampedVelocity = Math.max(-1.8, Math.min(1.8, velocity));
+
+      // Viscoelastic deformation factors
+      const targetScaleY = 1 + clampedVelocity * 0.25;
+      const targetTranslateY = clampedVelocity * 5;
+      const secondaryScaleY = 1 + clampedVelocity * 0.18;
+      const secondaryTranslateY = clampedVelocity * 3.5;
+
+      // Real-time kinematic tracking (smooth, zero-allocation)
+      if (quickPrimaryScaleY && quickPrimaryY) {
+        quickPrimaryScaleY(targetScaleY);
+        quickPrimaryY(targetTranslateY);
+      }
+      if (quickSecondaryScaleY && quickSecondaryY) {
+        quickSecondaryScaleY(secondaryScaleY);
+        quickSecondaryY(secondaryTranslateY);
+      }
+      if (quickGlowScaleY && quickGlowY) {
+        quickGlowScaleY(targetScaleY);
+        quickGlowY(targetTranslateY);
+      }
+
+      // Dynamic glint shift along the crest
+      if (gradientRef.current) {
+        const shift = clampedVelocity * 12;
+        gradientRef.current.setAttribute('x1', `${20 - shift}%`);
+        gradientRef.current.setAttribute('x2', `${80 - shift}%`);
+      }
+
+      // Clear any pending spring return while active scrolling is happening
+      if (resetTimer) clearTimeout(resetTimer);
+
+      // Spring return to perfect equilibrium with Emil's signature damped bounce
+      resetTimer = setTimeout(() => {
+        const elementsToSpring = [primaryPathRef.current, glowEdgeRef.current].filter(Boolean);
+        if (elementsToSpring.length) {
+          gsap.to(elementsToSpring, {
+            scaleY: 1,
+            y: 0,
+            duration: 0.85,
+            ease: 'elastic.out(1.15, 0.42)',
+            overwrite: 'auto',
+          });
+        }
+        if (secondaryPathRef.current) {
+          gsap.to(secondaryPathRef.current, {
+            scaleY: 1,
+            y: 0,
+            duration: 0.95,
+            ease: 'elastic.out(1.1, 0.45)',
+            overwrite: 'auto',
+          });
+        }
+        if (gradientRef.current) {
+          gsap.to(gradientRef.current, {
+            attr: { x1: '20%', x2: '80%' },
+            duration: 0.7,
+            ease: 'power3.out',
+          });
+        }
+      }, 90);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      observer.disconnect();
+      if (resetTimer) clearTimeout(resetTimer);
+    };
   }, { scope: containerRef });
 
   return (
     <div
       ref={containerRef}
-      className={`hidden md:block relative -mt-px -mb-px overflow-hidden pointer-events-none select-none z-10 ${className}`}
+      className={`block relative -mt-px -mb-px overflow-hidden pointer-events-none select-none z-10 ${className}`}
       aria-hidden="true"
       style={from ? { backgroundColor: from } : undefined}
     >
       <svg
+        ref={svgRef}
         viewBox={viewBox}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full block transform-gpu will-change-transform"
+        className="w-full h-12 sm:h-16 lg:h-20 block transform-gpu will-change-transform overflow-hidden"
         preserveAspectRatio="none"
         style={{
           marginBottom: '-2px',
+          overflow: 'hidden',
           ...(flip ? { transform: 'scaleX(-1)' } : {}),
         }}
       >
-        {/* Harmonic Translucent Undertone Wave */}
+        <defs>
+          {/* Luminous micro-lens edge gradient */}
+          <linearGradient
+            ref={gradientRef}
+            id={gradId}
+            x1="20%"
+            y1="0%"
+            x2="80%"
+            y2="0%"
+          >
+            <stop offset="0%" stopColor="var(--color-primary-brand)" stopOpacity="0" />
+            <stop offset="35%" stopColor="var(--color-primary-brand)" stopOpacity="0.45" />
+            <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.95" />
+            <stop offset="65%" stopColor="var(--color-primary-brand)" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="var(--color-primary-brand)" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+
+        {/* Secondary Harmonic Stratum — Deforms concurrently with subtle fluid lag */}
         <path
-          ref={secondaryWaveRef}
+          ref={secondaryPathRef}
           d={dSecondary}
-          fill={isDarkTo ? '#1e9e55' : to}
-          opacity={isDarkTo ? '0.22' : '0.35'}
+          fill={isDarkTo ? CREAM_TOKEN : fillColor}
+          opacity={isDarkTo ? '0.55' : waveColor ? '0.55' : '0.35'}
+          style={{ transformOrigin: '50% 100%' }}
         />
-        {/* Primary Solid Surface Wave */}
+
+        {/* Primary Viscoelastic Horizon Surface */}
         <path
-          ref={primaryWaveRef}
+          ref={primaryPathRef}
           d={d}
-          fill={to}
+          fill={isDarkTo ? DARK_TOKEN : fillColor}
+          style={{ transformOrigin: '50% 100%' }}
+        />
+
+        {/* Luminous Precision Rim */}
+        <path
+          ref={glowEdgeRef}
+          d={dStroke}
+          stroke={`url(#${gradId})`}
+          strokeWidth="1.75"
+          strokeLinecap="round"
+          style={{ transformOrigin: '50% 100%' }}
         />
       </svg>
     </div>

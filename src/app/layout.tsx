@@ -1,25 +1,30 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, DM_Serif_Display } from "next/font/google";
+import { Archivo, Inter } from "next/font/google";
 import Script from "next/script";
 import { config } from "@/lib/config";
 import { fmtCOP } from "@/lib/credit";
 import { StructuredData } from "@/components/StructuredData";
 import { SiteUiProvider } from "@/components/site-ui";
 import { SimulatorProvider } from "@/components/simulator-store";
+import { getInitialRates, type RuntimeRatesConfig } from "@/lib/rates-config";
 import { RevealController } from "@/components/RevealController";
 import { GsapProvider } from "@/components/GsapProvider";
 import "./globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
+// Inter carries body copy; Archivo is the display face (the closest freely
+// licensed stand-in for inDrive's PP Agrandir — wide grotesque, tight tracking).
+// The CSS var names are legacy and kept so `font-sans` / `font-display` usages
+// across the app keep working unchanged.
+const jakarta = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-jakarta",
   display: "swap",
 });
 
-const display = DM_Serif_Display({
+const display = Archivo({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["600", "700", "800"],
   variable: "--font-display",
   display: "swap",
 });
@@ -27,14 +32,14 @@ const display = DM_Serif_Display({
 const MAX_AMOUNT_DISPLAY = `$${fmtCOP(config.simulator.amountMax).replace(',00','')}`;
 const DESCRIPTION =
   `Crédito digital en Colombia hasta ${MAX_AMOUNT_DISPLAY}. Respuesta en minutos, tasa clara y sin papeles. Simula tu cuota y solicita 100% en línea.`;
-const OG_TITLE = `${config.brandName} — Crédito digital hasta ${MAX_AMOUNT_DISPLAY}`;
+const OG_TITLE = `${config.brandName} - Crédito digital hasta ${MAX_AMOUNT_DISPLAY}`;
 const BRAND_ASSET_VERSION = '3ef966e';
 
 // metadataBase makes OG/canonical URLs absolute (⚠️ NEXT_PUBLIC_SITE_URL must be
 // the real domain or WhatsApp/social previews break).
 export const metadata: Metadata = {
   metadataBase: new URL(config.siteUrl),
-  title: `${config.brandName} — Crédito digital 100% en línea`,
+  title: `${config.brandName} - Crédito digital 100% en línea`,
   description: DESCRIPTION,
   authors: [{ name: config.brandName }],
   alternates: { canonical: "/", languages: { "es-CO": "/" } },
@@ -74,9 +79,29 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+// Render per request so the simulator reflects the admin's latest financial
+// settings without a redeploy. The layout reads Core server-side (below) and
+// seeds the client simulator with the active row (ADR-0001).
+export const dynamic = "force-dynamic";
+
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // Server-side read of Core's public rates-config (no CORS, in the initial
+  // HTML). Único SimulatorProvider del árbol: las páginas consumen estos rates
+  // sin re-sembrar. Falls back to static config when Core is unreachable.
+  const fallbackRates: RuntimeRatesConfig = {
+    monthlyRate: config.credit.monthlyRate,
+    amountMin: config.simulator.amountMin,
+    amountMax: config.simulator.amountMax,
+    termOptions: config.simulator.termOptions,
+    offeredFrequencies: ['daily', 'weekly', 'biweekly', 'monthly'],
+  };
+  const { rates: initialRates } = await getInitialRates(
+    config.ratesConfigEndpoint,
+    fallbackRates,
+  );
+
   return (
     <html lang="es" className={`${jakarta.variable} ${display.variable}`} suppressHydrationWarning>
       <body>
@@ -111,7 +136,9 @@ export default function RootLayout({
 
         <SiteUiProvider>
           <GsapProvider>
-            <SimulatorProvider>{children}</SimulatorProvider>
+            <SimulatorProvider initialRates={initialRates}>
+              {children}
+            </SimulatorProvider>
           </GsapProvider>
         </SiteUiProvider>
 

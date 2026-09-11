@@ -1,5 +1,5 @@
 /**
- * Credalia — isolated credit logic (PURE).
+ * Plataxi — isolated credit logic (PURE).
  *
  * Ported verbatim from the design prototype `app.js` (sections 1 & 2). All
  * credit math + eligibility rules live here and nowhere else, so the real
@@ -13,7 +13,7 @@
 
 import { config } from './config';
 
-export type Frequency = "monthly" | "biweekly";
+export type Frequency = "daily" | "weekly" | "biweekly" | "monthly" | "bimonthly" | "quarterly";
 
 export interface Simulation {
   amount: number;
@@ -25,7 +25,10 @@ export interface Simulation {
   monthlyRate: number; // decimal, monthly
   ea: number; // decimal, effective annual (E.A.)
   nPeriods: number;
-  unit: "/mes" | "/quincena";
+  unit: "/día" | "/semana" | "/quincena" | "/mes" | "/bimestre" | "/trimestre";
+  isEstimate: boolean;
+  adminFeePerPeriod: number; // COP por cuota (administración)
+  guaranteeFeeTotal: number; // COP total fianza
   valid: boolean; // false when the amount/term combo isn't offered
   message: string; // guidance shown to the user when !valid
 }
@@ -33,6 +36,20 @@ export interface Simulation {
 export interface Validity {
   ok: boolean;
   message: string;
+}
+
+/**
+ * Single source of truth para qué plazos están deshabilitados según el monto.
+ * Usado tanto por validateApplication (bloqueo CTA) como por Simulator (chips disabled).
+ */
+export function isTermDisabled(amount: number, termMonths: number): boolean {
+  if (amount <= config.simulator.amountMin && termMonths !== 1) return true;
+  if (amount > config.credit.highAmountThreshold && termMonths < config.credit.highAmountMinTerm) return true;
+  return false;
+}
+
+export function getDisabledTerms(amount: number, termOptions: number[]): number[] {
+  return termOptions.filter((t) => isTermDisabled(amount, t));
 }
 
 /**
@@ -47,23 +64,19 @@ export function validateApplication(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _frequency: Frequency,
 ): Validity {
-  const { smallAmountThreshold, smallAmountMaxTerm, highAmountThreshold, highAmountMinTerm } = config.credit;
+  if (!isTermDisabled(amount, termMonths)) return { ok: true, message: "" };
 
-  if (amount < smallAmountThreshold && termMonths >= smallAmountMaxTerm) {
+  const { highAmountThreshold, highAmountMinTerm } = config.credit;
+  if (amount <= config.simulator.amountMin) {
     return {
       ok: false,
-      message:
-        `Este monto no aplica para plazos de ${smallAmountMaxTerm} meses o más. Reduce el plazo o aumenta el monto.`,
+      message: `Para el monto mínimo de $${fmtCOP(config.simulator.amountMin)} el plazo disponible es de 1 mes.`,
     };
   }
-  if (amount > highAmountThreshold && termMonths < highAmountMinTerm) {
-    return {
-      ok: false,
-      message:
-        `Para montos superiores a $${fmtCOP(highAmountThreshold)} el plazo mínimo es de ${highAmountMinTerm} meses.`,
-    };
-  }
-  return { ok: true, message: "" };
+  return {
+    ok: false,
+    message: `Para montos superiores a $${fmtCOP(highAmountThreshold)} el plazo mínimo es de ${highAmountMinTerm} meses.`,
+  };
 }
 
 export function calculatePayment(
@@ -73,11 +86,16 @@ export function calculatePayment(
   monthlyRate: number = config.credit.monthlyRate,
 ): Simulation {
   const MONTHLY_RATE = monthlyRate;
-  const isBiweekly = frequency === "biweekly";
-
-  const periodsPerMonth = isBiweekly ? 2 : 1;
+  // periodsPerMonth: how many payments per calendar month (< 1 for multi-month periods)
+  const periodsPerMonth =
+    frequency === "daily" ? 30
+    : frequency === "weekly" ? 4
+    : frequency === "biweekly" ? 2
+    : frequency === "bimonthly" ? 0.5   // 1 payment every 2 months
+    : frequency === "quarterly" ? 1 / 3  // 1 payment every 3 months
+    : 1;
   const nPeriods = termMonths * periodsPerMonth;
-  const periodRate = isBiweekly ? MONTHLY_RATE / 2 : MONTHLY_RATE;
+  const periodRate = MONTHLY_RATE / periodsPerMonth;
 
   // Standard amortized payment: P * i / (1 - (1+i)^-n)
   const factor = Math.pow(1 + periodRate, -nPeriods);
@@ -86,6 +104,9 @@ export function calculatePayment(
   const totalCost = payment * nPeriods; // derived from the ROUNDED payment (display parity)
   const ea = Math.pow(1 + MONTHLY_RATE, 12) - 1; // annual equivalent
   const validity = validateApplication(amount, termMonths, frequency);
+  const adminFeeTotal = config.credit.adminFeeTotal;
+  const guaranteeFeeTotal = config.credit.guaranteeFeeTotal;
+  const adminFeePerPeriod = Math.round(adminFeeTotal / nPeriods);
 
   return {
     amount,
@@ -97,7 +118,16 @@ export function calculatePayment(
     monthlyRate: MONTHLY_RATE, // decimal, monthly
     ea, // decimal, annual
     nPeriods,
-    unit: isBiweekly ? "/quincena" : "/mes",
+    unit:
+      frequency === "daily" ? "/día"
+      : frequency === "weekly" ? "/semana"
+      : frequency === "biweekly" ? "/quincena"
+      : frequency === "bimonthly" ? "/bimestre"
+      : frequency === "quarterly" ? "/trimestre"
+      : "/mes",
+    isEstimate: frequency === "bimonthly" || frequency === "quarterly",
+    adminFeePerPeriod,
+    guaranteeFeeTotal,
     valid: validity.ok, // false when the combo is not offered
     message: validity.message, // guidance to show the user
   };
@@ -106,22 +136,18 @@ export function calculatePayment(
 /* ---------- FORMATTING HELPERS (presentation only) ---------- */
 
 /**
- * Colombian: thousands separated by ".", decimals by ",".
- * The prototype replaced U+00A0 with "."; `\s` generalizes that to every
- * group-separator variant ICU may emit (space, U+00A0, U+202F) so output is
- * stable across Node/ICU builds. On this runtime es-CO already groups with
- * ".", making the replace a no-op.
+ * Colombian: thousands separated by "." (no decimals). Deterministic by
+ * construction — no `toLocaleString`/ICU — so server and client (any engine)
+ * tag the same string, immune to locale/CLDR variance.
  */
 export function fmtCOP(n: number): string {
-  return Math.round(n).toLocaleString("es-CO").replace(/\s/g, ".");
+  const sign = n < 0 ? "-" : "";
+  const digits = Math.round(Math.abs(n)).toString();
+  return sign + digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 export function formatCurrencyCOP(n: number): string {
-  return new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-    maximumFractionDigits: 0,
-  }).format(Math.round(n));
+  return `$${fmtCOP(n)}`;
 }
 
 export function fmtPct(decimal: number, dec: number): string {

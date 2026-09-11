@@ -1,5 +1,21 @@
 import type { Config } from "tailwindcss";
 
+// Every token resolves to one of the 5 palette colors (or white). Utilities are
+// built from the channel triplets in globals.css rather than from the finished
+// var(--token) colors: Tailwind drops an opacity modifier it cannot split into
+// channels, which silently deleted ~55 tint utilities (border-green/20,
+// ring-white/12, bg-navy/90 …) and let ring-1 fall back to its default blue.
+const tint = (channels: string) => `rgb(var(${channels}) / <alpha-value>)`;
+
+const DARK = "--color-primary-dark-rgb";
+const BRAND = "--color-primary-brand-rgb";
+const SURFACE = "--color-secondary-surface-rgb";
+const TEXT = "--color-secondary-text-rgb";
+const TEXT_AA = "--color-secondary-text-aa-rgb";
+const LINE = "--color-secondary-border-rgb";
+const WHITE = "--color-white-rgb";
+const ERROR = "--color-feedback-error-rgb";
+
 const config: Config = {
   content: ["./src/**/*.{ts,tsx,mdx}"],
   theme: {
@@ -10,57 +26,125 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // ShadCN semantic tokens → brand colors
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        card: { DEFAULT: "var(--card)", foreground: "var(--card-foreground)" },
-        popover: { DEFAULT: "var(--popover)", foreground: "var(--popover-foreground)" },
-        primary: { DEFAULT: "var(--primary)", foreground: "var(--primary-foreground)" },
-        secondary: { DEFAULT: "var(--secondary)", foreground: "var(--secondary-foreground)" },
-        muted: { DEFAULT: "var(--muted)", foreground: "var(--muted-foreground)" },
-        accent: { DEFAULT: "var(--accent)", foreground: "var(--accent-foreground)" },
-        destructive: { DEFAULT: "var(--destructive)", foreground: "var(--destructive-foreground)" },
-        border: "var(--border)",
-        input: "var(--input)",
-        ring: "var(--ring)",
-        // Brand tokens
-        navy: { DEFAULT: "#0d2a5e", deep: "#0a2150", ink: "#11213f" },
-        orange: { DEFAULT: "#f5601b", ink: "#c2440a" },
-        green: { DEFAULT: "#1e9e55", ink: "#15793f", soft: "#e8f2dd", "soft-ink": "#137038", tint: "#e7faf4", bright: "#2bbd6a" },
-        ink: "#14213d",
-        "muted-2": "#677085",
-        "bg-soft": "#f7f9fa",
-        "border-2": "#eef1f4",
-        error: "#c5392c",
-        "hint-ink": "#9a4a16",
-        "hint-bg": "#fff4ed",
+        // 5 Primary & Secondary Color Utility Tokens
+        "primary-dark": tint(DARK),
+        "primary-brand": tint(BRAND),
+        "secondary-surface": tint(SURFACE),
+        "secondary-text": tint(TEXT),
+        "secondary-border": tint(LINE),
+
+        // Feedback colors (user states only, not brand identity).
+        "feedback-error": { DEFAULT: tint(ERROR), bg: tint(SURFACE) },
+        "feedback-success": { DEFAULT: tint(BRAND), bg: tint(SURFACE) },
+
+        // ShadCN semantic tokens
+        background: tint(WHITE),
+        foreground: tint(DARK),
+        card: { DEFAULT: tint(WHITE), foreground: tint(DARK) },
+        popover: { DEFAULT: tint(WHITE), foreground: tint(DARK) },
+        primary: { DEFAULT: tint(DARK), foreground: tint(WHITE) },
+        secondary: { DEFAULT: tint(BRAND), foreground: tint(DARK) },
+        muted: { DEFAULT: tint(SURFACE), foreground: tint(TEXT_AA) },
+        accent: { DEFAULT: tint(SURFACE), foreground: tint(DARK) },
+        destructive: { DEFAULT: tint(ERROR), foreground: tint(WHITE) },
+        border: tint(LINE),
+        input: tint(LINE),
+        ring: tint(DARK),
+
+        // Semantic surface tokens — white canvas, cream raised, onyx dark
+        surface: {
+          primary: tint(WHITE),
+          card: tint(SURFACE),
+          secondary: tint(WHITE),
+          tertiary: tint(SURFACE),
+          dark: tint(DARK),
+          "dark-card": tint(DARK),
+        },
+
+        // Semantic text tokens
+        text: {
+          primary: tint(DARK),
+          secondary: tint(TEXT_AA),
+          muted: tint(TEXT_AA),
+          inverse: tint(WHITE),
+        },
+
+        // Semantic brand tokens
+        brand: {
+          primary: tint(DARK),
+          accent: tint(BRAND),
+          orange: tint(BRAND),
+        },
+
+        // Semantic status tokens (estrictamente 5 colores)
+        status: {
+          success: { DEFAULT: tint(BRAND), bg: tint(SURFACE), text: tint(DARK) },
+          warning: { DEFAULT: tint(BRAND), bg: tint(SURFACE), text: tint(DARK) },
+          error: { DEFAULT: tint(DARK), bg: tint(SURFACE), text: tint(DARK) },
+          info: { DEFAULT: tint(DARK), bg: tint(SURFACE), text: tint(DARK) },
+        },
+
+        // Brand tokens — Plataxi mono-accent (compatibilidad)
+        navy: { DEFAULT: tint(DARK), deep: tint(DARK), ink: tint(DARK) },
+        orange: { DEFAULT: tint(BRAND), ink: tint(DARK) },
+        green: { DEFAULT: tint(BRAND), ink: tint(DARK), soft: tint(SURFACE), "soft-ink": tint(DARK), tint: tint(SURFACE), bright: tint(BRAND) },
+        ink: tint(DARK),
+        "muted-2": tint(TEXT_AA),
+        "bg-soft": tint(WHITE),
+        "border-2": tint(LINE),
+        error: tint(DARK),
+        "hint-ink": tint(DARK),
+        "hint-bg": tint(SURFACE),
+      },
+
+      // Opacity steps used by tint utilities in the codebase. A modifier whose
+      // value is not in this scale is dropped, so /12 and /15 need declaring
+      // even though they read like arbitrary numbers.
+      opacity: {
+        12: "0.12",
+        15: "0.15",
+        35: "0.35",
+        45: "0.45",
+        55: "0.55",
+        65: "0.65",
       },
       fontFamily: {
         sans: [
           "var(--font-jakarta)",
-          "Plus Jakarta Sans",
           "Inter",
           "system-ui",
           "sans-serif",
         ],
         display: [
           "var(--font-display)",
-          "DM Serif Display",
-          "Georgia",
-          "serif",
+          "Archivo",
+          "system-ui",
+          "sans-serif",
         ],
       },
+      // inDrive normalizes every card, panel and button on 16px. xl/2xl/3xl are
+      // aliased so existing rounded-2xl / rounded-3xl usages flatten without
+      // touching each component.
       borderRadius: {
         sm: "8px",
         md: "12px",
         lg: "16px",
-        xl: "22px",
+        xl: "16px",
+        "2xl": "16px",
+        "3xl": "16px",
         pill: "999px",
       },
+      // Display scale — trust-first fintech, not indrive shout:
+      // hero 32-56 (vs 36-64) and section 30-44 (vs 36-64) — hero still dominates via photo + scrim, not type.
+      // Smaller clamp (5.5vw/4.5vw vs 6.5vw) + relaxed line-height 1.25 for section tames 64px shout on 390.
+      fontSize: {
+        hero: ["clamp(2rem, 5.5vw, 3.5rem)", { lineHeight: "1.2", letterSpacing: "-0.015em" }],
+        section: ["clamp(1.875rem, 4.5vw, 2.75rem)", { lineHeight: "1.25", letterSpacing: "-0.015em" }],
+      },
       boxShadow: {
-        sm: "0 1px 2px rgba(16,32,64,.05), 0 1px 3px rgba(16,32,64,.06)",
-        md: "0 6px 24px rgba(13,42,94,.07), 0 2px 6px rgba(13,42,94,.05)",
-        lg: "0 24px 60px rgba(13,42,94,.14), 0 8px 24px rgba(13,42,94,.08)",
+        sm: "0 1px 2px rgba(17,17,16,.05), 0 1px 3px rgba(17,17,16,.06)",
+        md: "0 6px 24px rgba(17,17,16,.07), 0 2px 6px rgba(17,17,16,.05)",
+        lg: "0 24px 60px rgba(17,17,16,.14), 0 8px 24px rgba(17,17,16,.08)",
       },
       maxWidth: {
         container: "1120px",

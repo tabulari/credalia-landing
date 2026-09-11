@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import type { ApplicationInput } from "./application-schema";
 import { CONSENT_TEXT } from "./application-schema";
+import { fmtCOP } from "./credit";
 
 type FetchLike = typeof fetch;
 
@@ -24,6 +25,11 @@ export class CoreLeadError extends Error {
     readonly status?: number,
     /** Seconds the caller should wait before retrying (Core's 429 response). */
     readonly retryAfterSeconds?: number,
+    /**
+     * Raw upstream error body (e.g. FastAPI's `detail` list on a 422). Kept for
+     * server-side diagnosis only — never forwarded to the browser.
+     */
+    readonly detail?: unknown,
   ) {
     super(message);
   }
@@ -46,17 +52,40 @@ export function consentTextHash(): string {
 }
 
 /**
- * Maps the landing form payload to Core's WebLeadIntakeRequest shape:
- * strips non-digits from idNumber/phone (Core enforces exactly 10 chars on
- * phone), renames the frozen simulator terms (term → termMonths,
- * monthlyRate → monthlyInterestRate), and attaches the server-derived
- * clientIp/userAgent and consent hash.
+ * Maps the landing form payload to Core's WebLeadIntakeRequest shape (IP-163).
+ * Strips non-digits from idNumber/phone, renames simulator terms, converts
+ * daily income to monthly, and maps hasBank "yes"/"no" to boolean.
  */
 export function buildCoreLeadPayload(input: ApplicationInput, context: CoreLeadContext) {
+  // Convierte ingreso diario a mensual (Core espera el monto mensual)
+  let income = input.income;
+  if (input.incomeType === 'daily') {
+    const d = parseInt((input.income || '').replace(/\D/g, ''), 10);
+    if (Number.isFinite(d) && d > 0) {
+      income = `$ ${fmtCOP(d * 30)}`;
+    }
+  }
+
   return {
-    ...input,
-    idNumber: input.idNumber.replace(/\D/g, ""),
-    phone: input.phone.replace(/\D/g, ""),
+    // Step 1
+    fullName: input.fullName,
+    idNumber: input.idNumber.replace(/\D/g, ''),
+    phone: input.phone.replace(/\D/g, ''),
+    contactName: input.contactName || null,
+    contactPhone: input.contactPhone ? input.contactPhone.replace(/\D/g, '') : null,
+    email: input.email,
+    // Step 2 — plataforma Uber/DiDi mapea a conduzco_taxi hasta que Core soporte "plataforma"
+    taxiRole:
+      input.taxiRole === 'Taxi propio' ? 'taxi_propio' : 'conduzco_taxi',
+    taxiPlate: input.taxiPlate || null,
+    taxiCompany: input.taxiCompany,
+    drivingTime: input.drivingTime === 'lt1' ? 0 : input.drivingTime === '1to3' ? 2 : input.drivingTime === '3to5' ? 4 : 6,
+    // Step 3
+    income,
+    hasBank: input.hasBank === 'yes',
+    bankEntity: input.bankEntity || null,
+    // Consent
+    consent: input.consent,
     clientIp: context.clientIp,
     userAgent: context.userAgent,
     consentTextHash: consentTextHash(),
@@ -86,12 +115,24 @@ export async function forwardApplicationToCore(
 
   if (!response.ok) {
     let retryAfterSeconds: number | undefined;
+    let detail: unknown;
     try {
-      retryAfterSeconds = extractCoreRetryAfter(await response.text());
+      const bodyText = await response.text();
+      retryAfterSeconds = extractCoreRetryAfter(bodyText);
+      try {
+        detail = JSON.parse(bodyText);
+      } catch {
+        detail = bodyText || undefined;
+      }
     } catch {
       /* body unreadable — fall through with status only */
     }
-    throw new CoreLeadError("Core rejected the web lead", response.status, retryAfterSeconds);
+    throw new CoreLeadError(
+      "Core rejected the web lead",
+      response.status,
+      retryAfterSeconds,
+      detail,
+    );
   }
 
   const payload: unknown = await response.json();
